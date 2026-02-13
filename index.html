@@ -1233,7 +1233,7 @@ async function handleLogin(e) {
     }
 
     currentUser = result.user;
-    localStorage.setItem('volta_last_user_email', email);
+    localStorage.setItem('volta_user', JSON.stringify(result.user));
 
     updateAuthUI();
     updateDashboard();
@@ -1613,7 +1613,14 @@ updateDashboard();
           ).join('');
         }
       });
-    
+    document.addEventListener('DOMContentLoaded', () => {
+  const savedUser = localStorage.getItem('volta_user');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    updateAuthUI();
+    updateDashboard();
+  }
+});
   </script>
   </body>
 </html>
