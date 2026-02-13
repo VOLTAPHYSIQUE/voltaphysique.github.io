@@ -1496,11 +1496,14 @@ async function handleLogin(e) {
         
         document.getElementById('weight-new').value = '';
         
-        currentUser.currentWeight = newWeight.toFixed(1);
-        currentUser.weightGoalType = weightGoalType;
-        document.getElementById('stat-weight').textContent = newWeight.toFixed(1);
-        document.getElementById('weight-display-current').textContent = newWeight.toFixed(1);
-        document.getElementById('weight-current').value = newWeight.toFixed(1);
+        // Update local user object
+currentUser.currentWeight = newWeight.toFixed(1);
+currentUser.targetWeight = targetWeight.toFixed(1);
+currentUser.weightGoalType = weightGoalType;
+
+// Refresh entire dashboard cleanly
+updateDashboard();
+
         
       } catch (error) {
         console.error('Weight update error:', error);
