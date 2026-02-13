@@ -1,0 +1,1651 @@
+<!doctype html>
+<html lang="ar" class="h-full" data-version="with-canva-sheet">
+ <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLTA PHYSIQUE | Elite Fitness Coaching</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary-black: #0a0a0a;
+      --charcoal: #141414;
+      --dark-gray: #1a1a1a;
+      --neon-orange: #ff6b00;
+      --dark-orange: #cc5500;
+      --glow-orange: rgba(255, 107, 0, 0.4);
+    }
+    
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-orange) var(--charcoal);
+    }
+    
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .font-inter { font-family: 'Inter', sans-serif; }
+    
+    .glow-effect { box-shadow: 0 0 30px var(--glow-orange), 0 0 60px rgba(255, 107, 0, 0.2); }
+    .glow-text { text-shadow: 0 0 20px var(--glow-orange), 0 0 40px rgba(255, 107, 0, 0.3); }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--neon-orange), var(--dark-orange));
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      box-shadow: 0 0 25px var(--glow-orange), 0 0 50px rgba(255, 107, 0, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .card-dark {
+      background: linear-gradient(145deg, var(--charcoal), var(--dark-gray));
+      border: 1px solid rgba(255, 107, 0, 0.1);
+    }
+    
+    .card-dark:hover { border-color: rgba(255, 107, 0, 0.3); }
+    
+    .lightning-bg {
+      background: 
+        radial-gradient(ellipse at 20% 20%, rgba(255, 107, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 107, 0, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, var(--primary-black) 0%, var(--charcoal) 100%);
+    }
+    
+    .input-dark {
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 107, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .input-dark:focus {
+      border-color: var(--neon-orange);
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.2);
+      outline: none;
+    }
+    
+    .input-dark:read-only {
+      background: rgba(20, 20, 20, 0.5);
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--neon-orange);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after,
+    .nav-link.active::after { width: 100%; }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px var(--glow-orange); }
+      50% { box-shadow: 0 0 40px var(--glow-orange), 0 0 60px rgba(255, 107, 0, 0.3); }
+    }
+    
+    .pulse-glow { animation: pulse-glow 2s infinite; }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .float-animation { animation: float 3s ease-in-out infinite; }
+    
+    .page {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .page.active {
+      display: block;
+      opacity: 1;
+    }
+    
+    .social-panel {
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+    }
+    
+    .social-panel.open { transform: translateX(0); }
+    
+    .overlay {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .stat-card {
+      background: linear-gradient(145deg, rgba(255, 107, 0, 0.1), rgba(20, 20, 20, 0.9));
+      border: 1px solid rgba(255, 107, 0, 0.2);
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-[#0a0a0a] text-white font-inter overflow-auto">
+  <div id="app" class="h-full w-full">
+   <!-- Navigation -->
+   <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-orange-500/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16">
+      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3"> <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="h-[45px] w-auto object-contain" loading="eager"> <span class="font-bebas text-xl md:text-2xl font-normal tracking-wider whitespace-nowrap">VOLTA PHYSIQUE</span> </a>
+      <div class="hidden md:flex items-center gap-8">
+       <a href="#" onclick="navigateTo('home')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Home</a> <a href="#" onclick="navigateTo('about')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">About</a> <a href="#" onclick="navigateTo('packages')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Packages</a>
+       <div id="auth-nav-logged-out" class="flex items-center gap-4">
+        <a href="#" onclick="navigateTo('login')" class="text-gray-300 hover:text-white text-sm uppercase tracking-wider">Login</a> <a href="#" onclick="navigateTo('signup')" class="btn-primary px-5 py-2 rounded-lg text-sm font-semibold uppercase tracking-wider">Join Now</a>
+       </div>
+       <div id="auth-nav-logged-in" class="hidden flex items-center gap-4">
+        <a href="#" onclick="navigateTo('dashboard')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Dashboard</a> <button onclick="logout()" class="text-gray-400 hover:text-orange-500 text-sm uppercase tracking-wider">Logout</button>
+       </div>
+      </div><button onclick="toggleMobileMenu()" class="md:hidden text-white">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+       </svg></button>
+     </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-[#141414] border-t border-orange-500/10">
+     <div class="px-4 py-4 space-y-3">
+      <a href="#" onclick="navigateTo('home')" class="block text-gray-300 hover:text-white py-2 uppercase tracking-wider text-sm">Home</a> <a href="#" onclick="navigateTo('about')" class="block text-gray-300 hover:text-white py-2 uppercase tracking-wider text-sm">About</a> <a href="#" onclick="navigateTo('packages')" class="block text-gray-300 hover:text-white py-2 uppercase tracking-wider text-sm">Packages</a>
+      <div id="mobile-auth-logged-out">
+       <a href="#" onclick="navigateTo('login')" class="block text-gray-300 hover:text-white py-2 uppercase tracking-wider text-sm">Login</a> <a href="#" onclick="navigateTo('signup')" class="block btn-primary text-center py-2 rounded-lg uppercase tracking-wider text-sm mt-2">Join Now</a>
+      </div>
+      <div id="mobile-auth-logged-in" class="hidden">
+       <a href="#" onclick="navigateTo('dashboard')" class="block text-gray-300 hover:text-white py-2 uppercase tracking-wider text-sm">Dashboard</a> <button onclick="logout()" class="block w-full text-left text-gray-400 hover:text-orange-500 py-2 uppercase tracking-wider text-sm">Logout</button>
+      </div>
+     </div>
+    </div>
+   </nav><!-- Social Media Floating Button --> <button onclick="toggleSocialPanel()" id="social-float-btn" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full btn-primary flex items-center justify-center pulse-glow">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+    </svg></button> <!-- Social Media Panel -->
+   <div id="social-overlay" onclick="toggleSocialPanel()" class="overlay fixed inset-0 bg-black/70 z-50"></div>
+   <div id="social-panel" class="social-panel fixed top-0 right-0 h-full w-80 bg-[#141414] z-50 border-l border-orange-500/20 shadow-2xl overflow-y-auto">
+    <div class="p-6">
+     <div class="flex items-center justify-between mb-8">
+      <h3 class="font-bebas text-2xl tracking-wider">CONNECT WITH US</h3><button onclick="toggleSocialPanel()" class="text-gray-400 hover:text-white">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <div class="space-y-4">
+      <a href="https://www.instagram.com/voltaphysique/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 rounded-xl card-dark hover:glow-effect transition-all group">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6" fill="white" viewbox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2" /><circle cx="12" cy="12" r="3.5" fill="none" stroke="white" stroke-width="2" /><circle cx="17" cy="7" r="1" fill="white" />
+        </svg>
+       </div>
+       <div>
+        <p class="font-semibold text-white group-hover:text-orange-500 transition-colors">@voltaphysique</p>
+        <p class="text-sm text-gray-500">Main Account</p>
+       </div></a> <a href="https://www.instagram.com/volta_girls/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 rounded-xl card-dark hover:glow-effect transition-all group">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6" fill="white" viewbox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2" /><circle cx="12" cy="12" r="3.5" fill="none" stroke="white" stroke-width="2" /><circle cx="17" cy="7" r="1" fill="white" />
+        </svg>
+       </div>
+       <div>
+        <p class="font-semibold text-white group-hover:text-orange-500 transition-colors">@volta_girls</p>
+        <p class="text-sm text-gray-500">Women's Coaching</p>
+       </div></a> <a href="https://www.instagram.com/volta_physique_transformations/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 rounded-xl card-dark hover:glow-effect transition-all group">
+       <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6" fill="white" viewbox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="white" stroke-width="2" /><circle cx="12" cy="12" r="3.5" fill="none" stroke="white" stroke-width="2" /><circle cx="17" cy="7" r="1" fill="white" />
+        </svg>
+       </div>
+       <div>
+        <p class="font-semibold text-white group-hover:text-orange-500 transition-colors">@volta_transformations</p>
+        <p class="text-sm text-gray-500">Results &amp; Progress</p>
+       </div></a> <a href="https://www.youtube.com/@VOLTAPHYSIQUE" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 rounded-xl card-dark hover:glow-effect transition-all group">
+       <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+        </svg>
+       </div>
+       <div>
+        <p class="font-semibold text-white group-hover:text-orange-500 transition-colors">VOLTA PHYSIQUE</p>
+        <p class="text-sm text-gray-500">YouTube Channel</p>
+       </div></a> <a href="https://www.tiktok.com/@volta_physique" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 rounded-xl card-dark hover:glow-effect transition-all group">
+       <div class="w-12 h-12 rounded-full bg-black flex items-center justify-center border border-white/20 flex-shrink-0">
+        <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+        </svg>
+       </div>
+       <div>
+        <p class="font-semibold text-white group-hover:text-orange-500 transition-colors">@volta_physique</p>
+        <p class="text-sm text-gray-500">TikTok</p>
+       </div></a>
+     </div>
+    </div>
+   </div><!-- HOME PAGE -->
+   <div id="page-home" class="page active">
+    <section class="lightning-bg min-h-screen pt-16 relative overflow-hidden">
+     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+      <div class="text-center">
+       <div class="mb-3">
+        <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="w-28 h-28 mx-auto float-animation" loading="eager">
+       </div>
+       <h1 class="font-aref text-7xl sm:text-8xl md:text-9xl font-bold tracking-wider mb-10 glow-text float-animation" style="direction: rtl; unicode-bidi: embed; text-align: center; font-family: 'Aref Ruqaa', serif;">يلا بينا يا بطل</h1>
+       <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-light">Elite online coaching that transforms discipline into results. Unlock your ultimate physique with VOLTA PHYSIQUE.</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+        <button onclick="navigateTo('signup')" class="btn-primary px-10 py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Start Your Transformation</button> <button onclick="navigateTo('packages')" class="px-10 py-4 rounded-xl text-lg font-bold uppercase tracking-wider border-2 border-orange-500/50 hover:border-orange-500 hover:bg-orange-500/10 transition-all">View Packages</button>
+       </div>
+      </div>
+      <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-6">
+       <div class="text-center p-6 rounded-2xl card-dark">
+        <div class="font-bebas text-4xl sm:text-5xl text-orange-500 mb-2">
+         70+
+        </div>
+        <div class="text-gray-400 text-sm uppercase tracking-wider">
+         Transformations
+        </div>
+       </div>
+       <div class="text-center p-6 rounded-2xl card-dark">
+        <div class="font-bebas text-4xl sm:text-5xl text-orange-500 mb-2">
+         100+
+        </div>
+        <div class="text-gray-400 text-sm uppercase tracking-wider">
+         Clients
+        </div>
+       </div>
+       <div class="text-center p-6 rounded-2xl card-dark">
+        <div class="font-bebas text-4xl sm:text-5xl text-orange-500 mb-2">
+         5+
+        </div>
+        <div class="text-gray-400 text-sm uppercase tracking-wider">
+         Years Experience
+        </div>
+       </div>
+       <div class="text-center p-6 rounded-2xl card-dark">
+        <div class="font-bebas text-4xl sm:text-5xl text-orange-500 mb-2">
+         24/7
+        </div>
+        <div class="text-gray-400 text-sm uppercase tracking-wider">
+         Support
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- WHY VOLTA SECTION -->
+    <section class="bg-[#0a0a0a] py-24">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+       <h2 class="font-bebas text-4xl sm:text-5xl md:text-6xl tracking-wider mb-4">WHY <span class="text-orange-500">VOLTA</span>?</h2>
+       <p class="text-gray-400 max-w-2xl mx-auto">Our methodology combines cutting-edge science with personalized coaching to deliver results that last.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+       <div class="p-8 rounded-2xl card-dark hover:glow-effect transition-all group">
+        <div class="w-16 h-16 rounded-xl bg-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/30 transition-colors">
+         <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+         </svg>
+        </div>
+        <h3 class="font-bebas text-2xl tracking-wider mb-3">PERSONALIZED PLANS</h3>
+        <p class="text-gray-400">Custom training and nutrition protocols designed specifically for your body and goals.</p>
+       </div>
+       <div class="p-8 rounded-2xl card-dark hover:glow-effect transition-all group">
+        <div class="w-16 h-16 rounded-xl bg-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/30 transition-colors">
+         <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
+        </div>
+        <h3 class="font-bebas text-2xl tracking-wider mb-3">WEEKLY CHECK-INS</h3>
+        <p class="text-gray-400">Regular progress reviews and plan adjustments to keep you on track toward your goals.</p>
+       </div>
+       <div class="p-8 rounded-2xl card-dark hover:glow-effect transition-all group">
+        <div class="w-16 h-16 rounded-xl bg-orange-500/20 flex items-center justify-center mb-6 group-hover:bg-orange-500/30 transition-colors">
+         <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0zM7 10a3 3 0 11-6 0 3 3 0 016 0z" />
+         </svg>
+        </div>
+        <h3 class="font-bebas text-2xl tracking-wider mb-3">COMMUNITY SUPPORT</h3>
+        <p class="text-gray-400">Join a tribe of like-minded individuals all pushing toward greatness together.</p>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div><!-- ABOUT PAGE -->
+   <div id="page-about" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+       <h1 class="font-bebas text-5xl sm:text-6xl md:text-7xl tracking-wider mb-4">ABOUT <span class="text-orange-500">VOLTA</span></h1>
+       <p class="text-gray-400 text-lg max-w-2xl mx-auto">The origin story of elite transformation</p>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
+       <div class="order-2 lg:order-1">
+        <h2 class="font-bebas text-3xl sm:text-4xl tracking-wider mb-6">VOLTA <span class="text-orange-500">PHYSIQUE</span></h2>
+        <div class="space-y-4 text-gray-300">
+         <p>Volta Physique was built on one belief:</p>
+         <p>Most people don't fail because they lack potential.</p>
+         <p>They fail because they lack structure.</p>
+         <p>Volta is not just online coaching.</p>
+         <p>It's a performance driven system for ambitious individuals who are serious about transforming their physique and mindset.</p>
+         <p>We don't sell random workouts.</p>
+         <p>We build discipline.</p>
+         <p>We build structure.</p>
+         <p>We build stronger individuals.</p>
+         <p>If you're tired of starting over…</p>
+         <p>If you want real accountability…</p>
+         <p>If you're ready to upgrade your body and your identity</p>
+         <p>Volta is built for you.</p>
+        </div>
+       </div>
+       <div class="order-1 lg:order-2">
+        <div class="relative">
+         <div class="w-full aspect-square rounded-2xl bg-gradient-to-br from-orange-500/20 to-transparent flex items-center justify-center card-dark overflow-hidden"><img src="https://i.ibb.co/W4xcJB29/Whats-App-Image-2026-02-11-at-5-34-24-PM.jpg" alt="About section" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='linear-gradient(to right, #ff6b00, #cc5500)'; this.alt='Image unavailable';">
+         </div>
+         <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-xl bg-orange-500/30 blur-xl"></div>
+        </div>
+       </div>
+      </div>
+      <div class="mb-20">
+       <h2 class="font-bebas text-3xl sm:text-4xl tracking-wider mb-8 text-center">OUR <span class="text-orange-500">GOAL</span></h2>
+       <div class="grid md:grid-cols-1 gap-6">
+        <div class="p-6 rounded-2xl card-dark text-center">
+         <p class="text-gray-300 text-lg">To build the strongest fitness community in the Middle East where discipline and ambition are the standard.</p>
+        </div>
+       </div>
+      </div>
+      <div>
+       <h2 class="font-bebas text-3xl sm:text-4xl tracking-wider mb-8 text-center">THE <span class="text-orange-500">TEAM</span></h2>
+       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl card-dark text-center group hover:glow-effect transition-all">
+         <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-orange-500/30 to-orange-600/10 flex items-center justify-center mb-4">
+          <svg class="w-12 h-12 text-orange-500" fill="currentColor" viewbox="0 0 200 280"><circle cx="100" cy="40" r="22" /><rect x="92" y="62" width="16" height="12" rx="4" /><path d="M 50 75 Q 50 70 70 68 L 130 68 Q 150 70 150 75 L 148 85 Q 145 88 140 89 L 60 89 Q 55 88 52 85 Z" /><path d="M 60 89 L 62 130 Q 63 138 70 140 L 130 140 Q 137 138 138 130 L 140 89" /><path d="M 70 140 L 72 185 Q 73 190 78 192 L 122 192 Q 127 190 128 185 L 130 140" /><path d="M 60 95 Q 40 100 30 120 Q 28 125 32 128 Q 45 118 62 110" /><path d="M 138 95 Q 160 100 170 120 Q 172 125 168 128 Q 155 118 138 110" /><path d="M 78 192 L 82 265 Q 82 272 88 275 L 98 275 Q 103 272 103 265 L 100 192" /><path d="M 122 192 L 118 265 Q 118 272 112 275 L 102 275 Q 97 272 97 265 L 100 192" />
+          </svg>
+         </div>
+         <h3 class="font-bebas text-xl tracking-wider mb-1">Head Coach</h3>
+         <p class="text-orange-500 text-sm mb-2">Boys</p>
+         <p class="text-gray-400 text-sm">9+ years of coaching experience</p>
+        </div>
+        <div class="p-6 rounded-2xl card-dark text-center group hover:glow-effect transition-all">
+         <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-orange-500/30 to-orange-600/10 flex items-center justify-center mb-4">
+          <svg class="w-12 h-12 text-orange-500" fill="currentColor" viewbox="0 0 200 280"><circle cx="100" cy="45" r="24" /><ellipse cx="55" cy="55" rx="18" ry="24" opacity="0.9" /><ellipse cx="145" cy="55" rx="18" ry="24" opacity="0.9" /><path d="M 65 35 Q 100 25 135 35" stroke="currentColor" stroke-width="12" fill="none" stroke-linecap="round" /><path d="M 60 65 Q 40 75 35 95" stroke="currentColor" stroke-width="10" fill="none" stroke-linecap="round" /><circle cx="35" cy="105" r="10" /><rect x="88" y="68" width="24" height="16" rx="6" /><path d="M 70 85 Q 70 80 85 78 L 115 78 Q 130 80 130 85 L 128 95 Q 125 98 120 100 L 80 100 Q 75 98 72 95 Z" /><path d="M 80 100 L 82 155 Q 83 162 88 165 L 112 165 Q 117 162 118 155 L 120 100" /><path d="M 72 100 Q 50 105 42 130 Q 41 135 46 137 Q 58 120 72 110" /><path d="M 128 100 Q 150 105 158 130 Q 159 135 154 137 Q 142 120 128 110" /><path d="M 88 165 L 92 250 Q 92 265 100 270 L 105 270 Q 113 265 113 250 L 110 165" /><path d="M 112 165 L 108 250 Q 108 265 100 270 L 95 270 Q 87 265 87 250 L 90 165" />
+          </svg>
+         </div>
+         <h3 class="font-bebas text-xl tracking-wider mb-1">Support Team</h3>
+         <p class="text-orange-500 text-sm mb-2">24/7 Support</p>
+         <p class="text-gray-400 text-sm">Focus on your consistency</p>
+        </div>
+        <div class="p-6 rounded-2xl card-dark text-center group hover:glow-effect transition-all">
+         <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-orange-500/30 to-orange-600/10 flex items-center justify-center mb-4">
+          <svg class="w-12 h-12 text-orange-500" fill="currentColor" viewbox="0 0 200 280"><circle cx="100" cy="38" r="22" /><path d="M 78 28 Q 78 18 100 16 Q 122 18 122 28" opacity="0.8" /><rect x="92" y="60" width="16" height="14" rx="5" /><path d="M 55 75 Q 55 70 72 68 L 128 68 Q 145 70 145 75 L 143 88 Q 140 92 135 94 L 65 94 Q 60 92 57 88 Z" /><path d="M 65 94 L 68 140 Q 70 148 76 150 L 124 150 Q 130 148 132 140 L 135 94" /><path d="M 76 150 L 78 185 Q 80 190 85 192 L 115 192 Q 120 190 122 185 L 124 150" /><path d="M 65 98 Q 45 105 36 125 Q 34 130 39 133 Q 52 118 65 105" /><path d="M 135 98 Q 155 105 164 125 Q 166 130 161 133 Q 148 118 135 105" /><path d="M 85 192 L 88 265 Q 88 272 95 276 L 100 276 Q 105 272 105 265 L 102 192" /><path d="M 115 192 L 112 265 Q 112 272 105 276 L 100 276 Q 95 272 95 265 L 98 192" />
+          </svg>
+         </div>
+         <h3 class="font-bebas text-xl tracking-wider mb-1">Head Coach</h3>
+         <p class="text-orange-500 text-sm mb-2">Girls</p>
+         <p class="text-gray-400 text-sm">6+ years of coaching experience</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div><!-- PACKAGES PAGE -->
+   <div id="page-packages" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+       <h1 class="font-bebas text-5xl sm:text-6xl md:text-7xl tracking-wider mb-4">COACHING <span class="text-orange-500">PACKAGES</span></h1>
+       <p class="text-gray-400 text-lg max-w-2xl mx-auto">Choose your path to transformation. All packages include dedicated coaching.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
+       <!-- RAMADAN 30 DAYS FAT LOSS Package --> <button onclick="viewPackageDetails(0)" class="text-left group">
+        <div class="rounded-2xl card-dark p-10 h-full flex flex-col hover:glow-effect transition-all">
+         <div class="bg-orange-500/20 px-3 py-1 rounded-lg w-fit mb-4">
+          <p class="text-orange-500 font-semibold text-xs uppercase tracking-wider">Limited Ramadan Offer</p>
+         </div>
+         <h3 class="font-bebas text-3xl tracking-wider mb-2">RAMADAN 30 DAYS FAT LOSS</h3>
+         <p class="text-gray-400 text-sm mb-8">30 days of coaching</p>
+         <div class="mb-10"><span class="font-bebas text-5xl text-orange-500">750</span> <span class="text-gray-400 ml-2">EGP</span>
+         </div>
+         <ul id="preview-0" class="space-y-3 mb-auto text-sm text-gray-300"></ul>
+         <div class="pt-8 mt-8 border-t border-orange-500/20"><span class="text-orange-500 font-semibold uppercase tracking-wider text-sm group-hover:text-orange-300 transition-colors">View Details</span>
+         </div>
+        </div></button> <!-- VOLTA NO EXCUSES Package --> <button onclick="viewPackageDetails(1)" class="text-left group">
+        <div class="rounded-2xl card-dark p-10 h-full flex flex-col hover:glow-effect transition-all">
+         <h3 class="font-bebas text-3xl tracking-wider mb-2">VOLTA NO EXCUSES</h3>
+         <p class="text-gray-400 text-sm mb-8">3 months of coaching</p>
+         <div class="mb-10"><span class="font-bebas text-5xl text-orange-500">999</span> <span class="text-gray-400 ml-2">EGP</span>
+         </div>
+         <ul id="preview-1" class="space-y-3 mb-auto text-sm text-gray-300"></ul>
+         <div class="pt-8 mt-8 border-t border-orange-500/20"><span class="text-orange-500 font-semibold uppercase tracking-wider text-sm group-hover:text-orange-300 transition-colors">View Details</span>
+         </div>
+        </div></button> <!-- VOLTA GLOW UP 3.0 (Featured) --> <button onclick="viewPackageDetails(2)" class="text-left group">
+        <div class="rounded-2xl card-dark overflow-hidden h-full flex flex-col">
+         <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-8 py-4 text-center">
+          <p class="font-bebas tracking-wider text-sm">MOST POPULAR</p>
+         </div>
+         <div class="p-10 flex flex-col h-full hover:glow-effect transition-all">
+          <h3 class="font-bebas text-3xl tracking-wider mb-2">VOLTA GLOW UP 3.0</h3>
+          <p class="text-gray-400 text-sm mb-8">3 months of premium coaching</p>
+          <div class="mb-10"><span class="font-bebas text-5xl text-orange-500">1500</span> <span class="text-gray-400 ml-2">EGP</span>
+          </div>
+          <ul id="preview-2" class="space-y-3 mb-auto text-sm text-gray-300"></ul>
+          <div class="pt-8 mt-8 border-t border-orange-500/20"><span class="text-orange-500 font-semibold uppercase tracking-wider text-sm group-hover:text-orange-300 transition-colors">View Details</span>
+          </div>
+         </div>
+        </div></button> <!-- VOLTA BEAST MODE (VIP) --> <button onclick="viewPackageDetails(3)" class="text-left group">
+        <div class="rounded-2xl card-dark p-10 h-full flex flex-col hover:glow-effect transition-all">
+         <h3 class="font-bebas text-3xl tracking-wider mb-2">VOLTA BEAST MODE</h3>
+         <p class="text-gray-400 text-sm mb-8">(VIP) 6 months of elite coaching</p>
+         <div class="mb-10"><span class="font-bebas text-5xl text-orange-500">4490</span> <span class="text-gray-400 ml-2">EGP</span>
+         </div>
+         <ul id="preview-3" class="space-y-3 mb-auto text-sm text-gray-300"></ul>
+         <div class="pt-8 mt-8 border-t border-orange-500/20"><span class="text-orange-500 font-semibold uppercase tracking-wider text-sm group-hover:text-orange-300 transition-colors">View Details</span>
+         </div>
+        </div></button>
+      </div>
+      <div class="text-center">
+       <p class="text-gray-400 mb-4">All packages include a money-back guarantee within the first 7 days.</p>
+       <p class="text-gray-500 text-sm">Need help choosing? <a href="#" onclick="openWhatsApp('201055723467', '')" class="text-orange-500 hover:underline">Contact us on WhatsApp</a></p>
+      </div>
+     </div>
+    </section>
+   </div><!-- PACKAGE DETAILS PAGE -->
+   <div id="page-package-details" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16">
+     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <button onclick="navigateTo('packages')" class="mb-12 inline-flex items-center gap-2 text-orange-500 hover:text-orange-400 transition-colors">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+       </svg> Back to Packages </button>
+      <div class="mb-16">
+       <h1 id="details-title" class="font-bebas text-5xl sm:text-6xl tracking-wider mb-8">PACKAGE TITLE</h1>
+       <div class="grid sm:grid-cols-2 gap-8">
+        <div>
+         <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Price</p>
+         <p id="details-price" class="font-bebas text-5xl text-orange-500">999 <span class="text-2xl">EGP</span></p>
+        </div>
+        <div>
+         <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Duration</p>
+         <p id="details-duration" class="font-bebas text-5xl">3 Months</p>
+        </div>
+       </div>
+      </div>
+      <div class="rounded-2xl card-dark p-12 mb-12">
+       <h2 class="font-bebas text-3xl tracking-wider mb-10">PACKAGE INCLUDES</h2>
+       <ul id="details-features" class="space-y-4"></ul>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-6">
+       <button onclick="proceedToCheckout()" id="details-cta-btn" class="flex-1 btn-primary py-4 rounded-xl text-lg font-bold uppercase tracking-wider">SELECT PACKAGE</button> <button onclick="navigateTo('packages')" class="flex-1 px-8 py-4 rounded-xl border-2 border-orange-500/50 hover:border-orange-500 hover:bg-orange-500/10 text-lg font-bold uppercase tracking-wider transition-all">Other Packages</button>
+      </div>
+     </div>
+    </section>
+   </div><!-- LOGIN PAGE -->
+   <div id="page-login" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16 flex items-center">
+     <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="text-center mb-10">
+       <h1 class="font-bebas text-5xl tracking-wider mb-2">WELCOME <span class="text-orange-500">BACK</span></h1>
+       <p class="text-gray-400">Sign in to access your dashboard</p>
+      </div>
+      <div class="rounded-2xl card-dark p-8">
+       <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="space-y-5">
+         <div>
+          <label for="login-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label> <input type="email" id="login-email" required placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+         </div>
+         <div>
+          <label for="login-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+          <div class="relative">
+           <input type="password" id="login-password" required placeholder="Enter your password" class="w-full px-4 py-3 pr-12 rounded-xl input-dark text-white"> <button type="button" onclick="togglePasswordVisibility('login-password')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors">
+            <svg id="login-password-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg></button>
+          </div>
+         </div>
+        </div>
+        <div id="login-error" class="hidden mt-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm"></div><button type="submit" id="login-btn" class="w-full mt-8 btn-primary py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Sign In</button>
+       </form>
+       <div class="mt-6 text-center">
+        <p class="text-gray-400">Don't have an account? <a href="#" onclick="navigateTo('signup')" class="text-orange-500 hover:underline">Join Now</a></p>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div><!-- SIGNUP PAGE -->
+   <div id="page-signup" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16">
+     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10">
+       <h1 class="font-bebas text-5xl sm:text-6xl tracking-wider mb-2">START YOUR <span class="text-orange-500">JOURNEY</span></h1>
+       <p class="text-gray-400">Fill out the application form to begin your transformation</p>
+      </div>
+      <div class="rounded-2xl card-dark p-8">
+       <form id="signup-form" onsubmit="handleSignup(event)">
+        <div class="mb-8">
+         <h3 class="font-bebas text-xl tracking-wider mb-4 text-orange-500">Account Information</h3>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div class="md:col-span-2">
+           <label for="signup-name" class="block text-sm font-medium text-gray-300 mb-2">Full Name *</label> <input type="text" id="signup-name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="signup-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address *</label> <input type="email" id="signup-email" required placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="signup-phone" class="block text-sm font-medium text-gray-300 mb-2">Phone Number *</label> <input type="tel" id="signup-phone" required placeholder="+20 XXX XXX XXXX" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="signup-password" class="block text-sm font-medium text-gray-300 mb-2">Password *</label>
+           <div class="relative">
+            <input type="password" id="signup-password" required placeholder="Create password" class="w-full px-4 py-3 pr-12 rounded-xl input-dark text-white" minlength="6"> <button type="button" onclick="togglePasswordVisibility('signup-password')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors">
+             <svg id="signup-password-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+             </svg></button>
+           </div>
+          </div>
+          <div>
+           <label for="signup-confirm" class="block text-sm font-medium text-gray-300 mb-2">Confirm Password *</label>
+           <div class="relative">
+            <input type="password" id="signup-confirm" required placeholder="Confirm password" class="w-full px-4 py-3 pr-12 rounded-xl input-dark text-white"> <button type="button" onclick="togglePasswordVisibility('signup-confirm')" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500 transition-colors">
+             <svg id="signup-confirm-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+             </svg></button>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="mb-8">
+         <h3 class="font-bebas text-xl tracking-wider mb-4 text-orange-500">Physical Information</h3>
+         <div class="grid md:grid-cols-3 gap-4">
+          <div>
+           <label for="signup-age" class="block text-sm font-medium text-gray-300 mb-2">Age *</label> <input type="number" id="signup-age" required placeholder="25" min="16" max="80" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="signup-height" class="block text-sm font-medium text-gray-300 mb-2">Height (cm) *</label> <input type="number" id="signup-height" required placeholder="175" min="100" max="250" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="signup-weight" class="block text-sm font-medium text-gray-300 mb-2">Weight (kg) *</label> <input type="number" id="signup-weight" required placeholder="75" min="30" max="250" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+         </div>
+        </div>
+        <div class="mb-8">
+         <h3 class="font-bebas text-xl tracking-wider mb-4 text-orange-500">Training Background</h3>
+         <div class="grid md:grid-cols-2 gap-4">
+          <div>
+           <label for="signup-experience" class="block text-sm font-medium text-gray-300 mb-2">Training Experience *</label> <select id="signup-experience" required class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="">Select experience level</option> <option value="Beginner (0-6 months)">Beginner (0-6 months)</option> <option value="Intermediate (6-24 months)">Intermediate (6-24 months)</option> <option value="Advanced (2-5 years)">Advanced (2-5 years)</option> <option value="Expert (5+ years)">Expert (5+ years)</option> </select>
+          </div>
+          <div>
+           <label for="signup-days" class="block text-sm font-medium text-gray-300 mb-2">Training Days/Week *</label> <select id="signup-days" required class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="">Select days</option> <option value="2">2 days</option> <option value="3">3 days</option> <option value="4">4 days</option> <option value="5">5 days</option> <option value="6">6 days</option> </select>
+          </div>
+          <div class="md:col-span-2">
+           <label for="signup-goal" class="block text-sm font-medium text-gray-300 mb-2">Fitness Goal *</label> <select id="signup-goal" required class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="">Select your goal</option> <option value="Lose Weight">Lose Weight</option> <option value="Gain Muscle">Gain Muscle</option> <option value="Body Recomposition">Body Recomposition</option> <option value="Improve Strength">Improve Strength</option> <option value="General Fitness">General Fitness</option> </select>
+          </div>
+         </div>
+        </div>
+        <div class="mb-8">
+         <label for="signup-notes" class="block text-sm font-medium text-gray-300 mb-2">Additional Notes (Optional)</label> <textarea id="signup-notes" rows="3" placeholder="Any injuries, medical conditions, or other information we should know..." class="w-full px-4 py-3 rounded-xl input-dark text-white resize-none"></textarea>
+        </div>
+        <div id="signup-error" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm"></div>
+        <div id="signup-success" class="hidden mb-4 p-3 rounded-lg bg-green-500/20 border border-green-500/30 text-green-400 text-sm"></div><button type="submit" id="signup-btn" class="w-full btn-primary py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Create Account</button>
+       </form>
+       <div class="mt-6 text-center">
+        <p class="text-gray-400">Already have an account? <a href="#" onclick="navigateTo('login')" class="text-orange-500 hover:underline">Sign In</a></p>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div><!-- DASHBOARD PAGE -->
+   <div id="page-dashboard" class="page">
+    <section class="lightning-bg min-h-screen pt-24 pb-16">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="auth-required" class="text-center py-20">
+       <p class="text-gray-400 mb-6 text-lg">Please log in to access your dashboard</p><button onclick="navigateTo('login')" class="btn-primary px-8 py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Go to Login</button>
+      </div>
+      <div id="dashboard-content" class="hidden">
+       <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+        <div>
+         <h1 class="font-bebas text-4xl sm:text-5xl tracking-wider mb-2">WELCOME, <span id="dashboard-name" class="text-orange-500">ATHLETE</span></h1>
+         <p class="text-gray-400">Track your progress and access your fitness tools</p>
+        </div><button onclick="exportUserData()" class="mt-4 md:mt-0 px-6 py-3 rounded-xl border border-orange-500/50 hover:border-orange-500 hover:bg-orange-500/10 text-sm font-semibold uppercase tracking-wider transition-all flex items-center gap-2">
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-4m0 0l-3 3m3-3l3 3M4 20h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z" />
+         </svg> Export Data </button>
+       </div>
+       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="stat-card p-6 rounded-2xl">
+         <div class="flex items-center justify-between mb-3">
+          <p class="text-gray-400 text-sm uppercase tracking-wider">Age</p>
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+         </div>
+         <p id="stat-age" class="font-bebas text-4xl">--</p>
+         <p class="text-gray-500 text-sm">years old</p>
+        </div>
+        <div class="stat-card p-6 rounded-2xl">
+         <div class="flex items-center justify-between mb-3">
+          <p class="text-gray-400 text-sm uppercase tracking-wider">Height</p>
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+         </div>
+         <p id="stat-height" class="font-bebas text-4xl">--</p>
+         <p class="text-gray-500 text-sm">centimeters</p>
+        </div>
+        <div class="stat-card p-6 rounded-2xl">
+         <div class="flex items-center justify-between mb-3">
+          <p class="text-gray-400 text-sm uppercase tracking-wider">Weight</p>
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m0 0l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+          </svg>
+         </div>
+         <p id="stat-weight" class="font-bebas text-4xl">--</p>
+         <p class="text-gray-500 text-sm">kilograms</p>
+        </div>
+        <div class="stat-card p-6 rounded-2xl">
+         <div class="flex items-center justify-between mb-3">
+          <p class="text-gray-400 text-sm uppercase tracking-wider">Goal</p>
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+          </svg>
+         </div>
+         <p id="stat-goal" class="font-bebas text-2xl">--</p>
+         <p class="text-gray-500 text-sm">fitness goal</p>
+        </div>
+       </div>
+       <div class="grid lg:grid-cols-2 gap-8 mb-8">
+        <div class="rounded-2xl card-dark p-8">
+         <h3 class="font-bebas text-2xl tracking-wider mb-6 flex items-center gap-3">
+          <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg> PROTEIN CALCULATOR</h3>
+         <div class="space-y-4 mb-6">
+          <div>
+           <label for="calc-weight" class="block text-sm font-medium text-gray-300 mb-2">Body Weight (kg)</label> <input type="number" id="calc-weight" placeholder="75" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div>
+          <div>
+           <label for="calc-goal-select" class="block text-sm font-medium text-gray-300 mb-2">Fitness Goal</label> <select id="calc-goal-select" class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="maintain">Maintain Weight</option> <option value="lose">Lose Weight</option> <option value="gain">Build Muscle</option> </select>
+          </div>
+         </div><button onclick="calculateProtein()" class="w-full btn-primary py-3 rounded-xl font-semibold uppercase tracking-wider mb-6">Calculate</button>
+         <div id="protein-result" class="hidden p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
+          <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Recommended Daily Protein</p>
+          <p id="protein-amount" class="font-bebas text-4xl text-orange-500">--g</p>
+          <p id="protein-tip" class="text-gray-400 text-sm mt-2"></p>
+         </div>
+        </div>
+        <div class="rounded-2xl card-dark p-8">
+         <h3 class="font-bebas text-2xl tracking-wider mb-6 flex items-center gap-3">
+          <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 006.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+          </svg> CALORIE CALCULATOR</h3>
+         <div class="space-y-4 mb-6">
+          <div class="grid grid-cols-2 gap-4">
+           <div>
+            <label for="cal-weight" class="block text-sm font-medium text-gray-300 mb-2">Weight (kg)</label> <input type="number" id="cal-weight" placeholder="75" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+           </div>
+           <div>
+            <label for="cal-height" class="block text-sm font-medium text-gray-300 mb-2">Height (cm)</label> <input type="number" id="cal-height" placeholder="175" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+           </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+           <div>
+            <label for="cal-sex" class="block text-sm font-medium text-gray-300 mb-2">Sex</label> <select id="cal-sex" class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="Male" selected>Male</option> <option value="Female">Female</option> </select>
+           </div>
+           <div>
+            <label for="cal-age" class="block text-sm font-medium text-gray-300 mb-2">Age</label> <input type="number" id="cal-age" placeholder="25" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+           </div>
+          </div>
+          <div>
+           <label for="cal-activity" class="block text-sm font-medium text-gray-300 mb-2">Activity Level</label> <select id="cal-activity" class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="1.2">Sedentary</option> <option value="1.375">Light Activity</option> <option value="1.55" selected>Moderate</option> <option value="1.725">Very Active</option> <option value="1.9">Extra Active</option> </select>
+          </div>
+         </div><button onclick="calculateCalories()" class="w-full btn-primary py-3 rounded-xl font-semibold uppercase tracking-wider mb-6">Calculate</button>
+         <div id="calorie-result" class="hidden p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
+          <div class="grid grid-cols-3 gap-4 text-center">
+           <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Deficit</p>
+            <p id="cal-deficit" class="font-bebas text-2xl text-orange-500">--</p>
+            <p class="text-gray-500 text-xs">kcal/day</p>
+           </div>
+           <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Maintain</p>
+            <p id="cal-maintain" class="font-bebas text-2xl text-white">--</p>
+            <p class="text-gray-500 text-xs">kcal/day</p>
+           </div>
+           <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-1">Surplus</p>
+            <p id="cal-surplus" class="font-bebas text-2xl text-orange-500">--</p>
+            <p class="text-gray-500 text-xs">kcal/day</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- WEEKLY WEIGHT UPDATE SECTION -->
+       <div class="rounded-2xl card-dark p-8 mb-8">
+        <h3 class="font-bebas text-2xl tracking-wider mb-8 flex items-center gap-3">
+         <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+         </svg> WEEKLY WEIGHT UPDATE</h3><!-- Access Code Lock Section -->
+        <div id="access-code-section" class="mb-8 p-6 rounded-xl border border-orange-500/30 bg-orange-500/5">
+         <div class="flex flex-col sm:flex-row gap-4 items-end">
+          <div class="flex-1">
+           <label for="access-code-input" class="block text-sm font-medium text-gray-300 mb-2">Access Code</label> <input type="password" id="access-code-input" placeholder="Enter access code to unlock" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+          </div><button type="button" onclick="verifyAccessCode()" id="unlock-btn" class="px-6 py-3 rounded-xl btn-primary font-semibold uppercase tracking-wider flex items-center gap-2 whitespace-nowrap">
+           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+           </svg> Unlock </button>
+         </div>
+         <div id="access-code-error" class="hidden mt-3 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm"></div>
+        </div><!-- Weight Update Form (Blurred by default) -->
+        <div id="weight-update-content" class="blur-md pointer-events-none opacity-50 transition-all duration-300">
+         <!-- Weight Display Cards -->
+         <div class="grid md:grid-cols-4 gap-4 mb-8">
+          <div class="p-4 rounded-xl bg-[#0a0a0a]/50 border border-orange-500/20">
+           <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Start Weight</p>
+           <p id="weight-display-start" class="font-bebas text-3xl text-white">--</p>
+           <p class="text-gray-500 text-xs">initial weight</p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#0a0a0a]/50 border border-orange-500/20">
+           <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Current Weight</p>
+           <p id="weight-display-current" class="font-bebas text-3xl text-orange-500">--</p>
+           <p class="text-gray-500 text-xs">last recorded</p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#0a0a0a]/50 border border-orange-500/20">
+           <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">New Weight</p>
+           <p id="weight-display-new" class="font-bebas text-3xl text-white">--</p>
+           <p class="text-gray-500 text-xs">this week</p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#0a0a0a]/50 border border-orange-500/20">
+           <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Target Weight</p>
+           <p id="weight-display-target" class="font-bebas text-3xl text-white">--</p>
+           <p class="text-gray-500 text-xs">goal weight</p>
+          </div>
+         </div>
+         <form id="weight-update-form" onsubmit="handleWeightUpdate(event)">
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+           <div>
+            <label for="weight-start" class="block text-sm font-medium text-gray-300 mb-2">Start Weight (kg) <span class="text-gray-500 text-xs">read-only</span></label> <input type="number" id="weight-start" step="0.1" placeholder="--" class="w-full px-4 py-3 rounded-xl input-dark text-white" readonly>
+           </div>
+           <div>
+            <label for="weight-current" class="block text-sm font-medium text-gray-300 mb-2">Current Weight (kg) <span class="text-gray-500 text-xs">read-only</span></label> <input type="number" id="weight-current" step="0.1" placeholder="--" class="w-full px-4 py-3 rounded-xl input-dark text-white" readonly>
+           </div>
+           <div>
+            <label for="weight-new" class="block text-sm font-medium text-gray-300 mb-2">New Weight (kg) <span class="text-orange-500">*</span></label> <input type="number" id="weight-new" step="0.1" placeholder="Enter this week's weight" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+           </div>
+           <div>
+            <label for="weight-goal-type" class="block text-sm font-medium text-gray-300 mb-2">Weight Goal Type <span class="text-orange-500">*</span></label> <select id="weight-goal-type" required class="w-full px-4 py-3 rounded-xl input-dark text-white"> <option value="">Select goal type</option> <option value="Lose Weight">Lose Weight</option> <option value="Gain Weight">Gain Weight</option> <option value="Body Recomposition">Body Recomposition</option> <option value="Maintain Weight">Maintain Weight</option> </select>
+           </div>
+           <div>
+            <label for="weight-target" class="block text-sm font-medium text-gray-300 mb-2">Target Weight (kg) <span class="text-gray-500 text-xs" id="target-edit-status">locked</span></label>
+            <div class="flex gap-2">
+             <input type="number" id="weight-target" step="0.1" placeholder="70" class="flex-1 px-4 py-3 rounded-xl input-dark text-white" readonly> <button type="button" id="target-edit-btn" onclick="enableTargetEdit()" class="px-4 py-3 rounded-xl border border-orange-500/50 hover:border-orange-500 text-orange-500 font-semibold text-sm uppercase tracking-wider transition-all">Edit</button>
+            </div>
+           </div>
+          </div>
+          <div id="weight-update-error" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm"></div><button type="submit" id="weight-update-btn" class="w-full btn-primary py-3 rounded-xl font-semibold uppercase tracking-wider mb-6">SUBMIT WEIGHT UPDATE</button>
+         </form><!-- Weight Update Results -->
+         <div id="weight-update-result" class="hidden p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
+          <div class="grid md:grid-cols-3 gap-6 mb-6">
+           <div class="text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Weekly Change</p>
+            <p id="weight-change" class="font-bebas text-3xl text-orange-500">--</p>
+            <p class="text-gray-500 text-xs">from current weight</p>
+           </div>
+           <div class="text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Progress</p>
+            <p id="weight-progress" class="font-bebas text-3xl">--</p>
+            <p class="text-gray-500 text-xs">toward goal</p>
+           </div>
+           <div class="text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Remaining</p>
+            <p id="weight-remaining" class="font-bebas text-3xl text-orange-500">--</p>
+            <p class="text-gray-500 text-xs">to target</p>
+           </div>
+          </div>
+          <div class="p-4 rounded-lg bg-[#0a0a0a]/50 border border-orange-500/20 mb-6">
+           <p id="weight-message" class="text-gray-300 text-center font-medium"></p>
+          </div><button onclick="openProgressPhotoForm()" class="w-full btn-primary py-3 rounded-xl font-semibold uppercase tracking-wider flex items-center justify-center gap-2">
+           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+           </svg> Upload Your Progress Photos </button>
+         </div>
+        </div>
+       </div>
+       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <button onclick="navigateTo('packages')" class="p-6 rounded-2xl card-dark hover:glow-effect transition-all text-left group">
+         <svg class="w-10 h-10 text-orange-500 mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg><h4 class="font-bebas text-xl tracking-wider mb-1 group-hover:text-orange-500 transition-colors">VIEW PACKAGES</h4><p class="text-gray-400 text-sm">Explore our coaching options</p></button> <button onclick="openWhatsApp('201055723467', '')" class="p-6 rounded-2xl card-dark hover:glow-effect transition-all text-left group">
+         <svg class="w-10 h-10 text-orange-500 mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+         </svg><h4 class="font-bebas text-xl tracking-wider mb-1 group-hover:text-orange-500 transition-colors">CONTACT SUPPORT</h4><p class="text-gray-400 text-sm">Chat with us on WhatsApp</p></button> <button onclick="toggleSocialPanel()" class="p-6 rounded-2xl card-dark hover:glow-effect transition-all text-left group">
+         <svg class="w-10 h-10 text-orange-500 mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0zM7 10a3 3 0 11-6 0 3 3 0 016 0z" />
+         </svg><h4 class="font-bebas text-xl tracking-wider mb-1 group-hover:text-orange-500 transition-colors">JOIN COMMUNITY</h4><p class="text-gray-400 text-sm">Follow us on social media</p></button>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-50 hidden">
+   <div class="px-6 py-3 rounded-xl bg-[#1a1a1a] border border-orange-500/30 shadow-2xl flex items-center gap-3">
+    <svg id="toast-icon" class="w-5 h-5 text-green-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+    </svg><span id="toast-message" class="text-white text-sm"></span>
+   </div>
+  </div>
+  <script>
+    let currentUser = null;
+    let selectedPackageIndex = null;
+    let allUserData = [];
+    let isWeightUpdateUnlocked = false;
+
+    const packageData = [
+      {
+        title: 'RAMADAN 30 DAYS FAT LOSS',
+        price: '750',
+        currency: 'EGP',
+        duration: '30 Days',
+        shortFeatures: [
+          'Fat Loss Protocol',
+          'Personalized Meal Plan',
+          'Daily Guidance'
+        ],
+        fullFeatures: [
+          'Customized 30-day fat loss program',
+          'Personalized nutrition plan',
+          'Daily WhatsApp support',
+          'Weekly progress check-in',
+          'Form correction videos',
+          'Supplement recommendations',
+          'Limited Ramadan offer'
+        ]
+      },
+      {
+        title: 'VOLTA NO EXCUSES',
+        price: '999',
+        currency: 'EGP',
+        duration: '3 Months',
+        shortFeatures: [
+          'Full Training Program',
+          'Nutrition Plan',
+          'Weekly Check-ins'
+        ],
+        fullFeatures: [
+          'Complete 12-week transformation program',
+          'Customized workout split',
+          'Detailed nutrition protocol',
+          'Weekly progress assessments',
+          'Form correction & technique videos',
+          'Supplement stack recommendation',
+          'Direct coaching support via WhatsApp',
+          'Progress photo documentation',
+          '7-day money-back guarantee'
+        ]
+      },
+      {
+        title: 'VOLTA GLOW UP 3.0',
+        price: '1500',
+        currency: 'EGP',
+        duration: '3 Months',
+        shortFeatures: [
+          'Premium Training',
+          'Advanced Nutrition',
+          'Priority Support',
+          'Body Composition'
+        ],
+        fullFeatures: [
+          'Premium 12-week body transformation program',
+          'Advanced periodized training system',
+          'Macro-targeted nutrition strategy',
+          'Bi-weekly intensive coaching calls',
+          'Form analysis with video feedback',
+          'Monthly body composition testing',
+          'Priority WhatsApp support (24/7)',
+          'Supplement & ergogenic aids guide',
+          'Lifestyle & mindset coaching modules',
+          'Transformation journey documentation',
+          'Access to Volta community group',
+          '7-day money-back guarantee'
+        ]
+      },
+      {
+        title: 'VOLTA BEAST MODE',
+        price: '4490',
+        currency: 'EGP',
+        duration: '6 Months',
+        shortFeatures: [
+          'Elite VIP Program',
+          'Maximum Results',
+          'Premium Support',
+          'Complete Transformation'
+        ],
+        fullFeatures: [
+          'VIP 6-month complete transformation program',
+          'Elite performance training protocol',
+          'Advanced nutritional science system',
+          'Weekly one-on-one coaching sessions',
+          'Daily form & technique video reviews',
+          'Monthly advanced body composition analysis',
+          'VIP 24/7 priority WhatsApp support',
+          'Premium supplement stack customization',
+          'Advanced recovery & sleep optimization',
+          'Mental resilience & mindset mastery coaching',
+          'Exclusive VIP community access',
+          'Monthly progress photo & measurements',
+          'Post-program maintenance plan',
+          'Lifetime support & guidance',
+          'Full money-back guarantee (14 days)'
+        ]
+      }
+    ];
+
+    const dataHandler = {
+      onDataChanged(data) {
+        allUserData = data || [];
+        if (currentUser) {
+          const updated = allUserData.find(u => u.email === currentUser.email);
+          if (updated) {
+            currentUser = updated;
+            updateDashboard();
+          }
+        }
+      }
+    };
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.add('hidden');
+    }
+
+    function toggleSocialPanel() {
+      const panel = document.getElementById('social-panel');
+      const overlay = document.getElementById('social-overlay');
+      panel.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
+    function navigateTo(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      window.scrollTo(0, 0);
+      closeMobileMenu();
+    }
+
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      
+      toastMessage.textContent = message;
+      
+      if (type === 'error') {
+        toastIcon.className = 'w-5 h-5 text-red-500';
+        toastIcon.innerHTML = '<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>';
+      } else {
+        toastIcon.className = 'w-5 h-5 text-green-500';
+        toastIcon.innerHTML = '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>';
+      }
+      
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3000);
+    }
+
+    function calculateProtein() {
+      const weight = parseFloat(document.getElementById('calc-weight').value);
+      const goal = document.getElementById('calc-goal-select').value;
+      
+      if (!weight || weight <= 0) {
+        showToast('Please enter a valid weight.', 'error');
+        return;
+      }
+      
+      let multiplier, tip;
+      switch (goal) {
+        case 'lose':
+          multiplier = 2.2;
+          tip = 'Higher protein helps preserve muscle mass while in a caloric deficit.';
+          break;
+        case 'gain':
+          multiplier = 2.0;
+          tip = 'Adequate protein supports muscle growth and recovery during bulking.';
+          break;
+        default:
+          multiplier = 1.8;
+          tip = 'This amount maintains nitrogen balance and supports general fitness.';
+      }
+      
+      const protein = Math.round(weight * multiplier);
+      document.getElementById('protein-amount').textContent = `${protein}g`;
+      document.getElementById('protein-tip').textContent = tip;
+      document.getElementById('protein-result').classList.remove('hidden');
+      showToast('Protein calculated!', 'success');
+    }
+
+    function calculateCalories() {
+      const weight = parseFloat(document.getElementById('cal-weight').value);
+      const height = parseFloat(document.getElementById('cal-height').value);
+      const sex = document.getElementById('cal-sex').value;
+      const age = parseFloat(document.getElementById('cal-age').value);
+      const activity = parseFloat(document.getElementById('cal-activity').value);
+      
+      if (!weight || !height || !age || weight <= 0 || height <= 0 || age <= 0) {
+        showToast('Please fill in all fields with valid values.', 'error');
+        return;
+      }
+      
+      let bmr;
+      if (sex === 'Female') {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+      } else {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      }
+      
+      const tdee = Math.round(bmr * activity);
+      
+      document.getElementById('cal-deficit').textContent = (tdee - 500);
+      document.getElementById('cal-maintain').textContent = tdee;
+      document.getElementById('cal-surplus').textContent = (tdee + 300);
+      document.getElementById('calorie-result').classList.remove('hidden');
+      showToast('Calories calculated!', 'success');
+    }
+
+    function exportUserData() {
+      if (!currentUser) {
+        showToast('Please login first.', 'error');
+        return;
+      }
+      
+      const headers = ['Full Name', 'Email', 'Phone', 'Age', 'Height (cm)', 'Start Weight (kg)', 'Current Weight (kg)', 'Target Weight (kg)', 'Weight Goal Type', 'Experience', 'Training Days', 'Goal', 'Notes', 'Created At'];
+      const row = [
+        currentUser.fullName || '',
+        currentUser.email || '',
+        currentUser.phone || '',
+        currentUser.age || '',
+        currentUser.height || '',
+        currentUser.startWeight || '',
+        currentUser.currentWeight || '',
+        currentUser.targetWeight || '',
+        currentUser.weightGoalType || '',
+        currentUser.experience || '',
+        currentUser.trainingDays || '',
+        currentUser.goal || '',
+        currentUser.notes || '',
+        currentUser.createdAt ? new Date(currentUser.createdAt).toLocaleString() : ''
+      ];
+      
+      let csv = headers.join(',') + '\n';
+      csv += row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
+      
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `volta_physique_${currentUser.fullName.replace(/\s+/g, '_')}_data.csv`;
+      link.click();
+      
+      showToast('Data exported successfully!', 'success');
+    }
+
+    function viewPackageDetails(index) {
+      selectedPackageIndex = index;
+      const pkg = packageData[index];
+      
+      document.getElementById('details-title').textContent = pkg.title;
+      document.getElementById('details-price').innerHTML = `${pkg.price} <span class="text-2xl">${pkg.currency}</span>`;
+      document.getElementById('details-duration').textContent = pkg.duration;
+      
+      const featuresList = document.getElementById('details-features');
+      featuresList.innerHTML = pkg.fullFeatures.map(f => 
+        `<li class="flex items-start gap-4 text-gray-300">
+          <svg class="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          <span>${f}</span>
+        </li>`
+      ).join('');
+      
+      navigateTo('package-details');
+    }
+
+    function proceedToCheckout() {
+      if (selectedPackageIndex !== null) {
+        const pkg = packageData[selectedPackageIndex];
+        const message = `Hi, I'm interested in the ${pkg.title} package (${pkg.price} ${pkg.currency} for ${pkg.duration}). My email is ${currentUser ? currentUser.email : 'not yet registered'}`;
+        openWhatsApp('201055723467', message);
+      }
+    }
+
+    function openWhatsApp(phone = '201055723467', message = 'Hello VOLTA PHYSIQUE! I have a question about your coaching services.') {
+      const encoded = encodeURIComponent(message);
+      window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank');
+    }
+
+    function openProgressPhotoForm() {
+      const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSckxk6rko9d-isA_BciOrZPxSPUlzbzQH7f6q6vmoDhnzY4_g/viewform?usp=dialog';
+      window.open(formUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim().toLowerCase();
+      const phone = document.getElementById('signup-phone').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      const age = document.getElementById('signup-age').value.trim();
+      const height = document.getElementById('signup-height').value.trim();
+      const weight = document.getElementById('signup-weight').value.trim();
+      const experience = document.getElementById('signup-experience').value;
+      const trainingDays = document.getElementById('signup-days').value.trim();
+      const goal = document.getElementById('signup-goal').value;
+      const notes = document.getElementById('signup-notes').value.trim();
+      
+      const errorDiv = document.getElementById('signup-error');
+      const successDiv = document.getElementById('signup-success');
+      const btn = document.getElementById('signup-btn');
+      
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      
+      if (password !== confirm) {
+        errorDiv.textContent = 'Passwords do not match.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      if (allUserData.find(d => d.email === email)) {
+        errorDiv.textContent = 'An account with this email already exists.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      btn.textContent = 'Creating Account...';
+      btn.disabled = true;
+      
+      try {
+        const userData = {
+          fullName,
+          email,
+          phone,
+          password,
+          age: String(age),
+          height: String(height),
+          weight: weight,
+          startWeight: String(weight),
+          targetWeight: String(weight),
+          currentWeight: String(weight),
+          experience,
+          trainingDays,
+          goal,
+          weightGoalType: '',
+          notes,
+          createdAt: new Date().toISOString()
+        };
+        
+        try {
+          await fetch('https://script.google.com/macros/s/AKfycbyNWXWW17DunRRdweW9hMRO6SIGUuKQVBX7IOTPx2ymrvRdBXiW08kma1rNJn4Cmcjy/exec', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+            mode: 'no-cors'
+          });
+        } catch (error) {
+          console.log('Google Sheets sync: ', error);
+        }
+        
+        let canvaSuccess = true;
+        if (window.dataSdk) {
+          const result = await window.dataSdk.create(userData);
+          canvaSuccess = result.isOk;
+        }
+        
+        if (canvaSuccess) {
+          successDiv.textContent = 'Account created successfully! Redirecting to login...';
+          successDiv.classList.remove('hidden');
+          setTimeout(() => {
+            document.getElementById('signup-form').reset();
+            navigateTo('login');
+            successDiv.classList.add('hidden');
+          }, 2000);
+        } else {
+          errorDiv.textContent = 'Account created but there was an issue saving data. Please contact support.';
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        errorDiv.textContent = 'Failed to create account. Please try again.';
+        errorDiv.classList.remove('hidden');
+      }
+      
+      btn.textContent = 'Create Account';
+      btn.disabled = false;
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+      
+      errorDiv.classList.add('hidden');
+      btn.textContent = 'Signing In...';
+      btn.disabled = true;
+      
+      const user = allUserData.find(d => d.email === email && d.password === password);
+      if (!user) {
+        errorDiv.textContent = 'Invalid email or password.';
+        errorDiv.classList.remove('hidden');
+        btn.textContent = 'Sign In';
+        btn.disabled = false;
+        return;
+      }
+      
+      currentUser = user;
+      localStorage.setItem('volta_last_user_email', email);
+      
+      updateAuthUI();
+      navigateTo('dashboard');
+      updateDashboard();
+      
+      isWeightUpdateUnlocked = false;
+      lockWeightUpdate();
+      if (localStorage.getItem('weightUnlocked') === 'true') {
+        isWeightUpdateUnlocked = true;
+        unlockWeightUpdateDirectly();
+      }
+      
+      document.getElementById('login-form').reset();
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      
+      showToast('Welcome back!', 'success');
+    }
+
+    function logout() {
+      localStorage.removeItem('weightUnlocked');
+      currentUser = null;
+      localStorage.removeItem('volta_last_user_email');
+      isWeightUpdateUnlocked = false;
+      lockWeightUpdate();
+      updateAuthUI();
+      showToast('Logged out successfully.', 'success');
+      navigateTo('home');
+    }
+
+    function updateAuthUI() {
+      const loggedOut = document.getElementById('auth-nav-logged-out');
+      const loggedIn = document.getElementById('auth-nav-logged-in');
+      const mobileLoggedOut = document.getElementById('mobile-auth-logged-out');
+      const mobileLoggedIn = document.getElementById('mobile-auth-logged-in');
+      
+      if (currentUser) {
+        loggedOut.classList.add('hidden');
+        loggedIn.classList.remove('hidden');
+        mobileLoggedOut.classList.add('hidden');
+        mobileLoggedIn.classList.remove('hidden');
+      } else {
+        loggedOut.classList.remove('hidden');
+        loggedIn.classList.add('hidden');
+        mobileLoggedOut.classList.remove('hidden');
+        mobileLoggedIn.classList.add('hidden');
+      }
+    }
+
+    function updateDashboard() {
+      if (!currentUser) {
+        document.getElementById('auth-required').style.display = 'block';
+        document.getElementById('dashboard-content').style.display = 'none';
+        return;
+      }
+      
+      document.getElementById('auth-required').style.display = 'none';
+      document.getElementById('dashboard-content').style.display = 'block';
+      
+      const firstName = currentUser.fullName ? String(currentUser.fullName).split(' ')[0].toUpperCase() : 'ATHLETE';
+      document.getElementById('dashboard-name').textContent = firstName;
+      
+      document.getElementById('stat-age').textContent = currentUser.age || '--';
+      document.getElementById('stat-height').textContent = currentUser.height || '--';
+      document.getElementById('stat-weight').textContent = currentUser.currentWeight || '--';
+      document.getElementById('stat-goal').textContent = currentUser.goal || '--';
+      
+      const startWeight = currentUser.startWeight || currentUser.currentWeight || '--';
+      const currentWeight = currentUser.currentWeight || '--';
+      const targetWeight = currentUser.targetWeight || '--';
+      const weightGoalType = currentUser.weightGoalType || '';
+      
+      document.getElementById('weight-display-start').textContent = startWeight;
+      document.getElementById('weight-display-current').textContent = currentWeight;
+      document.getElementById('weight-display-target').textContent = targetWeight;
+      document.getElementById('weight-display-new').textContent = '--';
+      
+      document.getElementById('weight-start').value = startWeight === '--' ? '' : startWeight;
+      document.getElementById('weight-current').value = currentWeight === '--' ? '' : currentWeight;
+      document.getElementById('weight-target').value = targetWeight === '--' ? '' : targetWeight;
+      document.getElementById('weight-goal-type').value = weightGoalType;
+      document.getElementById('weight-new').value = '';
+      document.getElementById('weight-update-result').classList.add('hidden');
+    }
+
+    function verifyAccessCode() {
+      const codeInput = document.getElementById('access-code-input');
+      const errorDiv = document.getElementById('access-code-error');
+      const code = codeInput.value.trim();
+      const correctCode = '1223';
+      
+      errorDiv.classList.add('hidden');
+      
+      if (code === correctCode) {
+        unlockWeightUpdateDirectly();
+        codeInput.value = '';
+        showToast('Access code verified! Form unlocked.', 'success');
+      } else {
+        errorDiv.textContent = 'Invalid access code';
+        errorDiv.classList.remove('hidden');
+        codeInput.value = '';
+      }
+    }
+
+    function unlockWeightUpdateDirectly() {
+      const contentDiv = document.getElementById('weight-update-content');
+      const accessCodeSection = document.getElementById('access-code-section');
+      const unlockBtn = document.getElementById('unlock-btn');
+      
+      isWeightUpdateUnlocked = true;
+      localStorage.setItem('weightUnlocked', 'true');
+      contentDiv.classList.remove('blur-md', 'pointer-events-none', 'opacity-50');
+      accessCodeSection.classList.add('hidden');
+      unlockBtn.disabled = true;
+    }
+
+    function lockWeightUpdate() {
+      const contentDiv = document.getElementById('weight-update-content');
+      const accessCodeSection = document.getElementById('access-code-section');
+      const unlockBtn = document.getElementById('unlock-btn');
+
+      isWeightUpdateUnlocked = false;
+
+      contentDiv.classList.add('blur-md', 'pointer-events-none', 'opacity-50');
+      accessCodeSection.classList.remove('hidden');
+      unlockBtn.disabled = false;
+    }
+
+    function enableTargetEdit() {
+      const targetInput = document.getElementById('weight-target');
+      const editBtn = document.getElementById('target-edit-btn');
+      const editStatus = document.getElementById('target-edit-status');
+      
+      if (targetInput.readOnly) {
+        targetInput.readOnly = false;
+        targetInput.focus();
+        editBtn.textContent = 'Lock';
+        editBtn.classList.add('border-orange-500', 'bg-orange-500/10');
+        editStatus.textContent = 'editable';
+      } else {
+        targetInput.readOnly = true;
+        editBtn.textContent = 'Edit';
+        editBtn.classList.remove('border-orange-500', 'bg-orange-500/10');
+        editStatus.textContent = 'locked';
+      }
+    }
+
+    async function handleWeightUpdate(e) {
+      e.preventDefault();
+      
+      if (!currentUser) {
+        showToast('Please login first.', 'error');
+        return;
+      }
+      
+      if (!isWeightUpdateUnlocked) {
+        showToast('Please unlock the form with the access code.', 'error');
+        return;
+      }
+      
+      const errorDiv = document.getElementById('weight-update-error');
+      const resultDiv = document.getElementById('weight-update-result');
+      const btn = document.getElementById('weight-update-btn');
+      
+      errorDiv.classList.add('hidden');
+      resultDiv.classList.add('hidden');
+      
+      const newWeight = parseFloat(document.getElementById('weight-new').value);
+      const targetWeight = parseFloat(document.getElementById('weight-target').value);
+      const startWeight = parseFloat(document.getElementById('weight-start').value);
+      const currentWeight = parseFloat(document.getElementById('weight-current').value);
+      const weightGoalType = document.getElementById('weight-goal-type').value;
+      
+      if (!newWeight || newWeight <= 0) {
+        errorDiv.textContent = 'Please enter a valid new weight.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      if (!targetWeight || targetWeight <= 0) {
+        errorDiv.textContent = 'Target weight is required.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      if (!startWeight || startWeight <= 0) {
+        errorDiv.textContent = 'Start weight is missing.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      if (!weightGoalType) {
+        errorDiv.textContent = 'Please select a weight goal type.';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+      
+      btn.textContent = 'Submitting...';
+      btn.disabled = true;
+      
+      try {
+        const weeklyChange = newWeight - currentWeight;
+        
+        let progressPercentage;
+        let remainingWeight;
+        const goalTypeLower = String(weightGoalType).toLowerCase();
+        const isLosingWeight = goalTypeLower.includes('lose');
+        const isGainingWeight = goalTypeLower.includes('gain');
+        
+        if (isLosingWeight) {
+          const totalGoal = startWeight - targetWeight;
+          const progressDone = startWeight - newWeight;
+          
+          progressPercentage = totalGoal > 0 
+            ? Math.min(100, Math.max(0, Math.round((progressDone / totalGoal) * 100)))
+            : 0;
+          
+          remainingWeight = newWeight - targetWeight;
+          if (remainingWeight < 0) remainingWeight = 0;
+        } else if (isGainingWeight) {
+          const totalGoal = targetWeight - startWeight;
+          const progressDone = newWeight - startWeight;
+          
+          progressPercentage = totalGoal > 0 
+            ? Math.min(100, Math.max(0, Math.round((progressDone / totalGoal) * 100)))
+            : 0;
+          
+          remainingWeight = targetWeight - newWeight;
+          if (remainingWeight < 0) remainingWeight = 0;
+        } else {
+          progressPercentage = 0;
+          remainingWeight = 0;
+        }
+        
+        try {
+          const googleSheetPayload = {
+            action: 'appendWeeklyUpdate',
+            fullName: currentUser.fullName || '',
+            startWeight: startWeight.toFixed(1),
+            targetWeight: targetWeight.toFixed(1),
+            previousWeight: currentWeight.toFixed(1),
+            currentWeight: newWeight.toFixed(1),
+            weightGoalType: weightGoalType,
+            goal: currentUser.goal || '',
+            totalGoal: (isLosingWeight || isGainingWeight) ? Math.abs(targetWeight - startWeight).toFixed(1) : '0',
+            progressPercent: progressPercentage,
+            remaining: remainingWeight.toFixed(1),
+            timestamp: new Date().toISOString()
+          };
+          
+          await fetch('https://script.google.com/macros/s/AKfycbyOS047hGkDkHdQiBcoFXtQvNjEf3MNZC9d52N7DLgSEEMrc7W-A6vCM8P_BYOS7n6M/exec', {
+            method: 'POST',
+            body: JSON.stringify(googleSheetPayload),
+            mode: 'no-cors'
+          });
+        } catch (error) {
+          console.log('Google Sheets sync: ', error);
+        }
+        
+        if (window.dataSdk) {
+          const updateData = {
+            ...currentUser,
+            currentWeight: newWeight.toFixed(1),
+            startWeight: startWeight.toFixed(1),
+            targetWeight: targetWeight.toFixed(1),
+            weightGoalType: weightGoalType
+          };
+          await window.dataSdk.update(updateData);
+        }
+        
+        displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWeight, weightGoalType);
+        
+        document.getElementById('weight-new').value = '';
+        
+        currentUser.currentWeight = newWeight.toFixed(1);
+        currentUser.weightGoalType = weightGoalType;
+        document.getElementById('stat-weight').textContent = newWeight.toFixed(1);
+        document.getElementById('weight-display-current').textContent = newWeight.toFixed(1);
+        document.getElementById('weight-current').value = newWeight.toFixed(1);
+        
+      } catch (error) {
+        console.error('Weight update error:', error);
+        errorDiv.textContent = 'Failed to submit weight update. Please try again.';
+        errorDiv.classList.remove('hidden');
+      }
+      
+      btn.textContent = 'SUBMIT WEIGHT UPDATE';
+      btn.disabled = false;
+    }
+
+    function displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWeight, weightGoalType) {
+      const resultDiv = document.getElementById('weight-update-result');
+      const changeEl = document.getElementById('weight-change');
+      const progressEl = document.getElementById('weight-progress');
+      const remainingEl = document.getElementById('weight-remaining');
+      const messageEl = document.getElementById('weight-message');
+      
+      const goalTypeLower = String(weightGoalType).toLowerCase();
+      const isLosingWeight = goalTypeLower.includes('lose');
+      const isGainingWeight = goalTypeLower.includes('gain');
+      
+      let changeDirection, changeColor;
+      if (isLosingWeight) {
+        changeDirection = weeklyChange < 0 ? '↓' : weeklyChange > 0 ? '↑' : '→';
+        changeColor = weeklyChange < 0 ? 'text-green-400' : weeklyChange > 0 ? 'text-red-400' : 'text-yellow-400';
+      } else if (isGainingWeight) {
+        changeDirection = weeklyChange > 0 ? '↑' : weeklyChange < 0 ? '↓' : '→';
+        changeColor = weeklyChange > 0 ? 'text-green-400' : weeklyChange < 0 ? 'text-red-400' : 'text-yellow-400';
+      } else {
+        changeDirection = '→';
+        changeColor = 'text-yellow-400';
+      }
+      
+      changeEl.innerHTML = `<span class="${changeColor}">${changeDirection} ${Math.abs(weeklyChange).toFixed(1)}kg</span>`;
+      progressEl.textContent = `${progressPercentage}%`;
+      
+      if (remainingWeight === 0 && (isLosingWeight || isGainingWeight)) {
+        remainingEl.textContent = '🎯 GOAL!';
+      } else {
+        remainingEl.textContent = `${remainingWeight.toFixed(1)}kg`;
+      }
+      
+      let motivationalMessage = '';
+      
+      if (isLosingWeight) {
+        if (progressPercentage >= 100) {
+          motivationalMessage = '🔥 INCREDIBLE! You\'ve reached your target weight! Time to maintain and build strength!';
+        } else if (weeklyChange < 0) {
+          if (progressPercentage >= 75) {
+            motivationalMessage = '💪 You\'re in the final stretch! Stay focused and keep pushing!';
+          } else if (progressPercentage >= 50) {
+            motivationalMessage = '⚡ Halfway there! Your consistency is paying off!';
+          } else if (progressPercentage >= 25) {
+            motivationalMessage = '🎯 Great progress! Keep up the discipline!';
+          } else {
+            motivationalMessage = '✅ Excellent start! Every kg lost is a win!';
+          }
+        } else if (weeklyChange === 0) {
+          motivationalMessage = '📊 Weight stable this week. Stay consistent with your routine!';
+        } else {
+          motivationalMessage = '⚠️ Weight increased this week. Review your nutrition and training!';
+        }
+      } else if (isGainingWeight) {
+        if (progressPercentage >= 100) {
+          motivationalMessage = '🔥 LEGENDARY! You\'ve surpassed your muscle gain target!';
+        } else if (weeklyChange > 0) {
+          if (progressPercentage >= 75) {
+            motivationalMessage = '💪 Nearly there! Keep hitting those strength targets!';
+          } else if (progressPercentage >= 50) {
+            motivationalMessage = '🚀 Halfway to your muscle goal! Fuel hard and train harder!';
+          } else if (progressPercentage >= 25) {
+            motivationalMessage = '🎯 Good gains this week! Keep eating!';
+          } else {
+            motivationalMessage = '✅ Great start to your bulk! Keep eating!';
+          }
+        } else if (weeklyChange === 0) {
+          motivationalMessage = '📊 Weight stable this week. Adjust calories if needed!';
+        } else {
+          motivationalMessage = '⚠️ Weight decreased this week. Increase your caloric intake!';
+        }
+      } else {
+        if (Math.abs(weeklyChange) <= 0.5) {
+          motivationalMessage = '✅ Perfect! Weight is stable. Keep maintaining!';
+        } else if (weeklyChange < -0.5) {
+          motivationalMessage = '⚠️ Weight decreased. Slightly increase calories to maintain!';
+        } else {
+          motivationalMessage = '⚠️ Weight increased. Slightly decrease calories to maintain!';
+        }
+      }
+      
+      messageEl.textContent = motivationalMessage;
+      resultDiv.classList.remove('hidden');
+      showToast('Weight update submitted successfully!', 'success');
+    }
+
+    (async () => {
+      if (window.dataSdk) {
+        await window.dataSdk.init(dataHandler);
+        const lastEmail = localStorage.getItem('volta_last_user_email');
+        if (lastEmail && allUserData.length > 0) {
+          const user = allUserData.find(u => u.email === lastEmail);
+          if (user) {
+            currentUser = user;
+            updateAuthUI();
+            updateDashboard();
+          }
+        }
+      }
+      
+      packageData.forEach((pkg, index) => {
+        const previewElement = document.getElementById(`preview-${index}`);
+        if (previewElement) {
+          previewElement.innerHTML = pkg.shortFeatures.map(f => 
+            `<li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <span>${f}</span>
+            </li>`
+          ).join('');
+        }
+      });
+    })();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd466c05759acfb',t:'MTc3MDk4NjUwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
