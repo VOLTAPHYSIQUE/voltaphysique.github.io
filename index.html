@@ -1221,48 +1221,61 @@
       btn.disabled = false;
     }
 
-    function handleLogin(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('login-email').value.trim().toLowerCase();
-      const password = document.getElementById('login-password').value;
-      const errorDiv = document.getElementById('login-error');
-      const btn = document.getElementById('login-btn');
-      
-      errorDiv.classList.add('hidden');
-      btn.textContent = 'Signing In...';
-      btn.disabled = true;
-      
-      const user = allUserData.find(d => d.email === email && d.password === password);
-      if (!user) {
-        errorDiv.textContent = 'Invalid email or password.';
-        errorDiv.classList.remove('hidden');
-        btn.textContent = 'Sign In';
-        btn.disabled = false;
-        return;
-      }
-      
-      currentUser = user;
-      localStorage.setItem('volta_last_user_email', email);
-      
-      updateAuthUI();
-      navigateTo('dashboard');
-      updateDashboard();
-      
-      isWeightUpdateUnlocked = false;
-      lockWeightUpdate();
-      if (localStorage.getItem('weightUnlocked') === 'true') {
-        isWeightUpdateUnlocked = true;
-        unlockWeightUpdateDirectly();
-      }
-      
-      document.getElementById('login-form').reset();
+   async function handleLogin(e) {
+  e.preventDefault();
+
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const errorDiv = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  errorDiv.classList.add('hidden');
+  btn.textContent = 'Signing In...';
+  btn.disabled = true;
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbyNWXWW17DunRRdweW9hMRO6SIGUuKQVBX7IOTPx2ymrvRdBXiW08kma1rNJn4Cmcjy/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'login',
+        email: email,
+        password: password
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      errorDiv.textContent = result.message || 'Invalid email or password.';
+      errorDiv.classList.remove('hidden');
       btn.textContent = 'Sign In';
       btn.disabled = false;
-      
-      showToast('Welcome back!', 'success');
+      return;
     }
 
+    currentUser = result.user;
+    localStorage.setItem('volta_last_user_email', email);
+
+    updateAuthUI();
+    navigateTo('dashboard');
+    updateDashboard();
+
+    document.getElementById('login-form').reset();
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+
+    showToast('Welcome back!', 'success');
+
+  } catch (error) {
+    errorDiv.textContent = 'Login failed. Please try again.';
+    errorDiv.classList.remove('hidden');
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+  }
+}
     function logout() {
       localStorage.removeItem('weightUnlocked');
       currentUser = null;
