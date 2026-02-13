@@ -1166,13 +1166,11 @@
         
         const response = await fetch('https://script.google.com/macros/s/AKfycbxHeJDH-ZVa6yHBTitblaCK_RmNc_JFBRDMf0EA6NTNre1qnpVnL7qPoHj8L93FdQHDA/exec', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     action: "signup",
     ...userData
-  })
+  }),
+  mode: 'no-cors'
 });
 
 const result = await response.json();
@@ -1218,15 +1216,14 @@ async function handleLogin(e) {
   try {
     const response = await fetch('https://script.google.com/macros/s/AKfycbxHeJDH-ZVa6yHBTitblaCK_RmNc_JFBRDMf0EA6NTNre1qnpVnL7qPoHj8L93FdQHDA/exec', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        action: 'login',
-        email: email,
-        password: password
-      })
-    });
+    body: JSON.stringify({
+      action: "login",
+      email: email,
+      password: password
+    }),
+    mode: 'no-cors'
+  }
+);
 
     const result = await response.json();
 
