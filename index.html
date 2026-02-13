@@ -7,8 +7,6 @@
   <title>VOLTA PHYSIQUE </title>
   <link rel="icon" type="image/png" href="favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&amp;display=swap" rel="stylesheet">
@@ -826,7 +824,6 @@
   <script>
     let currentUser = null;
     let selectedPackageIndex = null;
-    let allUserData = [];
     let isWeightUpdateUnlocked = false;
 
     const packageData = [
@@ -928,20 +925,7 @@
         ]
       }
     ];
-
-    const dataHandler = {
-      onDataChanged(data) {
-        allUserData = data || [];
-        if (currentUser) {
-          const updated = allUserData.find(u => u.email === currentUser.email);
-          if (updated) {
-            currentUser = updated;
-            updateDashboard();
-          }
-        }
-      }
-    };
-
+   
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       menu.classList.toggle('hidden');
@@ -1155,11 +1139,7 @@
         return;
       }
       
-      if (allUserData.find(d => d.email === email)) {
-        errorDiv.textContent = 'An account with this email already exists.';
-        errorDiv.classList.remove('hidden');
-        return;
-      }
+     
       
       btn.textContent = 'Creating Account...';
       btn.disabled = true;
@@ -1193,25 +1173,15 @@
         } catch (error) {
           console.log('Google Sheets sync: ', error);
         }
+             
         
-        let canvaSuccess = true;
-        if (window.dataSdk) {
-          const result = await window.dataSdk.create(userData);
-          canvaSuccess = result.isOk;
-        }
-        
-        if (canvaSuccess) {
-          successDiv.textContent = 'Account created successfully! Redirecting to login...';
-          successDiv.classList.remove('hidden');
-          setTimeout(() => {
-            document.getElementById('signup-form').reset();
-            navigateTo('login');
-            successDiv.classList.add('hidden');
-          }, 2000);
-        } else {
-          errorDiv.textContent = 'Account created but there was an issue saving data. Please contact support.';
-          errorDiv.classList.remove('hidden');
-        }
+        successDiv.textContent = 'Account created successfully! Redirecting to login...';
+successDiv.classList.remove('hidden');
+setTimeout(() => {
+  document.getElementById('signup-form').reset();
+  navigateTo('login');
+  successDiv.classList.add('hidden');
+}, 2000);
       } catch (error) {
         errorDiv.textContent = 'Failed to create account. Please try again.';
         errorDiv.classList.remove('hidden');
@@ -1221,7 +1191,7 @@
       btn.disabled = false;
     }
 
-   async function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
 
   const email = document.getElementById('login-email').value.trim().toLowerCase();
@@ -1234,7 +1204,7 @@
   btn.disabled = true;
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbyNWXWW17DunRRdweW9hMRO6SIGUuKQVBX7IOTPx2ymrvRdBXiW08kma1rNJn4Cmcjy/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbx3Z7CVZfOJzIVVFxUOJ2LC7_qh7oU8nEmF1l_y5EI5CzwrCjKYaqmSeXXLe-RKgHeEEg/exec', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1249,7 +1219,7 @@
     const result = await response.json();
 
     if (!result.success) {
-      errorDiv.textContent = result.message || 'Invalid email or password.';
+      errorDiv.textContent = result.message;
       errorDiv.classList.remove('hidden');
       btn.textContent = 'Sign In';
       btn.disabled = false;
@@ -1260,8 +1230,8 @@
     localStorage.setItem('volta_last_user_email', email);
 
     updateAuthUI();
-    navigateTo('dashboard');
     updateDashboard();
+    navigateTo('dashboard');
 
     document.getElementById('login-form').reset();
     btn.textContent = 'Sign In';
@@ -1276,6 +1246,7 @@
     btn.disabled = false;
   }
 }
+
     function logout() {
       localStorage.removeItem('weightUnlocked');
       currentUser = null;
@@ -1515,18 +1486,7 @@
         } catch (error) {
           console.log('Google Sheets sync: ', error);
         }
-        
-        if (window.dataSdk) {
-          const updateData = {
-            ...currentUser,
-            currentWeight: newWeight.toFixed(1),
-            startWeight: startWeight.toFixed(1),
-            targetWeight: targetWeight.toFixed(1),
-            weightGoalType: weightGoalType
-          };
-          await window.dataSdk.update(updateData);
-        }
-        
+      
         displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWeight, weightGoalType);
         
         document.getElementById('weight-new').value = '';
@@ -1632,20 +1592,6 @@
       showToast('Weight update submitted successfully!', 'success');
     }
 
-    (async () => {
-      if (window.dataSdk) {
-        await window.dataSdk.init(dataHandler);
-        const lastEmail = localStorage.getItem('volta_last_user_email');
-        if (lastEmail && allUserData.length > 0) {
-          const user = allUserData.find(u => u.email === lastEmail);
-          if (user) {
-            currentUser = user;
-            updateAuthUI();
-            updateDashboard();
-          }
-        }
-      }
-      
       packageData.forEach((pkg, index) => {
         const previewElement = document.getElementById(`preview-${index}`);
         if (previewElement) {
