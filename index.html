@@ -974,10 +974,31 @@
       overlay.classList.toggle('open');
     }
 
-    function navigateTo(page, addToHistory = true) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(`page-${page}`).classList.add('active');
+   function navigateTo(page, addToHistory = true) {
 
+  // لو الصفحة مش موجودة ما يعملش error
+  const targetPage = document.getElementById(`page-${page}`);
+  if (!targetPage) return;
+
+  // اخفي كل الصفحات
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  // اعرض الصفحة المطلوبة
+  targetPage.classList.add('active');
+
+  // حدث شكل النافبار
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  const activeLink = document.querySelector(`[onclick="navigateTo('${page}')"]`);
+  if (activeLink) {
+    activeLink.classList.add('active');
+  }
+
+  // ضيفها في history عشان زرار الباك يشتغل
   if (addToHistory) {
     history.pushState({ page: page }, "", `#${page}`);
   }
@@ -985,6 +1006,7 @@
   window.scrollTo(0, 0);
   closeMobileMenu();
 }
+
 window.addEventListener("popstate", function (event) {
   if (event.state && event.state.page) {
     navigateTo(event.state.page, false);
