@@ -858,15 +858,14 @@
           'Weekly Check-ins'
         ],
         fullFeatures: [
-          'Complete 12-week transformation program',
-          'Customized workout split',
+          'Personalized workout plan (Gym / Home)',
+          'Video exercise explanations',
           'Detailed nutrition protocol',
-          'Weekly progress assessments',
-          'Form correction & technique videos',
-          'Supplement stack recommendation',
-          'Direct coaching support via WhatsApp',
-          'Progress photo documentation',
-          '7-day money-back guarantee'
+          'Personalized Nutrition plan',
+          'Weekly Follow-up with the coach phone',
+          'Program updates every 10-15 days ',
+          '10% discount on supplements',
+          'VOLTA Customer Supporting if needed',
         ]
       },
       {
@@ -881,18 +880,16 @@
           'Body Composition'
         ],
         fullFeatures: [
-          'Premium 12-week body transformation program',
-          'Advanced periodized training system',
-          'Macro-targeted nutrition strategy',
-          'Bi-weekly intensive coaching calls',
-          'Form analysis with video feedback',
-          'Monthly body composition testing',
-          'Priority WhatsApp support (24/7)',
-          'Supplement & ergogenic aids guide',
-          'Lifestyle & mindset coaching modules',
-          'Transformation journey documentation',
-          'Access to Volta community group',
-          '7-day money-back guarantee'
+          'personalised workout plan (Gym / Home)',
+          'Video exercis explanations ',
+          'Personalized Nutrition plan',
+          'Follow-up every 2-3 days with the coach',
+          'Program updates every 10 days',
+          'Food exchanges Guide',
+          '️Recipes E-Book',
+          'weekly call / Zoom meeting Customer supporting ',
+          '15% Discount on supplements ',
+          '️Posing Session with Our CMO / Media Team',
         ]
       },
       {
@@ -907,21 +904,18 @@
           'Complete Transformation'
         ],
         fullFeatures: [
-          'VIP 6-month complete transformation program',
-          'Elite performance training protocol',
-          'Advanced nutritional science system',
-          'Weekly one-on-one coaching sessions',
-          'Daily form & technique video reviews',
-          'Monthly advanced body composition analysis',
-          'VIP 24/7 priority WhatsApp support',
-          'Premium supplement stack customization',
-          'Advanced recovery & sleep optimization',
-          'Mental resilience & mindset mastery coaching',
-          'Exclusive VIP community access',
-          'Monthly progress photo & measurements',
-          'Post-program maintenance plan',
-          'Lifetime support & guidance',
-          'Full money-back guarantee (14 days)'
+          'personalised workoup plan (Gym/Home)',
+          'Video exercises explanation ',
+          'Personalised Nutrition plan',
+          'Daily Follow-up with the coach',
+          'Program updates every 10 days',
+          'Food exchanges',
+          'Recipes E-Book',
+          '1-2 Customer Call / Zoom per week ',
+          '️Posing Session with Our Cmo / media Team',
+          'Mindset session / month',
+          '20% discount on Supplements',
+          'Access call to the Owner(C/Ahmed khaled)',
         ]
       }
     ];
@@ -1297,11 +1291,14 @@ async function handleLogin(e) {
       
       document.getElementById('stat-age').textContent = currentUser.age || '--';
       document.getElementById('stat-height').textContent = currentUser.height || '--';
-      document.getElementById('stat-weight').textContent = currentUser.currentWeight || '--';
+      document.getElementById('stat-weight').textContent =
+      currentUser.currentWeight || currentUser.weight || '--';
       document.getElementById('stat-goal').textContent = currentUser.goal || '--';
       
-      const startWeight = currentUser.startWeight || currentUser.currentWeight || '--';
-      const currentWeight = currentUser.currentWeight || '--';
+      const startWeight =
+      currentUser.startWeight || currentUser.currentWeight || currentUser.weight || '--';
+      const currentWeight =
+      currentUser.currentWeight || currentUser.weight || '--';
       const targetWeight = currentUser.targetWeight || '--';
       const weightGoalType = currentUser.weightGoalType || '';
       
