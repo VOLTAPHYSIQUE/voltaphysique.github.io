@@ -177,7 +177,7 @@
    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-orange-500/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16">
-      <a href="#" onclick="navigateTo('home')" class="nav-link flex items-center gap-3"> <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="h-[45px] w-auto object-contain" loading="eager"> <span class="font-bebas text-xl md:text-2xl font-normal tracking-wider whitespace-nowrap">VOLTA PHYSIQUE</span> </a>
+      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3"> <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="h-[45px] w-auto object-contain" loading="eager"> <span class="font-bebas text-xl md:text-2xl font-normal tracking-wider whitespace-nowrap">VOLTA PHYSIQUE</span> </a>
       <div class="hidden md:flex items-center gap-8">
        <a href="#" onclick="navigateTo('home')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Home</a> <a href="#" onclick="navigateTo('about')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">About</a> <a href="#" onclick="navigateTo('packages')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Packages</a>
        <div id="auth-nav-logged-out" class="flex items-center gap-4">
@@ -974,43 +974,12 @@
       overlay.classList.toggle('open');
     }
 
-   function navigateTo(page, addToHistory = true) {
-
-  const targetPage = document.getElementById(`page-${page}`);
-  if (!targetPage) return;
-
-  // اخفي كل الصفحات
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.remove('active');
-  });
-
-  // فعل الصفحة المطلوبة
-  targetPage.classList.add('active');
-
-  // شيل active من كل لينكات الناف
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.remove('active');
-  });
-
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.classList.remove('active');
-
-  const onclickValue = link.getAttribute('onclick');
-  if (onclickValue && onclickValue.includes(`'${page}'`)) {
-    link.classList.add('active');
-  }
-});
-
-
-  if (addToHistory) {
-    history.pushState({ page: page }, "", `#${page}`);
-  }
-
-  window.scrollTo(0, 0);
-  closeMobileMenu();
-}
-
-
+    function navigateTo(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      window.scrollTo(0, 0);
+      closeMobileMenu();
+    }
 
     function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
@@ -1699,32 +1668,13 @@ document.getElementById('weight-new').value = '';
         }
       });
     document.addEventListener('DOMContentLoaded', () => {
-
-  // خلي أول صفحة تتحفظ في الهيستوري
-  history.replaceState({ page: 'home' }, "", "#home");
-
   const savedUser = localStorage.getItem('volta_user');
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
     updateAuthUI();
     updateDashboard();
   }
-
-  const hash = window.location.hash.replace("#", "");
-  if (hash) {
-    navigateTo(hash, false);
-  }
 });
-window.addEventListener("popstate", function (event) {
-
-  const page = (event.state && event.state.page)
-    ? event.state.page
-    : "home";
-
-  navigateTo(page, false);
-
-});
-
   </script>
   </body>
 </html>
