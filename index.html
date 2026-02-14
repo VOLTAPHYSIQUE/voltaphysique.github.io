@@ -1313,8 +1313,6 @@ async function handleLogin(e) {
       document.getElementById('weight-target').value = targetWeight === '--' ? '' : targetWeight;
       const goalSelect = document.getElementById('weight-goal-type');
 
-const goalSelect = document.getElementById('weight-goal-type');
-
 if (weightGoalType && goalSelect.querySelector(`option[value="${weightGoalType}"]`)) {
   goalSelect.value = weightGoalType;
 } else {
