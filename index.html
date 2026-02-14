@@ -976,36 +976,30 @@
 
    function navigateTo(page, addToHistory = true) {
 
-  // لو الصفحة مش موجودة ما يعملش error
   const targetPage = document.getElementById(`page-${page}`);
   if (!targetPage) return;
 
-  // اخفي كل الصفحات
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
   });
 
-  // اعرض الصفحة المطلوبة
   targetPage.classList.add('active');
 
-  // حدث شكل النافبار
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   });
 
-  const activeLink = document.querySelector(`[onclick="navigateTo('${page}')"]`);
-  if (activeLink) {
-    activeLink.classList.add('active');
-  }
+  const activeLink = document.querySelector(`.nav-link[onclick*="${page}"]`);
+  if (activeLink) activeLink.classList.add('active');
 
-  // ضيفها في history عشان زرار الباك يشتغل
   if (addToHistory) {
-    history.pushState({ page: page }, "", `#${page}`);
+    history.pushState({ page }, "", `#${page}`);
   }
 
   window.scrollTo(0, 0);
   closeMobileMenu();
 }
+
 
 window.addEventListener("popstate", function (event) {
   if (event.state && event.state.page) {
@@ -1702,12 +1696,17 @@ document.getElementById('weight-new').value = '';
         }
       });
     document.addEventListener('DOMContentLoaded', () => {
+
+  // خلي أول صفحة تتحفظ في الهيستوري
+  history.replaceState({ page: 'home' }, "", "#home");
+
   const savedUser = localStorage.getItem('volta_user');
   if (savedUser) {
     currentUser = JSON.parse(savedUser);
     updateAuthUI();
     updateDashboard();
   }
+
   const hash = window.location.hash.replace("#", "");
   if (hash) {
     navigateTo(hash, false);
