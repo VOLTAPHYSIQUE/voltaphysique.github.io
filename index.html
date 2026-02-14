@@ -1295,7 +1295,7 @@ async function handleLogin(e) {
       document.getElementById('stat-goal').textContent = currentUser.goal || '--';
       
       const startWeight =
-      currentUser.startWeight || currentUser.currentWeight || currentUser.weight || '--';
+      currentUser.startWeight || '--';
       const currentWeight =
       currentUser.currentWeight || currentUser.weight || '--';
       const targetWeight = currentUser.targetWeight || '--';
@@ -1401,7 +1401,12 @@ async function handleLogin(e) {
       const startWeight = parseFloat(document.getElementById('weight-start').value);
       const currentWeight = parseFloat(document.getElementById('weight-current').value);
       const weightGoalType = document.getElementById('weight-goal-type').value;
-      
+     
+      // تثبيت Start Weight لأول مرة فقط
+       if (!currentUser.startWeight) {
+       currentUser.startWeight = startWeight;
+       }
+
       if (!newWeight || newWeight <= 0) {
         errorDiv.textContent = 'Please enter a valid new weight.';
         errorDiv.classList.remove('hidden');
