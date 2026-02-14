@@ -974,12 +974,24 @@
       overlay.classList.toggle('open');
     }
 
-    function navigateTo(page) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(`page-${page}`).classList.add('active');
-      window.scrollTo(0, 0);
-      closeMobileMenu();
-    }
+    function navigateTo(page, addToHistory = true) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+
+  if (addToHistory) {
+    history.pushState({ page: page }, "", `#${page}`);
+  }
+
+  window.scrollTo(0, 0);
+  closeMobileMenu();
+}
+window.addEventListener("popstate", function (event) {
+  if (event.state && event.state.page) {
+    navigateTo(event.state.page, false);
+  } else {
+    navigateTo("home", false);
+  }
+});
 
     function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
@@ -1673,6 +1685,10 @@ document.getElementById('weight-new').value = '';
     currentUser = JSON.parse(savedUser);
     updateAuthUI();
     updateDashboard();
+  }
+  const hash = window.location.hash.replace("#", "");
+  if (hash) {
+    navigateTo(hash, false);
   }
 });
   </script>
