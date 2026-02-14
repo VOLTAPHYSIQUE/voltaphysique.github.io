@@ -1295,7 +1295,9 @@ async function handleLogin(e) {
       document.getElementById('stat-goal').textContent = currentUser.goal || '--';
       
       const startWeight =
-      currentUser.startWeight || '--';
+      currentUser.weight
+      ? parseFloat(currentUser.weight).toFixed(1)
+      : '--';
       const currentWeight =
       currentUser.currentWeight || currentUser.weight || '--';
       const targetWeight = currentUser.targetWeight || '--';
@@ -1311,7 +1313,6 @@ async function handleLogin(e) {
       document.getElementById('weight-target').value = targetWeight === '--' ? '' : targetWeight;
       document.getElementById('weight-goal-type').value = weightGoalType;
       document.getElementById('weight-new').value = '';
-      document.getElementById('weight-update-result').classList.add('hidden');
     }
 
     function verifyAccessCode() {
@@ -1398,14 +1399,9 @@ async function handleLogin(e) {
       
       const newWeight = parseFloat(document.getElementById('weight-new').value);
       const targetWeight = parseFloat(document.getElementById('weight-target').value);
-      const startWeight = parseFloat(document.getElementById('weight-start').value);
+      const startWeight = parseFloat(currentUser.weight);
       const currentWeight = parseFloat(document.getElementById('weight-current').value);
       const weightGoalType = document.getElementById('weight-goal-type').value;
-     
-      // تثبيت Start Weight لأول مرة فقط
-       if (!currentUser.startWeight) {
-       currentUser.startWeight = startWeight;
-       }
 
       if (!newWeight || newWeight <= 0) {
         errorDiv.textContent = 'Please enter a valid new weight.';
@@ -1493,20 +1489,28 @@ async function handleLogin(e) {
           console.log('Google Sheets sync: ', error);
         }
       
-        displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWeight, weightGoalType);
-        
-        document.getElementById('weight-new').value = '';
-        
         // Update local user object
 currentUser.currentWeight = newWeight.toFixed(1);
 currentUser.targetWeight = targetWeight.toFixed(1);
 currentUser.weightGoalType = weightGoalType;
-       // Sync dashboard goal with weight goal type
 currentUser.goal = weightGoalType;
+
 localStorage.setItem('volta_user', JSON.stringify(currentUser));
 
-// Refresh entire dashboard cleanly
+// حدث الداشبورد الأول
 updateDashboard();
+
+// بعد ما الداشبورد يخلص اعرض التراكر
+displayWeightUpdateResult(
+  weeklyChange,
+  progressPercentage,
+  remainingWeight,
+  weightGoalType
+);
+
+// فضي خانة الوزن الجديد
+document.getElementById('weight-new').value = '';
+
 
         
       } catch (error) {
