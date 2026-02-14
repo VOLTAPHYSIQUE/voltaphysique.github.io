@@ -992,14 +992,14 @@
   const activeLink = document.querySelector(`.nav-link[onclick*="${page}"]`);
   if (activeLink) activeLink.classList.add('active');
 
+  // 👇 أهم سطر هنا
   if (addToHistory) {
-    history.pushState({ page }, "", `#${page}`);
+    history.pushState({ page: page }, "", `#${page}`);
   }
 
   window.scrollTo(0, 0);
   closeMobileMenu();
 }
-
 
 
     function togglePasswordVisibility(inputId) {
@@ -1705,24 +1705,15 @@ document.getElementById('weight-new').value = '';
     navigateTo(hash, false);
   }
 });
-   window.onpopstate = function () {
-  const page = window.location.hash.replace("#", "") || "home";
+window.addEventListener("popstate", function (event) {
 
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.remove('active');
-  });
+  const page = (event.state && event.state.page)
+    ? event.state.page
+    : "home";
 
-  const target = document.getElementById(`page-${page}`);
-  if (target) target.classList.add('active');
+  navigateTo(page, false);
 
-  // تحديث لون اللينك في النافبار
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.remove('active');
-  });
-
-  const activeLink = document.querySelector(`.nav-link[onclick*="${page}"]`);
-  if (activeLink) activeLink.classList.add('active');
-};
+});
 
   </script>
   </body>
