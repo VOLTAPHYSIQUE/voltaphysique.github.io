@@ -1311,7 +1311,17 @@ async function handleLogin(e) {
       document.getElementById('weight-start').value = startWeight === '--' ? '' : startWeight;
       document.getElementById('weight-current').value = currentWeight === '--' ? '' : currentWeight;
       document.getElementById('weight-target').value = targetWeight === '--' ? '' : targetWeight;
-      document.getElementById('weight-goal-type').value = weightGoalType;
+      const goalSelect = document.getElementById('weight-goal-type');
+
+const goalSelect = document.getElementById('weight-goal-type');
+
+if (weightGoalType && goalSelect.querySelector(`option[value="${weightGoalType}"]`)) {
+  goalSelect.value = weightGoalType;
+} else {
+  goalSelect.value = "";
+}
+
+
       document.getElementById('weight-new').value = '';
     }
 
