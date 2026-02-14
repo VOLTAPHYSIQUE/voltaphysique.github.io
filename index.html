@@ -1001,13 +1001,6 @@
 }
 
 
-window.addEventListener("popstate", function (event) {
-  if (event.state && event.state.page) {
-    navigateTo(event.state.page, false);
-  } else {
-    navigateTo("home", false);
-  }
-});
 
     function togglePasswordVisibility(inputId) {
       const input = document.getElementById(inputId);
@@ -1712,6 +1705,25 @@ document.getElementById('weight-new').value = '';
     navigateTo(hash, false);
   }
 });
+   window.onpopstate = function () {
+  const page = window.location.hash.replace("#", "") || "home";
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  const target = document.getElementById(`page-${page}`);
+  if (target) target.classList.add('active');
+
+  // تحديث لون اللينك في النافبار
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  const activeLink = document.querySelector(`.nav-link[onclick*="${page}"]`);
+  if (activeLink) activeLink.classList.add('active');
+};
+
   </script>
   </body>
 </html>
