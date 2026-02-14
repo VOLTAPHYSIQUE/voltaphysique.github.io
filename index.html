@@ -177,7 +177,7 @@
    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-orange-500/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16">
-      <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3"> <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="h-[45px] w-auto object-contain" loading="eager"> <span class="font-bebas text-xl md:text-2xl font-normal tracking-wider whitespace-nowrap">VOLTA PHYSIQUE</span> </a>
+      <a href="#" onclick="navigateTo('home')" class="nav-link flex items-center gap-3"> <img src="https://i.ibb.co/rRQJF2m5/Screenshot-.-removebg-preview.png" alt="VOLTA PHYSIQUE" class="h-[45px] w-auto object-contain" loading="eager"> <span class="font-bebas text-xl md:text-2xl font-normal tracking-wider whitespace-nowrap">VOLTA PHYSIQUE</span> </a>
       <div class="hidden md:flex items-center gap-8">
        <a href="#" onclick="navigateTo('home')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Home</a> <a href="#" onclick="navigateTo('about')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">About</a> <a href="#" onclick="navigateTo('packages')" class="nav-link text-gray-300 hover:text-white text-sm uppercase tracking-wider">Packages</a>
        <div id="auth-nav-logged-out" class="flex items-center gap-4">
@@ -979,20 +979,29 @@
   const targetPage = document.getElementById(`page-${page}`);
   if (!targetPage) return;
 
+  // اخفي كل الصفحات
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
   });
 
+  // فعل الصفحة المطلوبة
   targetPage.classList.add('active');
 
+  // شيل active من كل لينكات الناف
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
   });
 
-  const activeLink = document.querySelector(`.nav-link[onclick*="${page}"]`);
-  if (activeLink) activeLink.classList.add('active');
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.classList.remove('active');
 
-  // 👇 أهم سطر هنا
+  const onclickValue = link.getAttribute('onclick');
+  if (onclickValue && onclickValue.includes(`'${page}'`)) {
+    link.classList.add('active');
+  }
+});
+
+
   if (addToHistory) {
     history.pushState({ page: page }, "", `#${page}`);
   }
@@ -1000,6 +1009,7 @@
   window.scrollTo(0, 0);
   closeMobileMenu();
 }
+
 
 
     function togglePasswordVisibility(inputId) {
