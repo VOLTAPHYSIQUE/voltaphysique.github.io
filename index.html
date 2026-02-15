@@ -171,7 +171,7 @@
   </style>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
  </head>
- <body class="h-full bg-[#0a0a0a] text-white font-inter overflow-auto">
+  <body class="h-full bg-[#0a0a0a] text-white font-inter overflow-x-hidden">
   <div id="app" class="h-full w-full">
    <!-- Navigation -->
    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-orange-500/10">
@@ -813,7 +813,7 @@
           <div id="weight-update-error" class="hidden mb-4 p-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-sm"></div><button type="submit" id="weight-update-btn" class="w-full btn-primary py-3 rounded-xl font-semibold uppercase tracking-wider mb-6">SUBMIT WEIGHT UPDATE</button>
          </form><!-- Weight Update Results -->
          <div id="weight-update-result" class="hidden p-6 rounded-xl bg-orange-500/10 border border-orange-500/30">
-          <div class="grid md:grid-cols-3 gap-6 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
            <div class="text-center">
             <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Weekly Change</p>
             <p id="weight-change" class="font-bebas text-3xl text-orange-500">--</p>
