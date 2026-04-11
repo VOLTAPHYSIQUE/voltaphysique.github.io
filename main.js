@@ -438,6 +438,7 @@ async function handleLogin(e) {
 function logout() {
     localStorage.removeItem('weightUnlocked');
     currentUser = null;
+    localStorage.removeItem('volta_user');
     localStorage.removeItem('volta_last_user_email');
     isWeightUpdateUnlocked = false;
     lockWeightUpdate();
@@ -845,22 +846,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDashboard();
     }
 
-    // ==========================================
-    // SCROLL ANIMATIONS OBSERVER
-    // ==========================================
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-visible');
-            }
+    // منع اللينكات الفارغة من القفز لأعلى الصفحة وتخريب الهيستوري
+    document.querySelectorAll('a[onclick^="navigateTo"]').forEach(a => {
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
         });
-    }, observerOptions);
-
-    document.querySelectorAll('.animate-fade-up, .animate-fade-in').forEach(el => {
-        observer.observe(el);
     });
+
+    // استعادة الصفحة اللي المستخدم كان فيها من الرابط وقت الـ Refresh
+    const initialPage = window.location.hash.replace('#', '') || 'home';
+    renderPage(initialPage);
 });
