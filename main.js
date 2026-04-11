@@ -150,11 +150,6 @@ function renderPage(page) {
     targetPage.classList.add('active');
     window.scrollTo(0, 0);
     closeMobileMenu();
-
-    // تشغيل الأنيميشن
-    setTimeout(() => {
-        playPageAnimations(targetPage);
-    }, 50);
 }
 
 // التقاط حدث تغيير الرابط
@@ -162,22 +157,6 @@ window.addEventListener('hashchange', () => {
     const page = window.location.hash.replace('#', '') || 'home';
     renderPage(page);
 });
-
-function playPageAnimations(pageElement) {
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-visible');
-                obs.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0, rootMargin: "0px 0px -20px 0px" });
-
-    pageElement.querySelectorAll('.animate-fade-up, .animate-fade-in').forEach(el => {
-        el.classList.remove('animate-visible');
-        observer.observe(el);
-    });
-}
 
 function togglePasswordVisibility(inputId) {
     const input = document.getElementById(inputId);
