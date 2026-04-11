@@ -714,11 +714,15 @@ async function handleWeightUpdate(e) {
                 timestamp: new Date().toISOString()
             };
 
-            await fetch(APP_CONFIG.api.weeklyUpdateScript, {
+            const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, {
                 method: 'POST',
-                body: JSON.stringify(googleSheetPayload),
-                mode: 'no-cors'
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+                body: JSON.stringify(googleSheetPayload)
             });
+            const result = await response.json();
+            console.log('Google Sheets sync:', result);
         } catch (error) {
             console.log('Google Sheets sync: ', error);
         }
