@@ -547,7 +547,7 @@ async function verifyAccessCode() {
         formData.append("action", "verifyCode");
         formData.append("code", code);
 
-        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
+        const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
