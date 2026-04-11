@@ -128,18 +128,55 @@ function toggleSocialPanel() {
 }
 
 function navigateTo(page) {
+    // لو المستخدم في نفس الصفحة، ارفع الشاشة لفوق فقط
+    if (window.location.hash === `#${page}` || (page === 'home' && !window.location.hash)) {
+        window.scrollTo(0, 0);
+        closeMobileMenu();
+        return;
+    }
+    // تغيير الرابط لحفظه في المتصفح
+    window.location.hash = page;
+}
+
+function renderPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(`page-${page}`).classList.add('active');
+
+    let targetPage = document.getElementById(`page-${page}`);
+    if (!targetPage) {
+        page = 'home';
+        targetPage = document.getElementById('page-home');
+    }
+
+    targetPage.classList.add('active');
     window.scrollTo(0, 0);
     closeMobileMenu();
 
-    // Reset animations so they replay smoothly when changing pages
-    const newPage = document.getElementById(`page-${page}`);
-    if (newPage) {
-        newPage.querySelectorAll('.animate-visible').forEach(el => {
-            el.classList.remove('animate-visible');
+    // تشغيل الأنيميشن
+    setTimeout(() => {
+        playPageAnimations(targetPage);
+    }, 50);
+}
+
+// التقاط حدث تغيير الرابط
+window.addEventListener('hashchange', () => {
+    const page = window.location.hash.replace('#', '') || 'home';
+    renderPage(page);
+});
+
+function playPageAnimations(pageElement) {
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-visible');
+                obs.unobserve(entry.target);
+            }
         });
-    }
+    }, { threshold: 0, rootMargin: "0px 0px -20px 0px" });
+
+    pageElement.querySelectorAll('.animate-fade-up, .animate-fade-in').forEach(el => {
+        el.classList.remove('animate-visible');
+        observer.observe(el);
+    });
 }
 
 function togglePasswordVisibility(inputId) {
