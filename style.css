@@ -1,0 +1,222 @@
+body {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-black: #0a0a0a;
+    --charcoal: #141414;
+    --dark-gray: #1a1a1a;
+    --neon-orange: #ff6b00;
+    --dark-orange: #cc5500;
+    --glow-orange: rgba(255, 107, 0, 0.4);
+}
+
+/* Lightning Background */
+.lightning-bg {
+    position: relative;
+    overflow: hidden;
+    background-image: url('./lightning-mobile.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Desktop version */
+@media (min-width: 768px) {
+    .lightning-bg {
+        background-image: url('./lightning-desktop.png');
+    }
+}
+
+/* ===== BLUR OVERLAY ===== */
+.lightning-blur::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 0;
+}
+
+.lightning-blur>* {
+    position: relative;
+    z-index: 1;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--neon-orange) var(--charcoal);
+}
+
+.font-bebas {
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.glow-effect {
+    box-shadow: 0 0 30px var(--glow-orange), 0 0 60px rgba(255, 107, 0, 0.2);
+}
+
+.glow-text {
+    text-shadow: 0 0 20px var(--glow-orange), 0 0 40px rgba(255, 107, 0, 0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--neon-orange), var(--dark-orange));
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 25px var(--glow-orange), 0 0 50px rgba(255, 107, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.card-dark {
+    background: linear-gradient(145deg, var(--charcoal), var(--dark-gray));
+    border: 1px solid rgba(255, 107, 0, 0.1);
+}
+
+.card-dark:hover {
+    border-color: rgba(255, 107, 0, 0.3);
+}
+
+.input-dark {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 107, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.input-dark:focus {
+    border-color: var(--neon-orange);
+    box-shadow: 0 0 15px rgba(255, 107, 0, 0.2);
+    outline: none;
+}
+
+.input-dark:read-only {
+    background: rgba(20, 20, 20, 0.5);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-orange);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px var(--glow-orange);
+    }
+
+    50% {
+        box-shadow: 0 0 40px var(--glow-orange), 0 0 60px rgba(255, 107, 0, 0.3);
+    }
+}
+
+.pulse-glow {
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.float-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+.page {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+}
+
+.social-panel {
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+}
+
+.social-panel.open {
+    transform: translateX(0);
+}
+
+.overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.stat-card {
+    background: linear-gradient(145deg, rgba(255, 107, 0, 0.1), rgba(20, 20, 20, 0.9));
+    border: 1px solid rgba(255, 107, 0, 0.2);
+}
+
+/* ==========================================
+   SCROLL ANIMATIONS
+   ========================================== */
+.animate-fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+.animate-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delay-100 {
+    transition-delay: 100ms;
+}
+
+.delay-200 {
+    transition-delay: 200ms;
+}
+
+.delay-300 {
+    transition-delay: 300ms;
+}
