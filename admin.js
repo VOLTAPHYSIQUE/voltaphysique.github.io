@@ -30,6 +30,37 @@ function updateAdminStats(users) {
     const pendingCountEl = document.getElementById('admin-pending-users');
     if (pendingCountEl) pendingCountEl.textContent = pendingUsers;
 
+    // رسم الجراف
+    const ctx = document.getElementById('adminOverviewChart');
+    if (ctx && users.length > 0) {
+        if (adminOverviewChartInstance) {
+            adminOverviewChartInstance.destroy();
+        }
+        adminOverviewChartInstance = new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['VIP Active', 'Pending'],
+                datasets: [{
+                    data: [activeUsers.length, pendingUsers],
+                    backgroundColor: ['#22c55e', '#eab308'],
+                    borderColor: ['#141414', '#141414'],
+                    borderWidth: 3,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#9ca3af', font: { family: 'Inter', size: 14 }, padding: 20 }
+                    }
+                }
+            }
+        });
+    }
 }
 
 async function openEditorModal() {
@@ -481,40 +512,11 @@ async function deleteClient(event, email, name) {
                 users = users.filter(u => u.email !== email); // شيل العميل من القائمة
                 localStorage.setItem('volta_admin_users', JSON.stringify(users));
 
-                // رسم الجراف الخاص بتوزيع المشتركين (Active vs Pending)
-                const ctx = document.getElementById('adminOverviewChart');
-                if (ctx) {
-                    if (adminOverviewChartInstance) {
-                        adminOverviewChartInstance.destroy();
-                    }
-                    adminOverviewChartInstance = new Chart(ctx.getContext('2d'), {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['VIP Active', 'Pending'],
-                            datasets: [{
-                                data: [activeUsers.length, pendingUsers],
-                                backgroundColor: ['#22c55e', '#eab308'],
-                                borderColor: ['#141414', '#141414'],
-                                borderWidth: 3,
-                                hoverOffset: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            cutout: '75%',
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: { color: '#9ca3af', font: { family: 'Inter', size: 12 }, padding: 15 }
-                                }
-                            }
-                        }
-                    });
-                }
-
                 updateAdminStats(users); // تحديث الأرقام اللي فوق
-                openAdminModal('tracker'); // إعادة رسم الجدول
+
+                const title = document.getElementById('admin-modal-title').textContent;
+                if (title && title.includes('UPDATES')) openAdminModal('updates');
+                else if (title && title.includes('TRACKER')) openAdminModal('tracker');
             }
         } else {
             alert('Failed to remove user: ' + result.message);
@@ -665,7 +667,8 @@ async function toggleUserStatus(event, email, newStatus) {
                     updateAdminStats(users);
 
                     const title = document.getElementById('admin-modal-title').textContent;
-                    if (title && title.includes('UPDATES')) openAdminModal('updates');
+                    if (title && title.includes('UPDATES')) { openAdminModal('updates'); }
+                    else if (title && title.includes('TRACKER')) { openAdminModal('tracker'); }
                 }
             }
         } else {
