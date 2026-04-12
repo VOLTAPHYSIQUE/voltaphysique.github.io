@@ -466,7 +466,7 @@ async function loadWeeklyUpdates() {
         formData.append("adminPassword", "VoltaAdmin123");
 
         // استدعاء سكريبت التحديثات الأسبوعية
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxO9QnDSGkTrnvWDhLTnTe9wkOxA6GdyVG0w4eDD9uZacteLbO2f2nzikecr2y8syhN/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
