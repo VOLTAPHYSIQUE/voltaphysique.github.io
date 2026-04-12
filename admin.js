@@ -118,6 +118,7 @@ function openAdminModal(type) {
                 <th class="p-4 font-medium">Experience</th>
                 <th class="p-4 font-medium">Status</th>
                 <th class="p-4 font-medium">Joined</th>
+                <th class="p-4 font-medium text-center">Action</th>
             </tr>
         `;
         tbody.innerHTML = users.map(user => {
@@ -134,6 +135,11 @@ function openAdminModal(type) {
                 <td class="p-4 text-xs">${user.experience || '--'}</td>
                 <td class="p-4">${statusBadge}</td>
                 <td class="p-4 text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
+                <td class="p-4 text-center">
+                    <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors" title="Remove Client">
+                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </td>
             </tr>
             `;
         }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No clients found.</td></tr>';
@@ -195,4 +201,51 @@ function adminLogout() {
     localStorage.removeItem('volta_admin');
     localStorage.removeItem('volta_admin_users');
     window.location.href = 'index.html'; // قفل اللوحة والرجوع للموقع الأساسي
+}
+
+async function deleteClient(event, email, name) {
+    // 1. طلب الباسورد كخطوة تأكيدية للحماية
+    const adminPass = prompt(`Are you sure you want to permanently remove ${name}?\n\nEnter Admin Password to confirm:`);
+
+    if (!adminPass) return; // لو داس كنسل أو مدخلش حاجة
+
+    const btn = event.target.closest('button');
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="text-xs">...</span>';
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "deleteUser");
+        formData.append("email", email);
+        formData.append("adminPassword", adminPass);
+
+        // استخدام رابط السكريبت الخاص بالـ Login/Signup
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            // تحديث الذاكرة واللوحة بدون ريفرش
+            const usersData = localStorage.getItem('volta_admin_users');
+            if (usersData) {
+                let users = JSON.parse(usersData);
+                users = users.filter(u => u.email !== email); // شيل العميل من القائمة
+                localStorage.setItem('volta_admin_users', JSON.stringify(users));
+
+                updateAdminStats(users); // تحديث الأرقام اللي فوق
+                openAdminModal('tracker'); // إعادة رسم الجدول
+            }
+        } else {
+            alert('Failed to remove user: ' + result.message);
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        }
+    } catch (error) {
+        alert('Connection error while trying to remove user.');
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+    }
 }

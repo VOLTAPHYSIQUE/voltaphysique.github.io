@@ -7,7 +7,7 @@ let isWeightUpdateUnlocked = false;
 // ==========================================
 const APP_CONFIG = {
     api: {
-        authScript: "https://script.google.com/macros/s/AKfycbxb-zNpxbeFI15GIZgAYnT6ZsdJonevWzsrLUk25a0-2iN9KmPV4DuWS01YeygjyvML3g/exec",
+        authScript: "https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec",
         weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbwXWJo3VOf6wbMo0YoGmsD5RmKreCQGEXgPgy3LH__ZPKeuipok_SXdTMrLqL61VA/exec"
     },
     links: {
@@ -511,6 +511,7 @@ async function handleLogin(e) {
 
 function logout() {
     localStorage.removeItem('weightUnlocked');
+    localStorage.removeItem('volta_access_code');
     currentUser = null;
     localStorage.removeItem('volta_user');
     localStorage.removeItem('volta_last_user_email');
@@ -609,6 +610,7 @@ async function verifyAccessCode() {
         const result = await response.json();
 
         if (result.success) {
+            localStorage.setItem('volta_access_code', code);
             unlockWeightUpdateDirectly();
             codeInput.value = '';
             showToast('Access code verified! Form unlocked.', 'success');
@@ -632,7 +634,6 @@ function unlockWeightUpdateDirectly() {
     const unlockBtn = document.getElementById('unlock-btn');
 
     isWeightUpdateUnlocked = true;
-    localStorage.setItem('weightUnlocked', 'true');
     contentDiv.classList.remove('blur-md', 'pointer-events-none', 'opacity-50');
     accessCodeSection.classList.add('hidden');
     unlockBtn.disabled = true;
@@ -648,6 +649,25 @@ function lockWeightUpdate() {
     contentDiv.classList.add('blur-md', 'pointer-events-none', 'opacity-50');
     accessCodeSection.classList.remove('hidden');
     unlockBtn.disabled = false;
+}
+
+async function silentVerifyAccessCode(code) {
+    try {
+        const formData = new FormData();
+        formData.append("action", "verifyCode");
+        formData.append("code", code);
+
+        const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success) {
+            unlockWeightUpdateDirectly();
+        } else {
+            localStorage.removeItem('volta_access_code');
+        }
+    } catch (error) {
+        console.log('Silent verification failed:', error);
+    }
 }
 
 function enableTargetEdit() {
@@ -922,6 +942,12 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUser = JSON.parse(savedUser);
         updateAuthUI();
         updateDashboard();
+
+        // فحص الكود السري في الخلفية (يستهلك إنترنت لضمان الأمان)
+        const savedCode = localStorage.getItem('volta_access_code');
+        if (savedCode) {
+            silentVerifyAccessCode(savedCode);
+        }
     }
 
     // تشغيل نظام الأنيميشن أول ما الموقع يفتح
