@@ -341,8 +341,8 @@ function openAdminModal(type) {
         tbody.innerHTML = users.map(user => {
             const isActive = String(user.Status || user.status || '').toLowerCase() === 'active';
             const statusBadge = isActive
-                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">VIP ACTIVE</span>'
-                : '<span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20">PENDING</span>';
+                ? `<button onclick="toggleUserStatus(event, '${user.email}', 'Pending')" class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors">VIP ACTIVE</button>`
+                : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
             <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
@@ -384,8 +384,8 @@ function openAdminModal(type) {
         tbody.innerHTML = users.map(user => {
             const isActive = String(user.Status || user.status || '').toLowerCase() === 'active';
             const statusBadge = isActive
-                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">VIP ACTIVE</span>'
-                : '<span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20">PENDING</span>';
+                ? `<button onclick="toggleUserStatus(event, '${user.email}', 'Pending')" class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors">VIP ACTIVE</button>`
+                : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors">
                 <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
@@ -597,4 +597,53 @@ async function saveAccessCode(e) {
     btn.textContent = originalText;
     btn.disabled = false;
     alert("Access Code updated successfully!");
+}
+
+async function toggleUserStatus(event, email, newStatus) {
+    event.stopPropagation();
+    const btn = event.currentTarget;
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '...';
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "updateUserStatus");
+        formData.append("email", email);
+        formData.append("status", newStatus);
+        formData.append("adminPassword", "VoltaAdmin123");
+
+        // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            const usersData = localStorage.getItem('volta_admin_users');
+            if (usersData) {
+                let users = JSON.parse(usersData);
+                const userIndex = users.findIndex(u => u.email === email);
+                if (userIndex !== -1) {
+                    users[userIndex].Status = newStatus;
+                    users[userIndex].status = newStatus;
+                    localStorage.setItem('volta_admin_users', JSON.stringify(users));
+                    updateAdminStats(users);
+
+                    const title = document.getElementById('admin-modal-title').textContent;
+                    if (title.includes('TRACKER')) openAdminModal('tracker');
+                    else if (title.includes('UPDATES')) openAdminModal('updates');
+                }
+            }
+        } else {
+            alert("Failed to update status: " + result.message);
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        }
+    } catch (e) {
+        alert("Connection error while updating status.");
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+    }
 }
