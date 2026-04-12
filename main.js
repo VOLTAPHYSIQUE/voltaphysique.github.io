@@ -8,7 +8,7 @@ let isWeightUpdateUnlocked = false;
 const APP_CONFIG = {
     api: {
         authScript: "https://script.google.com/macros/s/AKfycbxE5sSkcEVOGRbZgjEM6OPxv1saC_Zsy1pAwM44AsV9jKkhMu1E6YFlUInQdM05fJg66w/exec",
-        weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbzuZ4JosiTauNRd7k7pVnQwwrEGXyiZz9vvnbIgWG-MoSTi4nsI2DDQG-ITweL7ZJVM/exec"
+        weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbwXWJo3VOf6wbMo0YoGmsD5RmKreCQGEXgPgy3LH__ZPKeuipok_SXdTMrLqL61VA/exec"
     },
     links: {
         whatsappPhone: "201055723467",
