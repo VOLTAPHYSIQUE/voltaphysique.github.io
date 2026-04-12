@@ -16,12 +16,13 @@ const APP_CONFIG = {
     }
 };
 
-const packageData = [
+let packageData = [
     {
         title: 'RAMADAN 30 DAYS FAT LOSS',
         price: '750',
         currency: 'EGP',
         duration: '30 Days',
+        discount: 'Limited Ramadan Offer',
         shortFeatures: [
             'Fat Loss Protocol',
             'Personalized Meal Plan',
@@ -42,6 +43,7 @@ const packageData = [
         price: '999',
         currency: 'EGP',
         duration: '3 Months',
+        discount: '',
         shortFeatures: [
             'Full Training Program',
             'Nutrition Plan',
@@ -63,6 +65,7 @@ const packageData = [
         price: '1500',
         currency: 'EGP',
         duration: '3 Months',
+        discount: 'MOST SELLER',
         shortFeatures: [
             'Premium Training',
             'Advanced Nutrition',
@@ -87,6 +90,7 @@ const packageData = [
         price: '4490',
         currency: 'EGP',
         duration: '6 Months',
+        discount: 'VIP',
         shortFeatures: [
             'Elite VIP Program',
             'Maximum Results',
@@ -247,30 +251,87 @@ async function loadDynamicContent() {
                 const aboutImg = document.getElementById('about-image');
                 if (aboutImg) aboutImg.src = c.about_image;
             }
-            if (c.pkg_0_price) {
-                const p0 = document.getElementById('pkg-0-price');
-                if (p0) p0.textContent = c.pkg_0_price;
-                packageData[0].price = c.pkg_0_price;
+
+            const setText = (id, key) => { if (c[key] && document.getElementById(id)) document.getElementById(id).textContent = c[key]; };
+
+            setText('dyn-stat-1-num', 'stat_1_num'); setText('dyn-stat-1-text', 'stat_1_text');
+            setText('dyn-stat-2-num', 'stat_2_num'); setText('dyn-stat-2-text', 'stat_2_text');
+            setText('dyn-stat-3-num', 'stat_3_num'); setText('dyn-stat-3-text', 'stat_3_text');
+            setText('dyn-stat-4-num', 'stat_4_num'); setText('dyn-stat-4-text', 'stat_4_text');
+
+            setText('dyn-why-subtitle', 'why_subtitle');
+            setText('dyn-why-1-title', 'why_1_title'); setText('dyn-why-1-desc', 'why_1_desc');
+            setText('dyn-why-2-title', 'why_2_title'); setText('dyn-why-2-desc', 'why_2_desc');
+            setText('dyn-why-3-title', 'why_3_title'); setText('dyn-why-3-desc', 'why_3_desc');
+
+            if (c.about_text) {
+                const aboutContainer = document.getElementById('dyn-about-text');
+                if (aboutContainer) {
+                    aboutContainer.innerHTML = c.about_text.split('\n')
+                        .filter(p => p.trim() !== '')
+                        .map(p => `<p>${p}</p>`)
+                        .join('');
+                }
             }
-            if (c.pkg_1_price) {
-                const p1 = document.getElementById('pkg-1-price');
-                if (p1) p1.textContent = c.pkg_1_price;
-                packageData[1].price = c.pkg_1_price;
-            }
-            if (c.pkg_2_price) {
-                const p2 = document.getElementById('pkg-2-price');
-                if (p2) p2.textContent = c.pkg_2_price;
-                packageData[2].price = c.pkg_2_price;
-            }
-            if (c.pkg_3_price) {
-                const p3 = document.getElementById('pkg-3-price');
-                if (p3) p3.textContent = c.pkg_3_price;
-                packageData[3].price = c.pkg_3_price;
+
+            if (c.packages_data) {
+                packageData = JSON.parse(c.packages_data);
             }
         }
+        renderPackages();
     } catch (e) {
         console.log("Dynamic content load failed:", e);
+        renderPackages();
     }
+}
+
+function renderPackages() {
+    const container = document.getElementById('packages-container');
+    if (!container) return;
+
+    container.innerHTML = packageData.map((pkg, index) => {
+        const discountHtml = pkg.discount ? `
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 rounded-lg w-fit mb-4 shadow-[0_0_15px_rgba(255,107,0,0.4)]">
+              <p class="text-white font-bold text-xs uppercase tracking-wider">${pkg.discount}</p>
+            </div>
+        ` : '';
+
+        const sFeatures = Array.isArray(pkg.shortFeatures) ? pkg.shortFeatures : (pkg.shortFeatures || '').split('\n').filter(f => f.trim());
+        const featuresHtml = sFeatures.map(f => `
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+              <span>${f}</span>
+            </li>
+        `).join('');
+
+        return `
+        <button onclick="viewPackageDetails(${index})" class="text-left group w-full h-full">
+          <div class="rounded-2xl card-dark p-6 sm:p-10 h-full flex flex-col hover:glow-effect transition-all relative overflow-hidden">
+            ${discountHtml}
+            <h3 class="font-bebas text-3xl tracking-wider mb-2">${pkg.title}</h3>
+            <p class="text-gray-400 text-sm mb-8">${pkg.duration}</p>
+            <div class="mb-10">
+                <span class="font-bebas text-5xl text-orange-500">${pkg.price}</span> 
+                <span class="text-gray-400 ml-2">${pkg.currency || 'EGP'}</span>
+            </div>
+            <ul class="space-y-3 mb-auto text-sm text-gray-300 text-left">
+                ${featuresHtml}
+            </ul>
+            <div class="pt-8 mt-8 border-t border-orange-500/20 text-left">
+                <span class="text-orange-500 font-semibold uppercase tracking-wider text-sm group-hover:text-orange-300 transition-colors">View Details</span>
+            </div>
+          </div>
+        </button>
+        `;
+    }).join('');
+
+    const newCards = container.querySelectorAll('.card-dark');
+    newCards.forEach(el => {
+        el.classList.add('volta-animate');
+        scrollObserver.observe(el);
+    });
 }
 
 function calculateProtein() {
@@ -965,19 +1026,6 @@ function displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWe
     showToast('Weight update submitted successfully!', 'success');
 }
 
-packageData.forEach((pkg, index) => {
-    const previewElement = document.getElementById(`preview-${index}`);
-    if (previewElement) {
-        previewElement.innerHTML = pkg.shortFeatures.map(f =>
-            `<li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-          </svg>
-          <span>${f}</span>
-        </li>`
-        ).join('');
-    }
-});
 
 document.addEventListener('DOMContentLoaded', () => {
     const savedUser = localStorage.getItem('volta_user');

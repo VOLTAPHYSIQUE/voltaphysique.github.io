@@ -1,3 +1,5 @@
+let adminPackages = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية الصفحة: طرد أي زائر يحاول يفتح الصفحة مباشرة بدون إذن
     const isAdmin = localStorage.getItem('volta_admin');
@@ -62,35 +64,35 @@ async function openEditorModal() {
         const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
         const result = await response.json();
 
-        let cData = {};
-        if (result.success && result.content) {
-            cData = result.content;
-        }
+        let cData = result.content || {};
+        document.getElementById('edit-about-image').value = cData.about_image || '';
 
-        document.getElementById('editor-fields').innerHTML = `
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">About Section Image URL</label>
-                <input type="text" id="edit-about-image" value="${cData.about_image || ''}" placeholder="https://..." class="w-full px-4 py-3 rounded-xl input-dark text-white">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Ramadan Package Price (EGP)</label>
-                <input type="number" id="edit-pkg-0" value="${cData.pkg_0_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">No Excuses Package Price (EGP)</label>
-                <input type="number" id="edit-pkg-1" value="${cData.pkg_1_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Glow Up 3.0 Package Price (EGP)</label>
-                <input type="number" id="edit-pkg-2" value="${cData.pkg_2_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Beast Mode Package Price (EGP)</label>
-                <input type="number" id="edit-pkg-3" value="${cData.pkg_3_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
-            </div>
-        `;
+        document.getElementById('edit-stat-1-num').value = cData.stat_1_num || '70+';
+        document.getElementById('edit-stat-1-text').value = cData.stat_1_text || 'Transformations';
+        document.getElementById('edit-stat-2-num').value = cData.stat_2_num || '100+';
+        document.getElementById('edit-stat-2-text').value = cData.stat_2_text || 'Clients';
+        document.getElementById('edit-stat-3-num').value = cData.stat_3_num || '5+';
+        document.getElementById('edit-stat-3-text').value = cData.stat_3_text || 'Years Experience';
+        document.getElementById('edit-stat-4-num').value = cData.stat_4_num || '24/7';
+        document.getElementById('edit-stat-4-text').value = cData.stat_4_text || 'Support';
+
+        document.getElementById('edit-why-subtitle').value = cData.why_subtitle || "Our methodology combines cutting-edge science with personalized coaching to deliver results that last.";
+        document.getElementById('edit-why-1-title').value = cData.why_1_title || 'PERSONALIZED PLANS';
+        document.getElementById('edit-why-1-desc').value = cData.why_1_desc || 'Custom training and nutrition protocols designed specifically for your body and goals.';
+        document.getElementById('edit-why-2-title').value = cData.why_2_title || 'WEEKLY CHECK-INS';
+        document.getElementById('edit-why-2-desc').value = cData.why_2_desc || 'Regular progress reviews and plan adjustments to keep you on track toward your goals.';
+        document.getElementById('edit-why-3-title').value = cData.why_3_title || 'COMMUNITY SUPPORT';
+        document.getElementById('edit-why-3-desc').value = cData.why_3_desc || 'Join a tribe of like-minded individuals all pushing toward greatness together.';
+
+        const defaultAbout = "Volta Physique was built on one belief:\nMost people don't fail because they lack potential.\nThey fail because they lack structure.\nVolta is not just online coaching.\nIt's a performance driven system for ambitious individuals who are serious about transforming their physique and mindset.\nWe don't sell random workouts.\nWe build discipline.\nWe build structure.\nWe build stronger individuals.\nIf you're tired of starting over…\nIf you want real accountability…\nIf you're ready to upgrade your body and your identity\nVolta is built for you.";
+        document.getElementById('edit-about-text').value = cData.about_text || defaultAbout;
+
+        if (cData.packages_data) {
+            adminPackages = JSON.parse(cData.packages_data);
+        }
+        renderAdminPackages();
     } catch (e) {
-        document.getElementById('editor-fields').innerHTML = '<p class="text-red-500">Failed to load content.</p>';
+        document.getElementById('admin-packages-list').innerHTML = '<p class="text-red-500">Failed to load packages.</p>';
     }
 }
 
@@ -102,44 +104,152 @@ function closeEditorModal() {
     setTimeout(() => modal.classList.add('hidden'), 300);
 }
 
-async function saveWebsiteContent(e) {
-    e.preventDefault();
-    const btn = document.getElementById('save-content-btn');
-    const adminPass = prompt("Enter Admin Password to save changes:");
-    if (!adminPass) return;
+function renderAdminPackages() {
+    const container = document.getElementById('admin-packages-list');
+    if (adminPackages.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-sm">No packages found. Add one to get started.</p>';
+        return;
+    }
 
+    container.innerHTML = adminPackages.map((pkg, index) => `
+        <div class="p-4 bg-[#0a0a0a] border border-orange-500/20 rounded-xl mb-4">
+            <div class="flex justify-between items-center mb-3">
+                <h4 class="font-bold text-white text-lg">${pkg.title || 'Untitled Package'}</h4>
+                <div class="flex gap-2">
+                    <button type="button" onclick="editPackage(${index})" class="px-3 py-1.5 bg-blue-500/20 text-blue-500 rounded-lg hover:bg-blue-500/30 text-xs uppercase font-bold tracking-wider">Edit</button>
+                    <button type="button" onclick="deletePackage(${index})" class="px-3 py-1.5 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 text-xs uppercase font-bold tracking-wider">Delete</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-sm text-gray-400 mb-3">
+                <p>Price: <span class="text-orange-500">${pkg.price} ${pkg.currency || 'EGP'}</span></p>
+                <p>Duration: <span class="text-white">${pkg.duration}</span></p>
+                <p class="col-span-2">Discount: <span class="text-green-500">${pkg.discount || 'None'}</span></p>
+            </div>
+            
+            <div id="edit-form-${index}" class="hidden pt-4 border-t border-orange-500/20 space-y-3">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Package Title</label>
+                    <input type="text" id="pkg-title-${index}" value="${pkg.title || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Price</label>
+                        <input type="number" id="pkg-price-${index}" value="${pkg.price || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Duration (e.g. 3 Months)</label>
+                        <input type="text" id="pkg-duration-${index}" value="${pkg.duration || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Discount Badge (Optional)</label>
+                    <input type="text" id="pkg-discount-${index}" value="${pkg.discount || ''}" placeholder="e.g. 20% OFF or VIP" class="w-full px-3 py-2 rounded-lg input-dark text-sm border-green-500/30">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Short Features (One per line - Shown on card)</label>
+                    <textarea id="pkg-short-${index}" rows="3" class="w-full px-3 py-2 rounded-lg input-dark text-sm leading-tight">${Array.isArray(pkg.shortFeatures) ? pkg.shortFeatures.join('\n') : (pkg.shortFeatures || '')}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Full Features (One per line - Shown in details)</label>
+                    <textarea id="pkg-full-${index}" rows="4" class="w-full px-3 py-2 rounded-lg input-dark text-sm leading-tight">${Array.isArray(pkg.fullFeatures) ? pkg.fullFeatures.join('\n') : (pkg.fullFeatures || '')}</textarea>
+                </div>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button type="button" onclick="editPackage(${index})" class="px-4 py-2 text-gray-400 hover:text-white text-sm">Cancel</button>
+                    <button type="button" onclick="savePackage(event, ${index})" class="px-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 text-sm uppercase tracking-wider">Save Package</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function editPackage(index) {
+    const form = document.getElementById(`edit-form-${index}`);
+    form.classList.toggle('hidden');
+}
+
+function addNewPackage() {
+    adminPackages.push({
+        title: 'New Package', price: '0', currency: 'EGP', duration: '1 Month', discount: '', shortFeatures: [], fullFeatures: []
+    });
+    renderAdminPackages();
+    editPackage(adminPackages.length - 1);
+}
+
+async function savePackage(e, index) {
+    const btn = e.target;
+    const originalText = btn.textContent;
     btn.textContent = 'Saving...';
-    btn.disabled = true;
 
-    const updates = {
-        about_image: document.getElementById('edit-about-image').value.trim(),
-        pkg_0_price: document.getElementById('edit-pkg-0').value.trim(),
-        pkg_1_price: document.getElementById('edit-pkg-1').value.trim(),
-        pkg_2_price: document.getElementById('edit-pkg-2').value.trim(),
-        pkg_3_price: document.getElementById('edit-pkg-3').value.trim()
+    adminPackages[index] = {
+        title: document.getElementById(`pkg-title-${index}`).value,
+        price: document.getElementById(`pkg-price-${index}`).value,
+        currency: 'EGP',
+        duration: document.getElementById(`pkg-duration-${index}`).value,
+        discount: document.getElementById(`pkg-discount-${index}`).value,
+        shortFeatures: document.getElementById(`pkg-short-${index}`).value.split('\n').filter(f => f.trim()),
+        fullFeatures: document.getElementById(`pkg-full-${index}`).value.split('\n').filter(f => f.trim()),
     };
 
+    await saveContentToDB({ packages_data: JSON.stringify(adminPackages) });
+    btn.textContent = originalText;
+    renderAdminPackages();
+}
+
+async function deletePackage(index) {
+    const pass = prompt("Enter Admin Password to delete this package:");
+    if (pass !== "VoltaAdmin123") {
+        if (pass) alert("Incorrect Password");
+        return;
+    }
+
+    adminPackages.splice(index, 1);
+    await saveContentToDB({ packages_data: JSON.stringify(adminPackages) });
+    renderAdminPackages();
+}
+
+async function saveGeneralSettings(e) {
+    if (e) e.preventDefault();
+    const btn = document.getElementById('save-general-btn');
+    btn.textContent = 'Saving...';
+    await saveContentToDB({
+        about_image: document.getElementById('edit-about-image').value.trim(),
+        stat_1_num: document.getElementById('edit-stat-1-num').value.trim(),
+        stat_1_text: document.getElementById('edit-stat-1-text').value.trim(),
+        stat_2_num: document.getElementById('edit-stat-2-num').value.trim(),
+        stat_2_text: document.getElementById('edit-stat-2-text').value.trim(),
+        stat_3_num: document.getElementById('edit-stat-3-num').value.trim(),
+        stat_3_text: document.getElementById('edit-stat-3-text').value.trim(),
+        stat_4_num: document.getElementById('edit-stat-4-num').value.trim(),
+        stat_4_text: document.getElementById('edit-stat-4-text').value.trim(),
+        why_subtitle: document.getElementById('edit-why-subtitle').value.trim(),
+        why_1_title: document.getElementById('edit-why-1-title').value.trim(),
+        why_1_desc: document.getElementById('edit-why-1-desc').value.trim(),
+        why_2_title: document.getElementById('edit-why-2-title').value.trim(),
+        why_2_desc: document.getElementById('edit-why-2-desc').value.trim(),
+        why_3_title: document.getElementById('edit-why-3-title').value.trim(),
+        why_3_desc: document.getElementById('edit-why-3-desc').value.trim(),
+        about_text: document.getElementById('edit-about-text').value.trim()
+    });
+    btn.textContent = 'Save Content';
+    alert("Content updated successfully!");
+}
+
+async function saveContentToDB(updates) {
     try {
         const formData = new FormData();
         formData.append("action", "updateContent");
-        formData.append("adminPassword", adminPass);
+        formData.append("adminPassword", "VoltaAdmin123");
         formData.append("updates", JSON.stringify(updates));
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
         const result = await response.json();
 
-        if (result.success) {
-            alert("Content updated successfully! The main website will reflect these changes on the next refresh.");
-            closeEditorModal();
-        } else {
-            alert("Failed: " + result.message);
+        if (!result.success) {
+            alert("Failed to save: " + result.message);
         }
     } catch (e) {
-        alert("Error saving content.");
+        alert("Network error while saving.");
     }
-
-    btn.textContent = 'Save Changes';
-    btn.disabled = false;
 }
 
 function renderClientsCards(users) {

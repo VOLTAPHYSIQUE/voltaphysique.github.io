@@ -131,7 +131,7 @@
     <!-- Content Editor Modal -->
     <div id="editor-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeEditorModal()"></div>
-        <div class="absolute inset-4 md:inset-y-10 md:inset-x-1/4 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
+        <div class="absolute inset-4 md:inset-10 lg:inset-x-20 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
             id="editor-modal-content">
             <div class="flex items-center justify-between p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
                 <h2 class="font-bebas text-3xl tracking-wider text-white">WEBSITE <span
@@ -143,17 +143,103 @@
                     </svg>
                 </button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1">
-                <form id="editor-form" onsubmit="saveWebsiteContent(event)">
-                    <div class="space-y-4" id="editor-fields">
-                        <p class="text-gray-400 text-center">Loading content...</p>
+            <div class="p-6 overflow-y-auto flex-1 flex flex-col lg:flex-row gap-8">
+                <!-- General Settings -->
+                <div class="lg:w-1/2 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
+                    <h3 class="font-bebas text-2xl text-orange-500">Website Content</h3>
+
+                    <div class="space-y-4 p-5 bg-[#141414] rounded-xl border border-orange-500/20">
+                        <h4 class="text-orange-500 font-bold mb-2">1. Home Page Stats</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 1 Number</label><input type="text"
+                                    id="edit-stat-1-num" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="70+"></div>
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 1 Text</label><input type="text"
+                                    id="edit-stat-1-text" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="Transformations"></div>
+
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 2 Number</label><input type="text"
+                                    id="edit-stat-2-num" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="100+"></div>
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 2 Text</label><input type="text"
+                                    id="edit-stat-2-text" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="Clients"></div>
+
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 3 Number</label><input type="text"
+                                    id="edit-stat-3-num" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="5+"></div>
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 3 Text</label><input type="text"
+                                    id="edit-stat-3-text" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="Years Experience"></div>
+
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 4 Number</label><input type="text"
+                                    id="edit-stat-4-num" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="24/7"></div>
+                            <div><label class="block text-xs text-gray-400 mb-1">Stat 4 Text</label><input type="text"
+                                    id="edit-stat-4-text" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                    placeholder="Support"></div>
+                        </div>
                     </div>
-                    <div class="mt-8 pt-6 border-t border-orange-500/20">
-                        <button type="submit" id="save-content-btn"
-                            class="w-full btn-primary py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Save
-                            Changes</button>
+
+                    <div class="space-y-4 p-5 bg-[#141414] rounded-xl border border-orange-500/20">
+                        <h4 class="text-orange-500 font-bold mb-2">2. Why Volta Section</h4>
+                        <div><label class="block text-xs text-gray-400 mb-1">Subtitle</label><textarea
+                                id="edit-why-subtitle" rows="2" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                placeholder="Our methodology combines..."></textarea></div>
+                        <div class="pt-4 border-t border-white/5">
+                            <label class="block text-xs text-gray-400 mb-1">Card 1 Title</label><input type="text"
+                                id="edit-why-1-title" class="w-full px-3 py-2 rounded-lg input-dark text-sm mb-2"
+                                placeholder="PERSONALIZED PLANS">
+                            <label class="block text-xs text-gray-400 mb-1">Card 1 Text</label><textarea
+                                id="edit-why-1-desc" rows="2"
+                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"></textarea>
+                        </div>
+                        <div class="pt-4 border-t border-white/5">
+                            <label class="block text-xs text-gray-400 mb-1">Card 2 Title</label><input type="text"
+                                id="edit-why-2-title" class="w-full px-3 py-2 rounded-lg input-dark text-sm mb-2"
+                                placeholder="WEEKLY CHECK-INS">
+                            <label class="block text-xs text-gray-400 mb-1">Card 2 Text</label><textarea
+                                id="edit-why-2-desc" rows="2"
+                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"></textarea>
+                        </div>
+                        <div class="pt-4 border-t border-white/5">
+                            <label class="block text-xs text-gray-400 mb-1">Card 3 Title</label><input type="text"
+                                id="edit-why-3-title" class="w-full px-3 py-2 rounded-lg input-dark text-sm mb-2"
+                                placeholder="COMMUNITY SUPPORT">
+                            <label class="block text-xs text-gray-400 mb-1">Card 3 Text</label><textarea
+                                id="edit-why-3-desc" rows="2"
+                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"></textarea>
+                        </div>
                     </div>
-                </form>
+
+                    <div class="space-y-4 p-5 bg-[#141414] rounded-xl border border-orange-500/20">
+                        <h4 class="text-orange-500 font-bold mb-2">3. About Section</h4>
+                        <div><label class="block text-xs text-gray-400 mb-1">About Image URL</label><input type="text"
+                                id="edit-about-image" placeholder="https://..."
+                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"></div>
+                        <div><label class="block text-xs text-gray-400 mb-1">About Story Text (Press Enter for new
+                                line)</label><textarea id="edit-about-text" rows="8"
+                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                                placeholder="Volta Physique was built on one belief..."></textarea></div>
+                    </div>
+
+                    <button onclick="saveGeneralSettings(event)" id="save-general-btn"
+                        class="w-full btn-primary py-3 rounded-xl font-bold uppercase tracking-wider sticky bottom-0 z-10 shadow-2xl">Save
+                        Content</button>
+                </div>
+
+                <!-- Packages Manager -->
+                <div class="lg:w-2/3 border-t lg:border-t-0 lg:border-l border-orange-500/20 pt-6 lg:pt-0 lg:pl-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bebas text-2xl text-orange-500">Packages Manager</h3>
+                        <button onclick="addNewPackage()"
+                            class="px-4 py-2 bg-green-500/20 text-green-500 rounded-lg font-bold text-sm hover:bg-green-500/30 transition-colors">+
+                            Add Package</button>
+                    </div>
+                    <div id="admin-packages-list" class="space-y-4">
+                        <p class="text-gray-400">Loading packages...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
