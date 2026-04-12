@@ -182,31 +182,31 @@ function renderAdminPackages() {
                     <label class="block text-xs text-gray-400 mb-1">Package Title</label>
                     <input type="text" id="pkg-title-${index}" value="${pkg.title || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Price</label>
+                        <label class="block text-[10px] sm:text-xs text-gray-400 mb-1">Price</label>
                         <input type="number" id="pkg-price-${index}" value="${pkg.price || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 mb-1">Duration (e.g. 3 Months)</label>
+                        <label class="block text-[10px] sm:text-xs text-gray-400 mb-1">Duration (e.g. 3 Months)</label>
                         <input type="text" id="pkg-duration-${index}" value="${pkg.duration || ''}" class="w-full px-3 py-2 rounded-lg input-dark text-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">Discount Badge (Optional)</label>
+                    <label class="block text-[10px] sm:text-xs text-gray-400 mb-1">Discount Badge (Optional)</label>
                     <input type="text" id="pkg-discount-${index}" value="${pkg.discount || ''}" placeholder="e.g. 20% OFF or VIP" class="w-full px-3 py-2 rounded-lg input-dark text-sm border-green-500/30">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">Short Features (One per line - Shown on card)</label>
+                    <label class="block text-[10px] sm:text-xs text-gray-400 mb-1">Short Features (One per line - Shown on card)</label>
                     <textarea id="pkg-short-${index}" rows="3" class="w-full px-3 py-2 rounded-lg input-dark text-sm leading-tight">${Array.isArray(pkg.shortFeatures) ? pkg.shortFeatures.join('\n') : (pkg.shortFeatures || '')}</textarea>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">Full Features (One per line - Shown in details)</label>
+                    <label class="block text-[10px] sm:text-xs text-gray-400 mb-1">Full Features (One per line - Shown in details)</label>
                     <textarea id="pkg-full-${index}" rows="4" class="w-full px-3 py-2 rounded-lg input-dark text-sm leading-tight">${Array.isArray(pkg.fullFeatures) ? pkg.fullFeatures.join('\n') : (pkg.fullFeatures || '')}</textarea>
                 </div>
-                <div class="flex justify-end gap-2 mt-4">
-                    <button type="button" onclick="editPackage(${index})" class="px-4 py-2 text-gray-400 hover:text-white text-sm">Cancel</button>
-                    <button type="button" onclick="savePackage(event, ${index})" class="px-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 text-sm uppercase tracking-wider">Save Package</button>
+                <div class="flex justify-end gap-2 mt-5">
+                    <button type="button" onclick="editPackage(${index})" class="px-3 sm:px-4 py-2 text-gray-400 hover:text-white text-xs sm:text-sm">Cancel</button>
+                    <button type="button" onclick="savePackage(event, ${index})" class="px-3 sm:px-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 text-[10px] sm:text-sm uppercase tracking-wider">Save Package</button>
                 </div>
             </div>
         </div>
