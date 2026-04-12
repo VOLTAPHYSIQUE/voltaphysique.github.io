@@ -23,10 +23,32 @@
                             class="text-orange-500">DASHBOARD</span></h1>
                     <p class="text-gray-400">Manage your athletes and track their progress</p>
                 </div>
-                <button onclick="adminLogout()"
-                    class="mt-4 md:mt-0 px-6 py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-sm font-semibold uppercase tracking-wider transition-all">
-                    Lock & Exit
-                </button>
+                <div class="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0">
+                    <button
+                        onclick="window.open('https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing', '_blank')"
+                        class="px-6 py-3 rounded-xl btn-primary text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                            </path>
+                        </svg>
+                        Client Tracker
+                    </button>
+                    <button
+                        onclick="window.open('https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing', '_blank')"
+                        class="px-6 py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                            </path>
+                        </svg>
+                        Weekly Updates
+                    </button>
+                    <button onclick="adminLogout()"
+                        class="px-6 py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-sm font-semibold uppercase tracking-wider transition-all">
+                        Lock & Exit
+                    </button>
+                </div>
             </div>
 
             <!-- Stats -->
@@ -39,28 +61,29 @@
                     <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Active Subscribers</p>
                     <p id="admin-active-users" class="font-bebas text-5xl text-green-500">0</p>
                 </div>
+                <div class="stat-card p-6 rounded-2xl border-yellow-500/30">
+                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Pending Leads</p>
+                    <p id="admin-pending-users" class="font-bebas text-5xl text-yellow-500">0</p>
+                </div>
             </div>
 
-            <!-- Table -->
-            <div class="rounded-2xl card-dark overflow-hidden border border-orange-500/20">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse whitespace-nowrap">
-                        <thead>
-                            <tr
-                                class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
-                                <th class="p-4 font-medium">Name</th>
-                                <th class="p-4 font-medium">Phone (WhatsApp)</th>
-                                <th class="p-4 font-medium">Goal</th>
-                                <th class="p-4 font-medium">Start Wt</th>
-                                <th class="p-4 font-medium">Current Wt</th>
-                                <th class="p-4 font-medium">Target Wt</th>
-                                <th class="p-4 font-medium">Status</th>
-                                <th class="p-4 font-medium">Registered</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-table" class="text-gray-300 text-sm divide-y divide-orange-500/10">
-                        </tbody>
-                    </table>
+            <!-- Athletes Directory Section (الكروت الجديدة) -->
+            <div class="rounded-2xl card-dark p-6 sm:p-8 mb-10">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <h3 class="font-bebas text-2xl tracking-wider flex items-center gap-3">
+                        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg> ATHLETES DIRECTORY
+                    </h3>
+                    <button onclick="toggleClientsView()" id="toggle-clients-btn"
+                        class="px-6 py-3 rounded-xl border border-orange-500/50 hover:border-orange-500 text-orange-500 text-sm font-semibold uppercase tracking-wider transition-all">
+                        Show Athletes
+                    </button>
+                </div>
+
+                <!-- الشبكة المخفية اللي هيظهر فيها كروت المشتركين -->
+                <div id="clients-grid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 transition-all">
                 </div>
             </div>
 
