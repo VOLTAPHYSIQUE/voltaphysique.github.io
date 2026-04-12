@@ -86,7 +86,7 @@ async function openEditorModal() {
     try {
         const formData = new FormData();
         formData.append("action", "getContent");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         let cData = result.content || {};
@@ -301,7 +301,7 @@ async function saveContentToDB(updates) {
         formData.append("adminPassword", "VoltaAdmin123");
         formData.append("updates", JSON.stringify(updates));
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (!result.success) {
@@ -319,7 +319,7 @@ async function fetchFreshAdminData() {
         formData.append("email", "admin");
         formData.append("password", "VoltaAdmin123");
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success && result.isAdmin) {
@@ -369,15 +369,15 @@ function openAdminModal(type) {
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing';
 
         thead.innerHTML = `
-            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[9px] sm:text-xs uppercase tracking-wider text-gray-400">
-                <th class="p-2 sm:p-4 font-medium">Name</th>
-                <th class="p-2 sm:p-4 font-medium text-center">Contact</th>
-                <th class="p-2 sm:p-4 font-medium hidden md:table-cell">Age</th>
-                <th class="p-2 sm:p-4 font-medium hidden md:table-cell">Height</th>
-                <th class="p-2 sm:p-4 font-medium hidden lg:table-cell">Exp.</th>
-                <th class="p-2 sm:p-4 font-medium text-center">Status</th>
-                <th class="p-2 sm:p-4 font-medium hidden sm:table-cell">Joined</th>
-                <th class="p-2 sm:p-4 font-medium text-center">Action</th>
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-3 sm:p-4 font-medium">Name</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Contact</th>
+                <th class="p-3 sm:p-4 font-medium">Age</th>
+                <th class="p-3 sm:p-4 font-medium">Height</th>
+                <th class="p-3 sm:p-4 font-medium">Exp.</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Status</th>
+                <th class="p-3 sm:p-4 font-medium">Joined</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
         tbody.innerHTML = users.map(user => {
@@ -394,12 +394,12 @@ function openAdminModal(type) {
                         <span class="hidden sm:inline text-xs sm:text-sm hover:underline ml-1">${user.phone || '--'}</span>
                     </a>
                 </td>
-                <td class="p-2 sm:p-4 hidden md:table-cell">${user.age || '--'}</td>
-                <td class="p-2 sm:p-4 hidden md:table-cell">${user.height || '--'}</td>
-                <td class="p-2 sm:p-4 text-[10px] sm:text-xs hidden lg:table-cell">${user.experience || '--'}</td>
-                <td class="p-2 sm:p-4 text-center">${statusBadge}</td>
-                <td class="p-2 sm:p-4 text-[10px] sm:text-xs text-gray-500 hidden sm:table-cell">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
-                <td class="p-2 sm:p-4 text-center">
+                <td class="p-3 sm:p-4 text-xs">${user.age || '--'}</td>
+                <td class="p-3 sm:p-4 text-xs">${user.height || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.experience || '--'}</td>
+                <td class="p-3 sm:p-4 text-center">${statusBadge}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
+                <td class="p-3 sm:p-4 text-center">
                     <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-1.5 sm:p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors inline-flex items-center justify-center" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -416,11 +416,11 @@ function openAdminModal(type) {
         thead.innerHTML = `
             <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
                 <th class="p-3 sm:p-4 font-medium">Name</th>
-                <th class="p-3 sm:p-4 font-medium hidden md:table-cell">Goal</th>
-                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Start</th>
-                <th class="p-3 sm:p-4 font-medium">Current</th>
-                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Target</th>
-                <th class="p-3 sm:p-4 font-medium">Status</th>
+                <th class="p-3 sm:p-4 font-medium">Goal</th>
+                <th class="p-3 sm:p-4 font-medium">Start</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Current</th>
+                <th class="p-3 sm:p-4 font-medium">Target</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Status</th>
                 <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
@@ -431,12 +431,12 @@ function openAdminModal(type) {
                 : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors">
-                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[100px] sm:min-w-[120px] text-xs sm:text-sm">${user.fullName || '--'}</td>
-                <td class="p-3 sm:p-4 text-[10px] sm:text-xs hidden md:table-cell">${user.goal || user.weightGoalType || '--'}</td>
-                <td class="p-3 sm:p-4 hidden sm:table-cell">${user.startWeight || user.weight || '--'}</td>
-                <td class="p-3 sm:p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'}</td>
-                <td class="p-3 sm:p-4 hidden sm:table-cell">${user.targetWeight || '--'}</td>
-                <td class="p-3 sm:p-4">${statusBadge}</td>
+                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${user.fullName || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.goal || user.weightGoalType || '--'}</td>
+                <td class="p-3 sm:p-4">${user.startWeight || user.weight || '--'}</td>
+                <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${user.currentWeight || user.weight || '--'}</td>
+                <td class="p-3 sm:p-4">${user.targetWeight || '--'}</td>
+                <td class="p-3 sm:p-4 text-center">${statusBadge}</td>
                 <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
                     <button onclick="viewAthleteGraph('${user.email}')" class="p-2 sm:px-2 sm:py-1 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
                         <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
@@ -515,7 +515,7 @@ async function deleteClient(event, email, name) {
         formData.append("adminPassword", adminPass);
 
         // استخدام رابط السكريبت الخاص بالـ Login/Signup
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", {
             method: "POST",
             body: formData
         });
@@ -655,7 +655,18 @@ async function toggleUserStatus(event, email, newStatus) {
     event.stopPropagation();
     const btn = event.currentTarget;
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '...';
+    const originalClass = btn.className;
+
+    // تأثير سريع جداً (Optimistic UI) عشان يقلب معاك في نفس اللحظة بدون ريفرش
+    if (newStatus === 'Active') {
+        btn.innerHTML = 'VIP ACTIVE';
+        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-500/10 text-green-500 text-[9px] sm:text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors";
+        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Pending')`);
+    } else {
+        btn.innerHTML = 'PENDING';
+        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[9px] sm:text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors";
+        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Active')`);
+    }
     btn.disabled = true;
 
     try {
@@ -666,7 +677,7 @@ async function toggleUserStatus(event, email, newStatus) {
         formData.append("adminPassword", "VoltaAdmin123");
 
         // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", {
             method: "POST",
             body: formData
         });

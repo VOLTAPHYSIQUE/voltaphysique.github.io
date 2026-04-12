@@ -7,8 +7,8 @@ let isWeightUpdateUnlocked = false;
 // ==========================================
 const APP_CONFIG = {
     api: {
-        authScript: "https://script.google.com/macros/s/AKfycbxsNmVtFwlmYYCnwt7ptmlsxF7p13kIHWBAE9PtOU9GBkIS492joly2H9bQNSJ8zYQ/exec",
-        weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbzun3rRM7qer4qVuWsD5lmz-m3v8SSDTdXWBMKuICAmOPZn_wm5Lmq1ZiCINkCiK125/exec"
+        authScript: "https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec",
+        weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbw0AvmA-HD3IFTP3U5DSI5LoYqu2uxnbmVOB2rlqFms6aPb5fWQXhGl061CiSyC-HJb/exec"
     },
     links: {
         whatsappPhone: "201055723467",
@@ -710,7 +710,8 @@ async function verifyAccessCode() {
         formData.append("action", "verifyCode");
         formData.append("code", code);
 
-        const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, { method: "POST", body: formData });
+        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
+        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
@@ -761,7 +762,7 @@ async function silentVerifyAccessCode(code) {
         formData.append("action", "verifyCode");
         formData.append("code", code);
 
-        const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, { method: "POST", body: formData });
+        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
@@ -881,33 +882,38 @@ async function handleWeightUpdate(e) {
         }
 
         try {
-            const googleSheetPayload = {
-                action: 'appendWeeklyUpdate',
-                fullName: currentUser.fullName || '',
-                startWeight: startWeight.toFixed(1),
-                targetWeight: targetWeight.toFixed(1),
-                previousWeight: currentWeight.toFixed(1),
-                currentWeight: newWeight.toFixed(1),
-                goalType: weightGoalType,
-                goal: currentUser.goal || '',
-                totalGoal: (isLosingWeight || isGainingWeight) ? Math.abs(targetWeight - startWeight).toFixed(1) : '0',
-                progressPercent: progressPercentage,
-                remaining: remainingWeight.toFixed(1),
-                timestamp: new Date().toISOString()
-            };
+            const formData = new FormData();
+            formData.append('action', 'appendWeeklyUpdate');
+            formData.append('email', currentUser.email);
+            formData.append('fullName', currentUser.fullName || '');
+            formData.append('startWeight', startWeight.toFixed(1));
+            formData.append('targetWeight', targetWeight.toFixed(1));
+            formData.append('previousWeight', currentWeight.toFixed(1));
+            formData.append('currentWeight', newWeight.toFixed(1));
+            formData.append('goalType', weightGoalType);
 
             const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
-                body: JSON.stringify(googleSheetPayload)
+                body: formData
             });
             const result = await response.json();
             console.log('Google Sheets sync:', result);
+            if (!result.success) throw new Error(result.message);
         } catch (error) {
             console.log('Google Sheets sync: ', error);
+            throw error;
         }
+
+        // تحديث الوزن في شيت المشتركين الأساسي عشان يظهر في لوحة الإدارة
+        try {
+            const syncData = new FormData();
+            syncData.append("action", "syncWeights");
+            syncData.append("email", currentUser.email);
+            syncData.append("currentWeight", newWeight.toFixed(1));
+            syncData.append("targetWeight", targetWeight.toFixed(1));
+            syncData.append("goalType", weightGoalType);
+            fetch(APP_CONFIG.api.authScript, { method: "POST", body: syncData }).catch(() => { });
+        } catch (e) { }
 
         // Update local user object
         currentUser.currentWeight = newWeight.toFixed(1);
