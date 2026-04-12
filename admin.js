@@ -86,7 +86,7 @@ async function openEditorModal() {
     try {
         const formData = new FormData();
         formData.append("action", "getContent");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         let cData = result.content || {};
@@ -301,7 +301,7 @@ async function saveContentToDB(updates) {
         formData.append("adminPassword", "VoltaAdmin123");
         formData.append("updates", JSON.stringify(updates));
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (!result.success) {
@@ -319,7 +319,7 @@ async function fetchFreshAdminData() {
         formData.append("email", "admin");
         formData.append("password", "VoltaAdmin123");
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success && result.isAdmin) {
@@ -515,7 +515,7 @@ async function deleteClient(event, email, name) {
         formData.append("adminPassword", adminPass);
 
         // استخدام رابط السكريبت الخاص بالـ Login/Signup
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
             method: "POST",
             body: formData
         });
@@ -677,7 +677,7 @@ async function toggleUserStatus(event, email, newStatus) {
         formData.append("adminPassword", "VoltaAdmin123");
 
         // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
             method: "POST",
             body: formData
         });

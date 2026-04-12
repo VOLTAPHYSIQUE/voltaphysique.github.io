@@ -7,7 +7,7 @@ let isWeightUpdateUnlocked = false;
 // ==========================================
 const APP_CONFIG = {
     api: {
-        authScript: "https://script.google.com/macros/s/AKfycbzbLMp0cCFGDeItGBw5wAZRqVPK97a-NRbukusSIM6QBR_LLO-DXNeXVoW-9J4D8vY28Q/exec",
+        authScript: "https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec",
         weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbw0AvmA-HD3IFTP3U5DSI5LoYqu2uxnbmVOB2rlqFms6aPb5fWQXhGl061CiSyC-HJb/exec"
     },
     links: {
@@ -711,7 +711,6 @@ async function verifyAccessCode() {
         formData.append("code", code);
 
         const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
-        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
@@ -908,12 +907,15 @@ async function handleWeightUpdate(e) {
         try {
             const syncData = new FormData();
             syncData.append("action", "syncWeights");
-            syncData.append("email", currentUser.email);
+            syncData.append("email", currentUser.email.toLowerCase().trim());
             syncData.append("currentWeight", newWeight.toFixed(1));
             syncData.append("targetWeight", targetWeight.toFixed(1));
             syncData.append("goalType", weightGoalType);
-            fetch(APP_CONFIG.api.authScript, { method: "POST", body: syncData }).catch(() => { });
-        } catch (e) { }
+
+            const syncResp = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: syncData });
+            const syncResult = await syncResp.json();
+            console.log("Admin Sync:", syncResult);
+        } catch (e) { console.error("Admin Sync Error:", e); }
 
         // Update local user object
         currentUser.currentWeight = newWeight.toFixed(1);
