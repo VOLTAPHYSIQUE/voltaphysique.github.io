@@ -94,6 +94,103 @@ function renderClientsCards(users) {
     }).join('');
 }
 
+function openAdminModal(type) {
+    const modal = document.getElementById('admin-modal');
+    const modalContent = document.getElementById('admin-modal-content');
+    const title = document.getElementById('admin-modal-title');
+    const thead = document.getElementById('admin-modal-thead');
+    const tbody = document.getElementById('admin-modal-tbody');
+    const modalLink = document.getElementById('admin-modal-link');
+
+    const usersData = localStorage.getItem('volta_admin_users');
+    const users = usersData ? JSON.parse(usersData).reverse() : [];
+
+    if (type === 'tracker') {
+        title.innerHTML = 'CLIENT <span class="text-orange-500">TRACKER</span>';
+        modalLink.href = 'https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing';
+
+        thead.innerHTML = `
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-4 font-medium">Name</th>
+                <th class="p-4 font-medium">Phone</th>
+                <th class="p-4 font-medium">Age</th>
+                <th class="p-4 font-medium">Height</th>
+                <th class="p-4 font-medium">Experience</th>
+                <th class="p-4 font-medium">Status</th>
+                <th class="p-4 font-medium">Joined</th>
+            </tr>
+        `;
+        tbody.innerHTML = users.map(user => {
+            const isActive = String(user.Status || user.status || '').toLowerCase() === 'active';
+            const statusBadge = isActive
+                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">VIP ACTIVE</span>'
+                : '<span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20">PENDING</span>';
+            return `
+            <tr class="hover:bg-white/5 transition-colors">
+                <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
+                <td class="p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline">${user.phone || '--'}</a></td>
+                <td class="p-4">${user.age || '--'} yrs</td>
+                <td class="p-4">${user.height || '--'} cm</td>
+                <td class="p-4 text-xs">${user.experience || '--'}</td>
+                <td class="p-4">${statusBadge}</td>
+                <td class="p-4 text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
+            </tr>
+            `;
+        }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No clients found.</td></tr>';
+
+    } else if (type === 'updates') {
+        title.innerHTML = 'WEEKLY <span class="text-orange-500">UPDATES</span>';
+        modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
+
+        thead.innerHTML = `
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-4 font-medium">Name</th>
+                <th class="p-4 font-medium">Goal</th>
+                <th class="p-4 font-medium">Start Wt</th>
+                <th class="p-4 font-medium">Current Wt</th>
+                <th class="p-4 font-medium">Target Wt</th>
+                <th class="p-4 font-medium">Status</th>
+                <th class="p-4 font-medium">WhatsApp</th>
+            </tr>
+        `;
+        tbody.innerHTML = users.map(user => {
+            const isActive = String(user.Status || user.status || '').toLowerCase() === 'active';
+            const statusBadge = isActive
+                ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">VIP ACTIVE</span>'
+                : '<span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20">PENDING</span>';
+            return `
+            <tr class="hover:bg-white/5 transition-colors">
+                <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
+                <td class="p-4 text-xs">${user.goal || user.weightGoalType || '--'}</td>
+                <td class="p-4">${user.startWeight || user.weight || '--'} kg</td>
+                <td class="p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'} kg</td>
+                <td class="p-4">${user.targetWeight || '--'} kg</td>
+                <td class="p-4">${statusBadge}</td>
+                <td class="p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-3 py-1 bg-green-500/10 text-green-500 text-xs rounded-lg hover:bg-green-500/20 transition-colors">Message</a></td>
+            </tr>
+            `;
+        }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
+    }
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalContent.classList.remove('scale-95');
+    }, 10);
+}
+
+function closeAdminModal() {
+    const modal = document.getElementById('admin-modal');
+    const modalContent = document.getElementById('admin-modal-content');
+
+    modal.classList.add('opacity-0');
+    modalContent.classList.add('scale-95');
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
+}
+
 function adminLogout() {
     localStorage.removeItem('volta_admin');
     localStorage.removeItem('volta_admin_users');

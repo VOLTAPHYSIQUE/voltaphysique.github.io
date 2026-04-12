@@ -24,8 +24,7 @@
                     <p class="text-gray-400">Manage your athletes and track their progress</p>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0">
-                    <button
-                        onclick="window.open('https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing', '_blank')"
+                    <button onclick="openAdminModal('tracker')"
                         class="px-6 py-3 rounded-xl btn-primary text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -34,8 +33,7 @@
                         </svg>
                         Client Tracker
                     </button>
-                    <button
-                        onclick="window.open('https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing', '_blank')"
+                    <button onclick="openAdminModal('updates')"
                         class="px-6 py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -89,6 +87,38 @@
 
         </div>
     </div>
+
+    <!-- Admin Modal (Tables Interface) -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeAdminModal()"></div>
+        <div class="absolute inset-4 md:inset-10 lg:inset-x-20 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
+            id="admin-modal-content">
+            <div class="flex items-center justify-between p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
+                <h2 id="admin-modal-title" class="font-bebas text-3xl sm:text-4xl tracking-wider text-white">TITLE</h2>
+                <div class="flex items-center gap-4">
+                    <a id="admin-modal-link" href="#" target="_blank"
+                        class="hidden sm:flex px-4 py-2 rounded-lg border border-orange-500/50 text-orange-500 text-xs uppercase tracking-wider hover:bg-orange-500/10 transition-colors">Edit
+                        in Google Sheets</a>
+                    <button onclick="closeAdminModal()" class="text-gray-400 hover:text-red-500 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-0 sm:p-6 overflow-y-auto flex-1">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead id="admin-modal-thead"></thead>
+                        <tbody id="admin-modal-tbody" class="text-gray-300 text-sm divide-y divide-orange-500/10">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="admin.js"></script>
 </body>
 
