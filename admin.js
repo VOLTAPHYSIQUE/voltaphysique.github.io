@@ -304,12 +304,26 @@ function openAdminModal(type) {
     const thead = document.getElementById('admin-modal-thead');
     const tbody = document.getElementById('admin-modal-tbody');
     const modalLink = document.getElementById('admin-modal-link');
+    const statsEl = document.getElementById('admin-modal-stats');
 
     const usersData = localStorage.getItem('volta_admin_users');
     const users = usersData ? JSON.parse(usersData).reverse() : [];
 
     if (type === 'tracker') {
         title.innerHTML = 'CLIENT <span class="text-orange-500">TRACKER</span>';
+
+        const activeCount = users.filter(u => String(u.Status || u.status || '').toLowerCase() === 'active').length;
+        const pendingCount = users.length - activeCount;
+
+        if (statsEl) {
+            statsEl.classList.remove('hidden');
+            statsEl.innerHTML = `
+                <span class="px-2 py-1 rounded-md bg-gray-500/10 text-gray-400 border border-gray-500/20">TOTAL: <span class="text-white">${users.length}</span></span>
+                <span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 border border-green-500/20">VIP ACTIVE: <span class="text-white">${activeCount}</span></span>
+                <span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">PENDING: <span class="text-white">${pendingCount}</span></span>
+            `;
+        }
+
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing';
 
         thead.innerHTML = `
@@ -353,6 +367,7 @@ function openAdminModal(type) {
 
     } else if (type === 'updates') {
         title.innerHTML = 'WEEKLY <span class="text-orange-500">UPDATES</span>';
+        if (statsEl) statsEl.classList.add('hidden');
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
 
         thead.innerHTML = `
