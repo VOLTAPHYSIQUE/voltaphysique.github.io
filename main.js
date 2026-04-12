@@ -7,7 +7,7 @@ let isWeightUpdateUnlocked = false;
 // ==========================================
 const APP_CONFIG = {
     api: {
-        authScript: "https://script.google.com/macros/s/AKfycbxE5sSkcEVOGRbZgjEM6OPxv1saC_Zsy1pAwM44AsV9jKkhMu1E6YFlUInQdM05fJg66w/exec",
+        authScript: "https://script.google.com/macros/s/AKfycbxb-zNpxbeFI15GIZgAYnT6ZsdJonevWzsrLUk25a0-2iN9KmPV4DuWS01YeygjyvML3g/exec",
         weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbwXWJo3VOf6wbMo0YoGmsD5RmKreCQGEXgPgy3LH__ZPKeuipok_SXdTMrLqL61VA/exec"
     },
     links: {
