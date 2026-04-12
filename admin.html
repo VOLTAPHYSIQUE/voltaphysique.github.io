@@ -24,9 +24,9 @@
                             class="text-orange-500">DASHBOARD</span></h1>
                     <p class="text-gray-400">Manage your athletes and track their progress</p>
                 </div>
-                <div class="grid grid-cols-2 md:flex md:flex-row flex-wrap gap-2 sm:gap-3 mt-5 md:mt-0">
+                <div class="grid grid-cols-2 sm:flex sm:flex-row sm:flex-wrap gap-2 sm:gap-3 mt-5 md:mt-0">
                     <button onclick="openAdminModal('tracker')"
-                        class="px-3 py-2.5 sm:px-5 sm:py-3 rounded-xl btn-primary text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
+                        class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl btn-primary text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
@@ -35,16 +35,17 @@
                         <span class="truncate">Tracker</span>
                     </button>
                     <button onclick="openAdminModal('updates')"
-                        class="col-span-2 md:col-span-1 px-3 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
+                        class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                             </path>
                         </svg>
-                        <span class="truncate">Weekly Updates</span>
+                        <span class="truncate hidden sm:inline">Weekly Updates</span>
+                        <span class="truncate sm:hidden">Updates</span>
                     </button>
                     <button onclick="openEditorModal()"
-                        class="px-3 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-blue-500 hover:bg-blue-500/10 text-blue-500 text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
+                        class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-blue-500 hover:bg-blue-500/10 text-blue-500 text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -53,7 +54,7 @@
                         <span class="truncate">Editor</span>
                     </button>
                     <button onclick="adminLogout()"
-                        class="px-3 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center">
+                        class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center">
                         <span class="truncate">Exit</span>
                     </button>
                 </div>
@@ -104,32 +105,32 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeAdminModal()"></div>
         <div class="absolute inset-2 sm:inset-4 md:inset-10 lg:inset-x-20 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
             id="admin-modal-content">
-            <div
-                class="flex flex-col md:flex-row md:items-center justify-between p-4 sm:p-6 border-b border-orange-500/20 bg-[#1a1a1a] gap-3 sm:gap-4">
-                <div>
-                    <h2 id="admin-modal-title" class="font-bebas text-2xl sm:text-4xl tracking-wider text-white mb-1">
+            <div class="flex flex-col p-4 sm:p-6 border-b border-orange-500/20 bg-[#1a1a1a] gap-3 relative">
+                <div class="pr-10 sm:pr-12">
+                    <h2 id="admin-modal-title" class="font-bebas text-xl sm:text-4xl tracking-wider text-white mb-1">
                         TITLE</h2>
                     <div id="admin-modal-stats"
-                        class="hidden flex flex-wrap gap-2 text-[10px] sm:text-xs font-bold tracking-wider uppercase">
+                        class="hidden flex flex-wrap gap-1 sm:gap-2 text-[9px] sm:text-xs font-bold tracking-wider uppercase mt-1">
                     </div>
                 </div>
-                <div class="flex items-center gap-2 sm:gap-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full mt-1 sm:mt-0">
                     <select id="admin-filter" onchange="applyAdminFilter()"
-                        class="bg-[#0a0a0a] border border-orange-500/30 text-gray-300 text-xs uppercase tracking-wider px-3 py-2 rounded-lg outline-none focus:border-orange-500 transition-colors cursor-pointer hidden sm:block">
+                        class="w-full sm:w-auto bg-[#0a0a0a] border border-orange-500/30 text-gray-300 text-[10px] sm:text-xs uppercase tracking-wider px-3 py-2 rounded-lg outline-none focus:border-orange-500 transition-colors cursor-pointer block">
                         <option value="all">All Athletes</option>
                         <option value="active">VIP Active (Subscribed)</option>
                         <option value="pending">Pending (Just Login)</option>
                     </select>
                     <a id="admin-modal-link" href="#" target="_blank"
-                        class="hidden sm:flex px-4 py-2 rounded-lg border border-orange-500/50 text-orange-500 text-xs uppercase tracking-wider hover:bg-orange-500/10 transition-colors">Edit
+                        class="hidden sm:flex px-4 py-2 rounded-lg border border-orange-500/50 text-orange-500 text-[10px] sm:text-xs uppercase tracking-wider hover:bg-orange-500/10 transition-colors">Edit
                         in Google Sheets</a>
-                    <button onclick="closeAdminModal()" class="text-gray-400 hover:text-red-500 transition-colors">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
                 </div>
+                <button onclick="closeAdminModal()"
+                    class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
             </div>
             <div class="p-0 sm:p-6 overflow-y-auto flex-1">
                 <div class="overflow-x-auto">
