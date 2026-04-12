@@ -10,6 +10,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="h-full bg-[#0a0a0a] text-white font-inter overflow-x-hidden">
@@ -94,6 +95,12 @@
             <div class="flex items-center justify-between p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
                 <h2 id="admin-modal-title" class="font-bebas text-3xl sm:text-4xl tracking-wider text-white">TITLE</h2>
                 <div class="flex items-center gap-4">
+                    <select id="admin-filter" onchange="applyAdminFilter()"
+                        class="bg-[#0a0a0a] border border-orange-500/30 text-gray-300 text-xs uppercase tracking-wider px-3 py-2 rounded-lg outline-none focus:border-orange-500 transition-colors cursor-pointer hidden sm:block">
+                        <option value="all">All Athletes</option>
+                        <option value="active">VIP Active (Subscribed)</option>
+                        <option value="pending">Pending (Just Login)</option>
+                    </select>
                     <a id="admin-modal-link" href="#" target="_blank"
                         class="hidden sm:flex px-4 py-2 rounded-lg border border-orange-500/50 text-orange-500 text-xs uppercase tracking-wider hover:bg-orange-500/10 transition-colors">Edit
                         in Google Sheets</a>
@@ -112,6 +119,35 @@
                         <tbody id="admin-modal-tbody" class="text-gray-300 text-sm divide-y divide-orange-500/10">
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Graph Modal -->
+    <div id="graph-modal" class="fixed inset-0 z-[60] hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeGraphModal()"></div>
+        <div class="absolute inset-4 md:inset-x-20 md:inset-y-10 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
+            id="graph-modal-content">
+            <div class="flex items-center justify-between p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
+                <h2 class="font-bebas text-3xl tracking-wider text-white">ATHLETE <span
+                        class="text-orange-500">PROGRESS</span></h2>
+                <button onclick="closeGraphModal()" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 flex-1 flex flex-col">
+                <div class="mb-6 flex justify-between items-center">
+                    <h3 id="graph-athlete-name" class="font-bold text-xl text-white">Name</h3>
+                    <p id="graph-athlete-goal"
+                        class="text-orange-500 text-xs sm:text-sm uppercase tracking-wider bg-orange-500/10 px-3 py-1 rounded-lg">
+                        Goal</p>
+                </div>
+                <div class="w-full flex-1 relative min-h-[250px]">
+                    <canvas id="adminWeightChart"></canvas>
                 </div>
             </div>
         </div>
@@ -221,9 +257,16 @@
                             </svg>
                             4. Security Settings
                         </h4>
-                        <div><label class="block text-xs text-gray-400 mb-1">VIP Access Code (Used to unlock weekly
-                                updates)</label><input type="text" id="edit-access-code" placeholder="1223"
-                                class="w-full px-3 py-2 rounded-lg input-dark text-sm"></div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">VIP Access Code (Used to unlock weekly
+                                updates)</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="edit-access-code" placeholder="1223"
+                                    class="flex-1 px-3 py-2 rounded-lg input-dark text-sm">
+                                <button onclick="saveAccessCode(event)"
+                                    class="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-500 rounded-lg text-sm font-bold uppercase tracking-wider transition-colors border border-red-500/20">Update</button>
+                            </div>
+                        </div>
                     </div>
 
                     <button onclick="saveGeneralSettings(event)" id="save-general-btn"

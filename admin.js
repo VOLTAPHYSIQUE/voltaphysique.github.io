@@ -330,7 +330,8 @@ function openAdminModal(type) {
                 ? '<span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20">VIP ACTIVE</span>'
                 : '<span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20">PENDING</span>';
             return `
-            <tr class="hover:bg-white/5 transition-colors">
+            <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
+            <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
                 <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
                 <td class="p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline">${user.phone || '--'}</a></td>
                 <td class="p-4">${user.age || '--'} yrs</td>
@@ -338,7 +339,10 @@ function openAdminModal(type) {
                 <td class="p-4 text-xs">${user.experience || '--'}</td>
                 <td class="p-4">${statusBadge}</td>
                 <td class="p-4 text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
-                <td class="p-4 text-center">
+                <td class="p-4 text-center flex items-center justify-center gap-2">
+                    <button onclick="viewAthleteGraph('${user.email}')" class="p-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 transition-colors" title="View Progress">
+                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
+                    </button>
                     <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -375,17 +379,40 @@ function openAdminModal(type) {
                 <td class="p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'} kg</td>
                 <td class="p-4">${user.targetWeight || '--'} kg</td>
                 <td class="p-4">${statusBadge}</td>
-                <td class="p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-3 py-1 bg-green-500/10 text-green-500 text-xs rounded-lg hover:bg-green-500/20 transition-colors">Message</a></td>
+                <td class="p-4 flex gap-2">
+                    <button onclick="viewAthleteGraph('${user.email}')" class="px-3 py-1 bg-blue-500/10 text-blue-500 text-xs rounded-lg hover:bg-blue-500/20 transition-colors">Graph</button>
+                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-3 py-1 bg-green-500/10 text-green-500 text-xs rounded-lg hover:bg-green-500/20 transition-colors">Message</a>
+                </td>
             </tr>
             `;
         }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
     }
+
+    const filterEl = document.getElementById('admin-filter');
+    if (filterEl) filterEl.value = 'all';
 
     modal.classList.remove('hidden');
     setTimeout(() => {
         modal.classList.remove('opacity-0');
         modalContent.classList.remove('scale-95');
     }, 10);
+}
+
+function applyAdminFilter() {
+    const filterVal = document.getElementById('admin-filter').value;
+    const rows = document.querySelectorAll('.admin-table-row');
+
+    rows.forEach(row => {
+        if (filterVal === 'all') {
+            row.style.display = '';
+        } else if (filterVal === 'active' && row.dataset.status === 'active') {
+            row.style.display = '';
+        } else if (filterVal === 'pending' && row.dataset.status === 'pending') {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
 }
 
 function closeAdminModal() {
@@ -451,4 +478,108 @@ async function deleteClient(event, email, name) {
         btn.innerHTML = originalHtml;
         btn.disabled = false;
     }
+}
+
+let adminChartInstance = null;
+
+function viewAthleteGraph(email) {
+    const usersData = localStorage.getItem('volta_admin_users');
+    const users = usersData ? JSON.parse(usersData) : [];
+    const user = users.find(u => u.email === email);
+    if (!user) return;
+
+    document.getElementById('graph-athlete-name').textContent = user.fullName || 'Athlete';
+    document.getElementById('graph-athlete-goal').textContent = user.goal || user.weightGoalType || 'No Goal Set';
+
+    const modal = document.getElementById('graph-modal');
+    const content = document.getElementById('graph-modal-content');
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }, 10);
+
+    const canvas = document.getElementById('adminWeightChart');
+    if (!canvas) return;
+
+    const startW = parseFloat(user.startWeight || user.weight) || 0;
+    const currentW = parseFloat(user.currentWeight || user.weight) || 0;
+    const targetW = parseFloat(user.targetWeight) || 0;
+
+    if (adminChartInstance) {
+        adminChartInstance.destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(255, 107, 0, 0.4)');
+    gradient.addColorStop(1, 'rgba(255, 107, 0, 0.0)');
+
+    adminChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Start', 'Current', 'Target'],
+            datasets: [{
+                label: 'Weight (kg)',
+                data: [startW, currentW, targetW],
+                borderColor: '#ff6b00',
+                backgroundColor: gradient,
+                borderWidth: 3,
+                pointBackgroundColor: '#0a0a0a',
+                pointBorderColor: '#ff6b00',
+                pointBorderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#141414', titleColor: '#ff6b00', bodyColor: '#fff', borderColor: 'rgba(255,107,0,0.2)',
+                    borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: (ctx) => ctx.parsed.y + ' kg' }
+                }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { family: 'Inter', weight: 'bold' } } }
+            }
+        }
+    });
+}
+
+function closeGraphModal() {
+    const modal = document.getElementById('graph-modal');
+    const content = document.getElementById('graph-modal-content');
+    modal.classList.add('opacity-0');
+    content.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+async function saveAccessCode(e) {
+    if (e) e.preventDefault();
+
+    const pass = prompt("Enter Admin Password to update the Access Code:");
+    if (pass !== "VoltaAdmin123") {
+        if (pass) alert("Incorrect Password");
+        return;
+    }
+
+    const btn = e.currentTarget;
+    const originalText = btn.textContent;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    await saveContentToDB({
+        access_code: document.getElementById('edit-access-code').value.trim()
+    });
+
+    btn.textContent = originalText;
+    btn.disabled = false;
+    alert("Access Code updated successfully!");
 }
