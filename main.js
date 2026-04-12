@@ -478,6 +478,18 @@ async function handleLogin(e) {
             return;
         }
 
+        // لو اللي بيعمل لوجين هو الأدمن
+        if (result.isAdmin) {
+            // حفظ بيانات الجلسة السرية وتوجيهك لملف الأدمن
+            localStorage.setItem('volta_admin', 'true');
+            localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
+            showToast('Admin Portal Unlocked!', 'success');
+            setTimeout(() => {
+                window.location.href = 'admin.html';
+            }, 1000);
+            return; // عشان ميكملش كود المشتركين العادي
+        }
+
         currentUser = result.user;
         localStorage.setItem('volta_user', JSON.stringify(result.user));
 

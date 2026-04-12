@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLTA - Admin Portal</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+</head>
+
+<body class="h-full bg-[#0a0a0a] text-white font-inter overflow-x-hidden">
+    <div class="lightning-bg lightning-blur min-h-screen pt-12 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10 mt-8">
+                <div>
+                    <h1 class="font-bebas text-4xl sm:text-5xl tracking-wider mb-2">ADMIN <span
+                            class="text-orange-500">DASHBOARD</span></h1>
+                    <p class="text-gray-400">Manage your athletes and track their progress</p>
+                </div>
+                <button onclick="adminLogout()"
+                    class="mt-4 md:mt-0 px-6 py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-sm font-semibold uppercase tracking-wider transition-all">
+                    Lock & Exit
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div class="stat-card p-6 rounded-2xl border-orange-500/30">
+                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Total Athletes</p>
+                    <p id="admin-total-users" class="font-bebas text-5xl text-orange-500">0</p>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="rounded-2xl card-dark overflow-hidden border border-orange-500/20">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr
+                                class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
+                                <th class="p-4 font-medium">Name</th>
+                                <th class="p-4 font-medium">Phone (WhatsApp)</th>
+                                <th class="p-4 font-medium">Goal</th>
+                                <th class="p-4 font-medium">Start Wt</th>
+                                <th class="p-4 font-medium">Current Wt</th>
+                                <th class="p-4 font-medium">Target Wt</th>
+                                <th class="p-4 font-medium">Registered</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table" class="text-gray-300 text-sm divide-y divide-orange-500/10">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="admin.js"></script>
+</body>
+
+</html>
