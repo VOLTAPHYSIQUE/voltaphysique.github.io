@@ -7,7 +7,7 @@ let isWeightUpdateUnlocked = false;
 // ==========================================
 const APP_CONFIG = {
     api: {
-        authScript: "https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec",
+        authScript: "https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec",
         weeklyUpdateScript: "https://script.google.com/macros/s/AKfycbw0AvmA-HD3IFTP3U5DSI5LoYqu2uxnbmVOB2rlqFms6aPb5fWQXhGl061CiSyC-HJb/exec"
     },
     links: {
@@ -709,6 +709,7 @@ async function verifyAccessCode() {
         const formData = new FormData();
         formData.append("action", "verifyCode");
         formData.append("code", code);
+        formData.append("email", currentUser.email);
 
         const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
         const result = await response.json();
@@ -760,6 +761,7 @@ async function silentVerifyAccessCode(code) {
         const formData = new FormData();
         formData.append("action", "verifyCode");
         formData.append("code", code);
+        formData.append("email", currentUser.email);
 
         const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
         const result = await response.json();
