@@ -359,15 +359,15 @@ function openAdminModal(type) {
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing';
 
         thead.innerHTML = `
-            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
-                <th class="p-4 font-medium">Name</th>
-                <th class="p-4 font-medium">Phone</th>
-                <th class="p-4 font-medium">Age</th>
-                <th class="p-4 font-medium">Height</th>
-                <th class="p-4 font-medium">Experience</th>
-                <th class="p-4 font-medium">Status</th>
-                <th class="p-4 font-medium">Joined</th>
-                <th class="p-4 font-medium text-center">Action</th>
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-3 sm:p-4 font-medium">Name</th>
+                <th class="p-3 sm:p-4 font-medium">Phone</th>
+                <th class="p-3 sm:p-4 font-medium">Age</th>
+                <th class="p-3 sm:p-4 font-medium">Height</th>
+                <th class="p-3 sm:p-4 font-medium">Exp.</th>
+                <th class="p-3 sm:p-4 font-medium">Status</th>
+                <th class="p-3 sm:p-4 font-medium">Joined</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
         tbody.innerHTML = users.map(user => {
@@ -377,19 +377,15 @@ function openAdminModal(type) {
                 : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
-            <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
-                <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
-                <td class="p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline">${user.phone || '--'}</a></td>
-                <td class="p-4">${user.age || '--'} yrs</td>
-                <td class="p-4">${user.height || '--'} cm</td>
-                <td class="p-4 text-xs">${user.experience || '--'}</td>
-                <td class="p-4">${statusBadge}</td>
-                <td class="p-4 text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
-                <td class="p-4 text-center flex items-center justify-center gap-2">
-                    <button onclick="viewAthleteGraph('${user.email}')" class="p-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 transition-colors" title="View Progress">
-                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
-                    </button>
-                    <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors" title="Remove Client">
+                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[120px]">${user.fullName || '--'}</td>
+                <td class="p-3 sm:p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline">${user.phone || '--'}</a></td>
+                <td class="p-3 sm:p-4">${user.age || '--'}</td>
+                <td class="p-3 sm:p-4">${user.height || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.experience || '--'}</td>
+                <td class="p-3 sm:p-4">${statusBadge}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
+                <td class="p-3 sm:p-4 text-center">
+                    <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors inline-flex items-center justify-center" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 </td>
@@ -403,14 +399,14 @@ function openAdminModal(type) {
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
 
         thead.innerHTML = `
-            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-xs uppercase tracking-wider text-gray-400">
-                <th class="p-4 font-medium">Name</th>
-                <th class="p-4 font-medium">Goal</th>
-                <th class="p-4 font-medium">Start Wt</th>
-                <th class="p-4 font-medium">Current Wt</th>
-                <th class="p-4 font-medium">Target Wt</th>
-                <th class="p-4 font-medium">Status</th>
-                <th class="p-4 font-medium">WhatsApp</th>
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-3 sm:p-4 font-medium">Name</th>
+                <th class="p-3 sm:p-4 font-medium">Goal</th>
+                <th class="p-3 sm:p-4 font-medium">Start</th>
+                <th class="p-3 sm:p-4 font-medium">Current</th>
+                <th class="p-3 sm:p-4 font-medium">Target</th>
+                <th class="p-3 sm:p-4 font-medium">Status</th>
+                <th class="p-3 sm:p-4 font-medium">Action</th>
             </tr>
         `;
         tbody.innerHTML = users.map(user => {
@@ -420,15 +416,15 @@ function openAdminModal(type) {
                 : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors">
-                <td class="p-4 font-semibold text-white">${user.fullName || '--'}</td>
-                <td class="p-4 text-xs">${user.goal || user.weightGoalType || '--'}</td>
-                <td class="p-4">${user.startWeight || user.weight || '--'} kg</td>
-                <td class="p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'} kg</td>
-                <td class="p-4">${user.targetWeight || '--'} kg</td>
-                <td class="p-4">${statusBadge}</td>
-                <td class="p-4 flex gap-2">
-                    <button onclick="viewAthleteGraph('${user.email}')" class="px-3 py-1 bg-blue-500/10 text-blue-500 text-xs rounded-lg hover:bg-blue-500/20 transition-colors">Graph</button>
-                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-3 py-1 bg-green-500/10 text-green-500 text-xs rounded-lg hover:bg-green-500/20 transition-colors">Message</a>
+                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[120px]">${user.fullName || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.goal || user.weightGoalType || '--'}</td>
+                <td class="p-3 sm:p-4">${user.startWeight || user.weight || '--'}</td>
+                <td class="p-3 sm:p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'}</td>
+                <td class="p-3 sm:p-4">${user.targetWeight || '--'}</td>
+                <td class="p-3 sm:p-4">${statusBadge}</td>
+                <td class="p-3 sm:p-4 flex gap-1 sm:gap-2">
+                    <button onclick="viewAthleteGraph('${user.email}')" class="px-2 py-1 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors">Graph</button>
+                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] sm:text-xs rounded-lg hover:bg-green-500/20 transition-colors">Msg</a>
                 </td>
             </tr>
             `;
