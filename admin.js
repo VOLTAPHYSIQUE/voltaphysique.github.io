@@ -277,6 +277,33 @@ async function saveContentToDB(updates) {
     }
 }
 
+async function refreshAdminData(event) {
+    const btn = event.currentTarget;
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="text-xs">Refreshing...</span>';
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "login");
+        formData.append("email", "admin"); // مجرد إيميل وهمي عشان الدالة تشتغل
+        formData.append("password", "VoltaAdmin123");
+
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success && result.isAdmin) {
+            localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
+            updateAdminStats(result.users);
+        }
+    } catch (e) {
+        alert("Failed to refresh data.");
+    }
+
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+}
+
 function renderClientsCards(users) {
     const grid = document.getElementById('clients-grid');
     if (users.length === 0) {
