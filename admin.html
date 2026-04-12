@@ -34,15 +34,6 @@
                         </svg>
                         Refresh
                     </button>
-                    <button onclick="openAdminModal('tracker')"
-                        class="px-6 py-3 rounded-xl btn-primary text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
-                            </path>
-                        </svg>
-                        Client Tracker
-                    </button>
                     <button onclick="openAdminModal('updates')"
                         class="px-6 py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,6 +72,39 @@
                 <div class="stat-card p-6 rounded-2xl border-yellow-500/30">
                     <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Pending Leads</p>
                     <p id="admin-pending-users" class="font-bebas text-5xl text-yellow-500">0</p>
+                </div>
+            </div>
+
+            <!-- Athletes Directory Section (الكروت الجديدة على الشاشة الرئيسية) -->
+            <div class="rounded-2xl card-dark p-6 sm:p-8 mb-10">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h3 class="font-bebas text-2xl tracking-wider flex items-center gap-3">
+                            <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg> ATHLETES DIRECTORY
+                        </h3>
+                        <div id="main-stats-badges"
+                            class="mt-2 flex flex-wrap gap-2 text-[10px] sm:text-xs font-bold tracking-wider uppercase">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select id="main-filter" onchange="applyMainFilter()"
+                            class="bg-[#0a0a0a] border border-orange-500/30 text-gray-300 text-xs uppercase tracking-wider px-3 py-2 rounded-lg outline-none focus:border-orange-500 transition-colors cursor-pointer w-full sm:w-auto">
+                            <option value="all">All Athletes</option>
+                            <option value="active">VIP Active (Subscribed)</option>
+                            <option value="pending">Pending (Just Login)</option>
+                        </select>
+                        <a href="https://docs.google.com/spreadsheets/d/1pdd45vYARIzzCXc3WJCgLUASPDCifca2FnLKA-ATISY/edit?usp=sharing"
+                            target="_blank"
+                            class="hidden sm:flex px-4 py-2 rounded-lg border border-orange-500/50 text-orange-500 text-xs uppercase tracking-wider hover:bg-orange-500/10 transition-colors whitespace-nowrap">Open
+                            Sheets</a>
+                    </div>
+                </div>
+
+                <div id="main-athletes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 transition-all">
+                    <!-- كروت المشتركين هتظهر هنا -->
                 </div>
             </div>
 

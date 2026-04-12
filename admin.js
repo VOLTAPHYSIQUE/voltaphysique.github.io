@@ -44,7 +44,7 @@ async function openEditorModal() {
     try {
         const formData = new FormData();
         formData.append("action", "getContent");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         let cData = result.content || {};
@@ -259,7 +259,7 @@ async function saveContentToDB(updates) {
         formData.append("adminPassword", "VoltaAdmin123");
         formData.append("updates", JSON.stringify(updates));
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (!result.success) {
@@ -282,7 +282,7 @@ async function refreshAdminData(event) {
         formData.append("email", "admin"); // مجرد إيميل وهمي عشان الدالة تشتغل
         formData.append("password", "VoltaAdmin123");
 
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success && result.isAdmin) {
@@ -466,7 +466,7 @@ async function deleteClient(event, email, name) {
         formData.append("adminPassword", adminPass);
 
         // استخدام رابط السكريبت الخاص بالـ Login/Signup
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", {
             method: "POST",
             body: formData
         });
@@ -614,7 +614,7 @@ async function toggleUserStatus(event, email, newStatus) {
         formData.append("adminPassword", "VoltaAdmin123");
 
         // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", {
             method: "POST",
             body: formData
         });
@@ -632,8 +632,7 @@ async function toggleUserStatus(event, email, newStatus) {
                     updateAdminStats(users);
 
                     const title = document.getElementById('admin-modal-title').textContent;
-                    if (title.includes('TRACKER')) openAdminModal('tracker');
-                    else if (title.includes('UPDATES')) openAdminModal('updates');
+                    if (title && title.includes('UPDATES')) openAdminModal('updates');
                 }
             }
         } else {
