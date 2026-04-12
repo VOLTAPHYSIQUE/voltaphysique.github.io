@@ -112,12 +112,19 @@ const packageData = [
 
 function toggleMobileMenu() {
     const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
+    if (menu.classList.contains('max-h-0')) {
+        menu.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+        menu.classList.add('max-h-[500px]', 'opacity-100');
+    } else {
+        menu.classList.remove('max-h-[500px]', 'opacity-100');
+        menu.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+    }
 }
 
 function closeMobileMenu() {
     const menu = document.getElementById('mobile-menu');
-    menu.classList.add('hidden');
+    menu.classList.remove('max-h-[500px]', 'opacity-100');
+    menu.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
 }
 
 function toggleSocialPanel() {
