@@ -34,6 +34,15 @@
                         </svg>
                         Refresh
                     </button>
+                    <button onclick="openAdminModal('tracker')"
+                        class="px-6 py-3 rounded-xl btn-primary text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                            </path>
+                        </svg>
+                        Client Tracker
+                    </button>
                     <button onclick="openAdminModal('updates')"
                         class="px-6 py-3 rounded-xl border border-orange-500 hover:bg-orange-500/10 text-orange-500 text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,18 +69,27 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                <div class="stat-card p-6 rounded-2xl border-orange-500/30">
-                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Total Athletes</p>
-                    <p id="admin-total-users" class="font-bebas text-5xl text-orange-500">0</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="stat-card p-6 rounded-2xl border-orange-500/30 sm:col-span-2">
+                        <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Total Athletes</p>
+                        <p id="admin-total-users" class="font-bebas text-5xl text-orange-500">0</p>
+                    </div>
+                    <div class="stat-card p-6 rounded-2xl border-green-500/30">
+                        <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Active Subscribers</p>
+                        <p id="admin-active-users" class="font-bebas text-5xl text-green-500">0</p>
+                    </div>
+                    <div class="stat-card p-6 rounded-2xl border-yellow-500/30">
+                        <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Pending Leads</p>
+                        <p id="admin-pending-users" class="font-bebas text-5xl text-yellow-500">0</p>
+                    </div>
                 </div>
-                <div class="stat-card p-6 rounded-2xl border-green-500/30">
-                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Active Subscribers</p>
-                    <p id="admin-active-users" class="font-bebas text-5xl text-green-500">0</p>
-                </div>
-                <div class="stat-card p-6 rounded-2xl border-yellow-500/30">
-                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Pending Leads</p>
-                    <p id="admin-pending-users" class="font-bebas text-5xl text-yellow-500">0</p>
+                <div class="card-dark p-6 rounded-2xl flex flex-col items-center justify-center">
+                    <h3 class="font-bebas text-xl tracking-wider text-gray-300 w-full text-left mb-4">Athletes Breakdown
+                    </h3>
+                    <div class="relative w-full flex-1 min-h-[180px]">
+                        <canvas id="adminOverviewChart"></canvas>
+                    </div>
                 </div>
             </div>
 

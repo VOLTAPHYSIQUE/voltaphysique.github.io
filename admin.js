@@ -1,4 +1,5 @@
 let adminPackages = [];
+let adminOverviewChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية الصفحة: طرد أي زائر يحاول يفتح الصفحة مباشرة بدون إذن
@@ -479,6 +480,38 @@ async function deleteClient(event, email, name) {
                 let users = JSON.parse(usersData);
                 users = users.filter(u => u.email !== email); // شيل العميل من القائمة
                 localStorage.setItem('volta_admin_users', JSON.stringify(users));
+
+                // رسم الجراف الخاص بتوزيع المشتركين (Active vs Pending)
+                const ctx = document.getElementById('adminOverviewChart');
+                if (ctx) {
+                    if (adminOverviewChartInstance) {
+                        adminOverviewChartInstance.destroy();
+                    }
+                    adminOverviewChartInstance = new Chart(ctx.getContext('2d'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['VIP Active', 'Pending'],
+                            datasets: [{
+                                data: [activeUsers.length, pendingUsers],
+                                backgroundColor: ['#22c55e', '#eab308'],
+                                borderColor: ['#141414', '#141414'],
+                                borderWidth: 3,
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '75%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: '#9ca3af', font: { family: 'Inter', size: 12 }, padding: 15 }
+                                }
+                            }
+                        }
+                    });
+                }
 
                 updateAdminStats(users); // تحديث الأرقام اللي فوق
                 openAdminModal('tracker'); // إعادة رسم الجدول
