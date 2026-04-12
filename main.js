@@ -221,6 +221,15 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+// ==========================================
+// SERVER WARM-UP (To reduce cold-start loading times)
+// ==========================================
+function warmUpServers() {
+    // تسخين سيرفرات جوجل في الخلفية عشان تصحى ويكون الرد سريع وقت اللوجين أو تحديث الوزن
+    fetch(APP_CONFIG.api.authScript, { method: 'GET', mode: 'no-cors' }).catch(() => { });
+    fetch(APP_CONFIG.api.weeklyUpdateScript, { method: 'GET', mode: 'no-cors' }).catch(() => { });
+}
+
 function calculateProtein() {
     const weight = parseFloat(document.getElementById('calc-weight').value);
     const goal = document.getElementById('calc-goal-select').value;
@@ -427,7 +436,7 @@ async function handleSignup(e) {
             document.getElementById('signup-form').reset();
             navigateTo('login');
             successDiv.classList.add('hidden');
-        }, 2000);
+        }, 500);
 
     } catch (error) {
         errorDiv.textContent = 'Failed to create account. Please try again.';
@@ -916,4 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // استعادة الصفحة اللي المستخدم كان فيها من الرابط وقت الـ Refresh
     const initialPage = window.location.hash.replace('#', '') || 'home';
     renderPage(initialPage);
+
+    // تشغيل كود تسخين السيرفرات أول ما الموقع يفتح
+    warmUpServers();
 });
