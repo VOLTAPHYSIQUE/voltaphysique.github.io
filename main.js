@@ -112,19 +112,12 @@ const packageData = [
 
 function toggleMobileMenu() {
     const menu = document.getElementById('mobile-menu');
-    if (menu.classList.contains('max-h-0')) {
-        menu.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
-        menu.classList.add('max-h-[500px]', 'opacity-100');
-    } else {
-        menu.classList.remove('max-h-[500px]', 'opacity-100');
-        menu.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
-    }
+    menu.classList.toggle('open');
 }
 
 function closeMobileMenu() {
     const menu = document.getElementById('mobile-menu');
-    menu.classList.remove('max-h-[500px]', 'opacity-100');
-    menu.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+    menu.classList.remove('open');
 }
 
 function toggleSocialPanel() {
