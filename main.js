@@ -138,6 +138,32 @@ function navigateTo(page) {
     window.location.hash = page;
 }
 
+// ==========================================
+// ANIMATION SYSTEM (Scroll & Reveal)
+// ==========================================
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.remove('opacity-0', 'translate-y-12', 'scale-95');
+            entry.target.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+        }
+    });
+}, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+function initAnimations() {
+    // تحديد العناصر اللي هيتعملها أنيميشن (الكروت والعناوين)
+    const elements = document.querySelectorAll('.card-dark, .stat-card, section h2, section h3');
+    elements.forEach((el) => {
+        el.classList.add('volta-animate', 'opacity-0', 'translate-y-12', 'transition-all', 'duration-[800ms]', 'ease-out');
+
+        if (el.classList.contains('card-dark') || el.classList.contains('stat-card')) {
+            el.classList.add('scale-95');
+        }
+
+        scrollObserver.observe(el);
+    });
+}
+
 function renderPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
@@ -147,7 +173,23 @@ function renderPage(page) {
         targetPage = document.getElementById('page-home');
     }
 
+    // إعادة ضبط الأنيميشن للعناصر عشان تشتغل تاني لما نقلب بين الصفحات
+    const animatedElements = targetPage.querySelectorAll('.volta-animate');
+    animatedElements.forEach(el => {
+        el.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+        el.classList.add('opacity-0', 'translate-y-12');
+        if (el.classList.contains('card-dark') || el.classList.contains('stat-card')) {
+            el.classList.add('scale-95');
+        }
+    });
+
     targetPage.classList.add('active');
+
+    // تأثير ظهور ناعم (Fade In) للصفحة نفسها وقت التنقل
+    targetPage.style.opacity = '0';
+    targetPage.style.transition = 'opacity 0.4s ease-in-out';
+    setTimeout(() => targetPage.style.opacity = '1', 50);
+
     window.scrollTo(0, 0);
     closeMobileMenu();
 }
@@ -865,6 +907,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAuthUI();
         updateDashboard();
     }
+
+    // تشغيل نظام الأنيميشن أول ما الموقع يفتح
+    initAnimations();
 
     // منع اللينكات الفارغة من القفز لأعلى الصفحة وتخريب الهيستوري
     document.querySelectorAll('a[onclick^="navigateTo"]').forEach(a => {
