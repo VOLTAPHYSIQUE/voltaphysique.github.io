@@ -46,6 +46,102 @@ function toggleClientsView() {
     }
 }
 
+async function openEditorModal() {
+    const modal = document.getElementById('editor-modal');
+    const content = document.getElementById('editor-modal-content');
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }, 10);
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "getContent");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        let cData = {};
+        if (result.success && result.content) {
+            cData = result.content;
+        }
+
+        document.getElementById('editor-fields').innerHTML = `
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">About Section Image URL</label>
+                <input type="text" id="edit-about-image" value="${cData.about_image || ''}" placeholder="https://..." class="w-full px-4 py-3 rounded-xl input-dark text-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Ramadan Package Price (EGP)</label>
+                <input type="number" id="edit-pkg-0" value="${cData.pkg_0_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">No Excuses Package Price (EGP)</label>
+                <input type="number" id="edit-pkg-1" value="${cData.pkg_1_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Glow Up 3.0 Package Price (EGP)</label>
+                <input type="number" id="edit-pkg-2" value="${cData.pkg_2_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Beast Mode Package Price (EGP)</label>
+                <input type="number" id="edit-pkg-3" value="${cData.pkg_3_price || ''}" class="w-full px-4 py-3 rounded-xl input-dark text-white">
+            </div>
+        `;
+    } catch (e) {
+        document.getElementById('editor-fields').innerHTML = '<p class="text-red-500">Failed to load content.</p>';
+    }
+}
+
+function closeEditorModal() {
+    const modal = document.getElementById('editor-modal');
+    const content = document.getElementById('editor-modal-content');
+    modal.classList.add('opacity-0');
+    content.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+async function saveWebsiteContent(e) {
+    e.preventDefault();
+    const btn = document.getElementById('save-content-btn');
+    const adminPass = prompt("Enter Admin Password to save changes:");
+    if (!adminPass) return;
+
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    const updates = {
+        about_image: document.getElementById('edit-about-image').value.trim(),
+        pkg_0_price: document.getElementById('edit-pkg-0').value.trim(),
+        pkg_1_price: document.getElementById('edit-pkg-1').value.trim(),
+        pkg_2_price: document.getElementById('edit-pkg-2').value.trim(),
+        pkg_3_price: document.getElementById('edit-pkg-3').value.trim()
+    };
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "updateContent");
+        formData.append("adminPassword", adminPass);
+        formData.append("updates", JSON.stringify(updates));
+
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw-mN5BshP79y58UGdcWg28meKZaMDpOexDP-q3gM43oP07Ums_2EhzbljyjY8M_pFvJw/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success) {
+            alert("Content updated successfully! The main website will reflect these changes on the next refresh.");
+            closeEditorModal();
+        } else {
+            alert("Failed: " + result.message);
+        }
+    } catch (e) {
+        alert("Error saving content.");
+    }
+
+    btn.textContent = 'Save Changes';
+    btn.disabled = false;
+}
+
 function renderClientsCards(users) {
     const grid = document.getElementById('clients-grid');
     if (users.length === 0) {

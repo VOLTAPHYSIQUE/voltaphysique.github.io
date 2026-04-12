@@ -42,6 +42,15 @@
                         </svg>
                         Weekly Updates
                     </button>
+                    <button onclick="openEditorModal()"
+                        class="px-6 py-3 rounded-xl border border-blue-500 hover:bg-blue-500/10 text-blue-500 text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                        Website Editor
+                    </button>
                     <button onclick="adminLogout()"
                         class="px-6 py-3 rounded-xl border border-red-500/50 hover:border-red-500 hover:bg-red-500/10 text-red-500 text-sm font-semibold uppercase tracking-wider transition-all">
                         Lock & Exit
@@ -119,7 +128,37 @@
         </div>
     </div>
 
-    <script src="admin.js?v=2"></script>
+    <!-- Content Editor Modal -->
+    <div id="editor-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeEditorModal()"></div>
+        <div class="absolute inset-4 md:inset-y-10 md:inset-x-1/4 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
+            id="editor-modal-content">
+            <div class="flex items-center justify-between p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
+                <h2 class="font-bebas text-3xl tracking-wider text-white">WEBSITE <span
+                        class="text-blue-500">EDITOR</span></h2>
+                <button onclick="closeEditorModal()" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <form id="editor-form" onsubmit="saveWebsiteContent(event)">
+                    <div class="space-y-4" id="editor-fields">
+                        <p class="text-gray-400 text-center">Loading content...</p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-orange-500/20">
+                        <button type="submit" id="save-content-btn"
+                            class="w-full btn-primary py-4 rounded-xl text-lg font-bold uppercase tracking-wider">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js?v=3"></script>
 </body>
 
 </html>

@@ -230,6 +230,49 @@ function warmUpServers() {
     fetch(APP_CONFIG.api.weeklyUpdateScript, { method: 'GET', mode: 'no-cors' }).catch(() => { });
 }
 
+// ==========================================
+// LOAD DYNAMIC WEBSITE CONTENT
+// ==========================================
+async function loadDynamicContent() {
+    try {
+        const formData = new FormData();
+        formData.append("action", "getContent");
+        const response = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success && result.content) {
+            const c = result.content;
+
+            if (c.about_image) {
+                const aboutImg = document.getElementById('about-image');
+                if (aboutImg) aboutImg.src = c.about_image;
+            }
+            if (c.pkg_0_price) {
+                const p0 = document.getElementById('pkg-0-price');
+                if (p0) p0.textContent = c.pkg_0_price;
+                packageData[0].price = c.pkg_0_price;
+            }
+            if (c.pkg_1_price) {
+                const p1 = document.getElementById('pkg-1-price');
+                if (p1) p1.textContent = c.pkg_1_price;
+                packageData[1].price = c.pkg_1_price;
+            }
+            if (c.pkg_2_price) {
+                const p2 = document.getElementById('pkg-2-price');
+                if (p2) p2.textContent = c.pkg_2_price;
+                packageData[2].price = c.pkg_2_price;
+            }
+            if (c.pkg_3_price) {
+                const p3 = document.getElementById('pkg-3-price');
+                if (p3) p3.textContent = c.pkg_3_price;
+                packageData[3].price = c.pkg_3_price;
+            }
+        }
+    } catch (e) {
+        console.log("Dynamic content load failed:", e);
+    }
+}
+
 function calculateProtein() {
     const weight = parseFloat(document.getElementById('calc-weight').value);
     const goal = document.getElementById('calc-goal-select').value;
@@ -966,4 +1009,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // تشغيل كود تسخين السيرفرات أول ما الموقع يفتح
     warmUpServers();
+
+    // تحميل محتوى الموقع المتغير (الصور والأسعار)
+    loadDynamicContent();
 });
