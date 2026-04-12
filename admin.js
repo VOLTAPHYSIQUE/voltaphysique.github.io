@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const users = JSON.parse(usersData);
         updateAdminStats(users);
     }
+
+    // جلب البيانات الجديدة أوتوماتيكياً في الخلفية عند تحميل الصفحة
+    fetchFreshAdminData();
 });
 
 function updateAdminStats(users) {
@@ -302,16 +305,11 @@ async function saveContentToDB(updates) {
     }
 }
 
-async function refreshAdminData(event) {
-    const btn = event.currentTarget;
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<span class="text-xs">Refreshing...</span>';
-    btn.disabled = true;
-
+async function fetchFreshAdminData() {
     try {
         const formData = new FormData();
         formData.append("action", "login");
-        formData.append("email", "admin"); // مجرد إيميل وهمي عشان الدالة تشتغل
+        formData.append("email", "admin");
         formData.append("password", "VoltaAdmin123");
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbwk7BH0exTOU26t1mLKFwe08QYFwjCPUuipkf7H-HEhnZp47pdNmT8dMNB8ekDiGQVi8w/exec", { method: "POST", body: formData });
@@ -320,13 +318,18 @@ async function refreshAdminData(event) {
         if (result.success && result.isAdmin) {
             localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
             updateAdminStats(result.users);
+
+            // تحديث الجداول لو كانت مفتوحة قدامك
+            const titleEl = document.getElementById('admin-modal-title');
+            if (titleEl && !document.getElementById('admin-modal').classList.contains('hidden')) {
+                const title = titleEl.textContent;
+                if (title.includes('UPDATES')) openAdminModal('updates');
+                else if (title.includes('TRACKER')) openAdminModal('tracker');
+            }
         }
     } catch (e) {
-        alert("Failed to refresh data.");
+        console.log("Failed to auto-refresh data.", e);
     }
-
-    btn.innerHTML = originalHtml;
-    btn.disabled = false;
 }
 
 function openAdminModal(type) {
@@ -362,11 +365,11 @@ function openAdminModal(type) {
             <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
                 <th class="p-3 sm:p-4 font-medium">Name</th>
                 <th class="p-3 sm:p-4 font-medium">Phone</th>
-                <th class="p-3 sm:p-4 font-medium">Age</th>
-                <th class="p-3 sm:p-4 font-medium">Height</th>
-                <th class="p-3 sm:p-4 font-medium">Exp.</th>
+                <th class="p-3 sm:p-4 font-medium hidden md:table-cell">Age</th>
+                <th class="p-3 sm:p-4 font-medium hidden md:table-cell">Height</th>
+                <th class="p-3 sm:p-4 font-medium hidden lg:table-cell">Exp.</th>
                 <th class="p-3 sm:p-4 font-medium">Status</th>
-                <th class="p-3 sm:p-4 font-medium">Joined</th>
+                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Joined</th>
                 <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
@@ -377,13 +380,13 @@ function openAdminModal(type) {
                 : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors admin-table-row" data-status="${isActive ? 'active' : 'pending'}">
-                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[120px]">${user.fullName || '--'}</td>
-                <td class="p-3 sm:p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline">${user.phone || '--'}</a></td>
-                <td class="p-3 sm:p-4">${user.age || '--'}</td>
-                <td class="p-3 sm:p-4">${user.height || '--'}</td>
-                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.experience || '--'}</td>
+                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[100px] sm:min-w-[120px] text-xs sm:text-sm">${user.fullName || '--'}</td>
+                <td class="p-3 sm:p-4"><a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="text-orange-500 hover:underline text-[10px] sm:text-sm">${user.phone || '--'}</a></td>
+                <td class="p-3 sm:p-4 hidden md:table-cell">${user.age || '--'}</td>
+                <td class="p-3 sm:p-4 hidden md:table-cell">${user.height || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs hidden lg:table-cell">${user.experience || '--'}</td>
                 <td class="p-3 sm:p-4">${statusBadge}</td>
-                <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500 hidden sm:table-cell">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
                 <td class="p-3 sm:p-4 text-center">
                     <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors inline-flex items-center justify-center" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -401,12 +404,12 @@ function openAdminModal(type) {
         thead.innerHTML = `
             <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
                 <th class="p-3 sm:p-4 font-medium">Name</th>
-                <th class="p-3 sm:p-4 font-medium">Goal</th>
-                <th class="p-3 sm:p-4 font-medium">Start</th>
+                <th class="p-3 sm:p-4 font-medium hidden md:table-cell">Goal</th>
+                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Start</th>
                 <th class="p-3 sm:p-4 font-medium">Current</th>
-                <th class="p-3 sm:p-4 font-medium">Target</th>
+                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Target</th>
                 <th class="p-3 sm:p-4 font-medium">Status</th>
-                <th class="p-3 sm:p-4 font-medium">Action</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
         tbody.innerHTML = users.map(user => {
@@ -416,15 +419,21 @@ function openAdminModal(type) {
                 : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
             return `
             <tr class="hover:bg-white/5 transition-colors">
-                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[120px]">${user.fullName || '--'}</td>
-                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.goal || user.weightGoalType || '--'}</td>
-                <td class="p-3 sm:p-4">${user.startWeight || user.weight || '--'}</td>
+                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[100px] sm:min-w-[120px] text-xs sm:text-sm">${user.fullName || '--'}</td>
+                <td class="p-3 sm:p-4 text-[10px] sm:text-xs hidden md:table-cell">${user.goal || user.weightGoalType || '--'}</td>
+                <td class="p-3 sm:p-4 hidden sm:table-cell">${user.startWeight || user.weight || '--'}</td>
                 <td class="p-3 sm:p-4 text-orange-400 font-bold">${user.currentWeight || user.weight || '--'}</td>
-                <td class="p-3 sm:p-4">${user.targetWeight || '--'}</td>
+                <td class="p-3 sm:p-4 hidden sm:table-cell">${user.targetWeight || '--'}</td>
                 <td class="p-3 sm:p-4">${statusBadge}</td>
-                <td class="p-3 sm:p-4 flex gap-1 sm:gap-2">
-                    <button onclick="viewAthleteGraph('${user.email}')" class="px-2 py-1 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors">Graph</button>
-                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="px-2 py-1 bg-green-500/10 text-green-500 text-[10px] sm:text-xs rounded-lg hover:bg-green-500/20 transition-colors">Msg</a>
+                <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
+                    <button onclick="viewAthleteGraph('${user.email}')" class="p-2 sm:px-2 sm:py-1 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
+                        <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
+                        <span class="hidden sm:inline">Graph</span>
+                    </button>
+                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="p-2 sm:px-2 sm:py-1 bg-green-500/10 text-green-500 text-[10px] sm:text-xs rounded-lg hover:bg-green-500/20 transition-colors inline-flex items-center justify-center" title="Message">
+                        <svg class="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        <span class="hidden sm:inline">Msg</span>
+                    </a>
                 </td>
             </tr>
             `;
