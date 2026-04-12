@@ -411,7 +411,10 @@ function openAdminModal(type) {
                 <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.experience || '--'}</td>
                 <td class="p-3 sm:p-4 text-center">${statusBadge}</td>
                 <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
-                <td class="p-3 sm:p-4 text-center">
+                <td class="p-2 sm:p-4 text-center flex justify-center gap-1 sm:gap-2">
+                    <button onclick="openEditAthleteModal('${user.email}')" class="p-1.5 sm:p-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500/20 transition-colors inline-flex items-center justify-center" title="Edit Athlete Data">
+                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
                     <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-1.5 sm:p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors inline-flex items-center justify-center" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -426,52 +429,113 @@ function openAdminModal(type) {
         modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
 
         thead.innerHTML = `
-            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[9px] sm:text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-3 sm:p-4 font-medium">Date</th>
                 <th class="p-3 sm:p-4 font-medium">Name</th>
                 <th class="p-3 sm:p-4 font-medium">Goal</th>
-                <th class="p-3 sm:p-4 font-medium">Start</th>
+                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Previous</th>
                 <th class="p-3 sm:p-4 font-medium text-center">Current</th>
-                <th class="p-3 sm:p-4 font-medium">Target</th>
-                <th class="p-3 sm:p-4 font-medium text-center">Status</th>
+                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Target</th>
                 <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
-        tbody.innerHTML = users.map(user => {
-            const isActive = String(user.Status || user.status || '').toLowerCase() === 'active';
-            const statusBadge = isActive
-                ? `<button onclick="toggleUserStatus(event, '${user.email}', 'Pending')" class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors">VIP ACTIVE</button>`
-                : `<button onclick="toggleUserStatus(event, '${user.email}', 'Active')" class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors">PENDING</button>`;
-            return `
-            <tr class="hover:bg-white/5 transition-colors">
-                <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${user.fullName || '--'}</td>
-                <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${user.weightGoalType || user.goal || '--'}</td>
-                <td class="p-3 sm:p-4">${user.startWeight || user.weight || '--'}</td>
-                <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${user.currentWeight || user.weight || '--'}</td>
-                <td class="p-3 sm:p-4">${user.targetWeight || '--'}</td>
-                <td class="p-3 sm:p-4 text-center">${statusBadge}</td>
-                <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
-                    <button onclick="viewAthleteGraph('${user.email}')" class="p-2 sm:px-2 sm:py-1 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
-                        <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
-                        <span class="hidden sm:inline">Graph</span>
-                    </button>
-                    <a href="https://wa.me/${String(user.phone || '').replace(/\D/g, '')}" target="_blank" class="p-2 sm:px-2 sm:py-1 bg-green-500/10 text-green-500 text-[10px] sm:text-xs rounded-lg hover:bg-green-500/20 transition-colors inline-flex items-center justify-center" title="Message">
-                        <svg class="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                        <span class="hidden sm:inline">Msg</span>
-                    </a>
-                </td>
-            </tr>
-            `;
-        }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Loading updates from server...</td></tr>';
+
+        // استدعاء البيانات من شيت التحديثات
+        loadWeeklyUpdates();
     }
 
     const filterEl = document.getElementById('admin-filter');
-    if (filterEl) filterEl.value = 'all';
+    if (filterEl) {
+        filterEl.value = 'all';
+        filterEl.style.display = type === 'updates' ? 'none' : 'block'; // إخفاء الفلتر في التحديثات
+    }
 
     modal.classList.remove('hidden');
     setTimeout(() => {
         modal.classList.remove('opacity-0');
         modalContent.classList.remove('scale-95');
     }, 10);
+}
+
+async function loadWeeklyUpdates() {
+    const tbody = document.getElementById('admin-modal-tbody');
+    try {
+        const formData = new FormData();
+        formData.append("action", "getWeeklyUpdates");
+        formData.append("adminPassword", "VoltaAdmin123");
+
+        // استدعاء سكريبت التحديثات الأسبوعية
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success) {
+            const updates = result.data.reverse(); // الأحدث فوق
+            tbody.innerHTML = updates.map(update => {
+                const dateStr = update.timestamp ? new Date(update.timestamp).toLocaleDateString() : '--';
+                return `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${dateStr}</td>
+                    <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || '--'}</td>
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || '--'}</td>
+                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.previousWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${update.currentWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.targetWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
+                        <button onclick="viewAthleteGraph('${update.email}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
+                            <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
+                            <span class="hidden sm:inline font-semibold">Graph</span>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
+        } else {
+            tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Error: ${result.message}</td></tr>`;
+        }
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load from server.</td></tr>';
+    }
+}
+
+async function loadWeeklyUpdates() {
+    const tbody = document.getElementById('admin-modal-tbody');
+    try {
+        const formData = new FormData();
+        formData.append("action", "getWeeklyUpdates");
+        formData.append("adminPassword", "VoltaAdmin123");
+
+        // استدعاء سكريبت التحديثات الأسبوعية
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success) {
+            const updates = result.data.reverse(); // الأحدث فوق
+            tbody.innerHTML = updates.map(update => {
+                const dateStr = update.timestamp ? new Date(update.timestamp).toLocaleDateString() : '--';
+                return `
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${dateStr}</td>
+                    <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || '--'}</td>
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || '--'}</td>
+                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.previousWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${update.currentWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.targetWeight || '--'}</td>
+                    <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
+                        <button onclick="viewAthleteGraph('${update.email}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
+                            <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
+                            <span class="hidden sm:inline font-semibold">Graph</span>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
+        } else {
+            tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Error: ${result.message}</td></tr>`;
+        }
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load from server.</td></tr>';
+    }
 }
 
 function applyAdminFilter() {
@@ -557,6 +621,84 @@ async function deleteClient(event, email, name) {
         btn.innerHTML = originalHtml;
         btn.disabled = false;
     }
+}
+
+function openEditAthleteModal(email) {
+    const usersData = localStorage.getItem('volta_admin_users');
+    const users = usersData ? JSON.parse(usersData) : [];
+    const user = users.find(u => u.email === email);
+    if (!user) return;
+
+    document.getElementById('edit-athlete-email').value = user.email;
+    document.getElementById('edit-athlete-goal').value = user.weightGoalType || user.goal || '';
+    document.getElementById('edit-athlete-current').value = user.currentWeight || user.weight || '';
+    document.getElementById('edit-athlete-target').value = user.targetWeight || '';
+
+    const modal = document.getElementById('edit-athlete-modal');
+    const content = document.getElementById('edit-athlete-modal-content');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }, 10);
+}
+
+function closeEditAthleteModal() {
+    const modal = document.getElementById('edit-athlete-modal');
+    const content = document.getElementById('edit-athlete-modal-content');
+    modal.classList.add('opacity-0');
+    content.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+async function saveAthleteData(e) {
+    const btn = e.currentTarget;
+    const originalText = btn.textContent;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    const email = document.getElementById('edit-athlete-email').value;
+    const goalType = document.getElementById('edit-athlete-goal').value;
+    const currentWeight = document.getElementById('edit-athlete-current').value;
+    const targetWeight = document.getElementById('edit-athlete-target').value;
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "syncWeights");
+        formData.append("email", email);
+        formData.append("currentWeight", currentWeight);
+        formData.append("targetWeight", targetWeight);
+        formData.append("goalType", goalType);
+
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.success) {
+            const usersData = localStorage.getItem('volta_admin_users');
+            if (usersData) {
+                let users = JSON.parse(usersData);
+                const userIndex = users.findIndex(u => u.email === email);
+                if (userIndex !== -1) {
+                    users[userIndex].currentWeight = currentWeight;
+                    users[userIndex].targetWeight = targetWeight;
+                    users[userIndex].weightGoalType = goalType;
+                    users[userIndex].goal = goalType;
+                    localStorage.setItem('volta_admin_users', JSON.stringify(users));
+
+                    const title = document.getElementById('admin-modal-title').textContent;
+                    if (title && title.includes('UPDATES')) openAdminModal('updates');
+                    else if (title && title.includes('TRACKER')) openAdminModal('tracker');
+                }
+            }
+            closeEditAthleteModal();
+        } else {
+            alert("Failed to update: " + (result.message || "Unknown error"));
+        }
+    } catch (e) {
+        alert("Network error while saving athlete data.");
+    }
+    btn.textContent = originalText;
+    btn.disabled = false;
 }
 
 let adminChartInstance = null;

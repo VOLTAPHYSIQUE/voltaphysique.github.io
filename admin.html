@@ -322,6 +322,47 @@
         </div>
     </div>
 
+    <!-- Edit Athlete Modal -->
+    <div id="edit-athlete-modal" class="fixed inset-0 z-[70] hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeEditAthleteModal()"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-10 rounded-2xl card-dark flex flex-col overflow-hidden scale-95 transition-transform duration-300"
+            id="edit-athlete-modal-content">
+            <div class="flex items-center justify-between p-4 sm:p-6 border-b border-orange-500/20 bg-[#1a1a1a]">
+                <h2 class="font-bebas text-2xl tracking-wider text-white">EDIT <span
+                        class="text-orange-500">ATHLETE</span></h2>
+                <button onclick="closeEditAthleteModal()" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 space-y-4">
+                <input type="hidden" id="edit-athlete-email">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Fitness Goal</label>
+                    <input type="text" id="edit-athlete-goal" class="w-full px-3 py-2 rounded-lg input-dark text-sm"
+                        placeholder="e.g. Lose Weight">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Current Wt (kg)</label>
+                        <input type="number" step="0.1" id="edit-athlete-current"
+                            class="w-full px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Target Wt (kg)</label>
+                        <input type="number" step="0.1" id="edit-athlete-target"
+                            class="w-full px-3 py-2 rounded-lg input-dark text-sm">
+                    </div>
+                </div>
+                <button onclick="saveAthleteData(event)"
+                    class="w-full btn-primary py-3 rounded-xl font-bold uppercase tracking-wider mt-2">Save
+                    Updates</button>
+            </div>
+        </div>
+    </div>
+
     <script src="admin.js?v=4"></script>
 </body>
 
