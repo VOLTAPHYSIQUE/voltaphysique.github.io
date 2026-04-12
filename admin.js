@@ -312,6 +312,18 @@ async function saveContentToDB(updates) {
     }
 }
 
+async function refreshAdminData(event) {
+    const btn = event.currentTarget;
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="text-xs">Refreshing...</span>';
+    btn.disabled = true;
+
+    await fetchFreshAdminData();
+
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+}
+
 async function fetchFreshAdminData() {
     try {
         const formData = new FormData();
