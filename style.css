@@ -189,3 +189,21 @@ body {
     background: linear-gradient(145deg, rgba(255, 107, 0, 0.1), rgba(20, 20, 20, 0.9));
     border: 1px solid rgba(255, 107, 0, 0.2);
 }
+
+/* Custom Animation System */
+.volta-animate {
+    opacity: 0;
+    transform: translateY(3rem) scale(0.95);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.volta-animate-text {
+    opacity: 0;
+    transform: translateY(3rem);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+}
