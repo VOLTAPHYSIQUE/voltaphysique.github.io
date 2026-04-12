@@ -219,6 +219,13 @@ async function deletePackage(index) {
 
 async function saveGeneralSettings(e) {
     if (e) e.preventDefault();
+
+    const pass = prompt("Enter Admin Password to save website content & security settings:");
+    if (pass !== "VoltaAdmin123") {
+        if (pass) alert("Incorrect Password");
+        return;
+    }
+
     const btn = document.getElementById('save-general-btn');
     btn.textContent = 'Saving...';
     await saveContentToDB({
