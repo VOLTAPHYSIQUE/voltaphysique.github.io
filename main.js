@@ -882,29 +882,6 @@ async function handleWeightUpdate(e) {
             remainingWeight = 0;
         }
 
-        try {
-            const formData = new FormData();
-            formData.append('action', 'appendWeeklyUpdate');
-            formData.append('email', currentUser.email);
-            formData.append('fullName', currentUser.fullName || '');
-            formData.append('startWeight', startWeight.toFixed(1));
-            formData.append('targetWeight', targetWeight.toFixed(1));
-            formData.append('previousWeight', currentWeight.toFixed(1));
-            formData.append('currentWeight', newWeight.toFixed(1));
-            formData.append('goalType', weightGoalType);
-
-            const response = await fetch(APP_CONFIG.api.weeklyUpdateScript, {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            console.log('Google Sheets sync:', result);
-            if (!result.success) throw new Error(result.message);
-        } catch (error) {
-            console.log('Google Sheets sync: ', error);
-            throw error;
-        }
-
         // تحديث الوزن في شيت المشتركين الأساسي عشان يظهر في لوحة الإدارة
         try {
             const syncData = new FormData();
@@ -917,7 +894,36 @@ async function handleWeightUpdate(e) {
             const syncResp = await fetch(APP_CONFIG.api.authScript, { method: "POST", body: syncData });
             const syncResult = await syncResp.json();
             console.log("Admin Sync:", syncResult);
+
+            // لو العميل مش Active، نمنعه من التحديث
+            if (syncResult.message === "Account is not Active.") {
+                errorDiv.textContent = 'Your account is PENDING. Wait for coach approval to update weight.';
+                errorDiv.classList.remove('hidden');
+                btn.textContent = 'SUBMIT WEIGHT UPDATE';
+                btn.disabled = false;
+                return; // إيقاف التحديث نهائياً
+            }
         } catch (e) { console.error("Admin Sync Error:", e); }
+
+        // تسجيل الوزن في شيت التحديثات الأسبوعية بدون ما يعطل الموقع
+        try {
+            const formData = new FormData();
+            formData.append('action', 'appendWeeklyUpdate');
+            formData.append('email', currentUser.email);
+            formData.append('fullName', currentUser.fullName || '');
+            formData.append('startWeight', startWeight.toFixed(1));
+            formData.append('targetWeight', targetWeight.toFixed(1));
+            formData.append('previousWeight', currentWeight.toFixed(1));
+            formData.append('currentWeight', newWeight.toFixed(1));
+            formData.append('goalType', weightGoalType);
+
+            fetch(APP_CONFIG.api.weeklyUpdateScript, {
+                method: 'POST',
+                body: formData
+            }).catch(e => console.log("Weekly Log Error:", e));
+        } catch (error) {
+            console.log('Google Sheets sync:', error);
+        }
 
         // Update local user object
         currentUser.currentWeight = newWeight.toFixed(1);
