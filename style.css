@@ -210,14 +210,16 @@ body {
 
 /* Mobile Menu Animation */
 .mobile-menu-container {
-    max-height: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.4s ease-in-out;
+    max-height: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-15px) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .mobile-menu-container.open {
-    max-height: 500px;
-    opacity: 1;
-    pointer-events: auto;
+    max-height: 500px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
 }
