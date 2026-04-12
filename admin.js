@@ -89,6 +89,30 @@ async function openEditorModal() {
 
         if (cData.packages_data) {
             adminPackages = JSON.parse(cData.packages_data);
+        } else {
+            // تحميل الباقات الافتراضية الخاصة بيك لو الشيت لسه فاضي
+            adminPackages = [
+                {
+                    title: 'RAMADAN 30 DAYS FAT LOSS', price: '750', currency: 'EGP', duration: '30 Days', discount: 'Limited Ramadan Offer',
+                    shortFeatures: ['Fat Loss Protocol', 'Personalized Meal Plan', 'Daily Guidance'],
+                    fullFeatures: ['Customized 30-day fat loss program', 'Personalized nutrition plan', 'Daily WhatsApp support', 'Weekly progress check-in', 'Form correction videos', 'Supplement recommendations', 'Limited Ramadan offer']
+                },
+                {
+                    title: 'VOLTA NO EXCUSES', price: '999', currency: 'EGP', duration: '3 Months', discount: '',
+                    shortFeatures: ['Full Training Program', 'Nutrition Plan', 'Weekly Check-ins'],
+                    fullFeatures: ['Personalized workout plan (Gym / Home)', 'Video exercise explanations', 'Detailed nutrition protocol', 'Personalized Nutrition plan', 'Weekly Follow-up with the coach phone', 'Program updates every 10-15 days', '10% discount on supplements', 'VOLTA Customer Supporting if needed']
+                },
+                {
+                    title: 'VOLTA GLOW UP 3.0', price: '1500', currency: 'EGP', duration: '3 Months', discount: 'MOST SELLER',
+                    shortFeatures: ['Premium Training', 'Advanced Nutrition', 'Priority Support', 'Body Composition'],
+                    fullFeatures: ['personalised workout plan (Gym / Home)', 'Video exercis explanations', 'Personalized Nutrition plan', 'Follow-up every 2-3 days with the coach', 'Program updates every 10 days', 'Food exchanges Guide', 'Recipes E-Book', 'weekly call / Zoom meeting Customer supporting', '15% Discount on supplements', 'Posing Session with Our CMO / Media Team']
+                },
+                {
+                    title: 'VOLTA BEAST MODE', price: '4490', currency: 'EGP', duration: '6 Months', discount: 'VIP',
+                    shortFeatures: ['Elite VIP Program', 'Maximum Results', 'Premium Support', 'Complete Transformation'],
+                    fullFeatures: ['personalised workoup plan (Gym/Home)', 'Video exercises explanation', 'Personalised Nutrition plan', 'Daily Follow-up with the coach', 'Program updates every 10 days', 'Food exchanges', 'Recipes E-Book', '1-2 Customer Call / Zoom per week', 'Posing Session with Our Cmo / media Team', 'Mindset session / month', '20% discount on Supplements', 'Access call to the Owner(C/Ahmed khaled)']
+                }
+            ];
         }
         renderAdminPackages();
     } catch (e) {
@@ -196,7 +220,8 @@ async function savePackage(e, index) {
 }
 
 async function deletePackage(index) {
-    const pass = prompt("Enter Admin Password to delete this package:");
+    const pkgName = adminPackages[index].title || 'this package';
+    const pass = prompt(`Are you sure you want to permanently delete "${pkgName}"?\n\nEnter Admin Password to confirm:`);
     if (pass !== "VoltaAdmin123") {
         if (pass) alert("Incorrect Password");
         return;
