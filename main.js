@@ -169,7 +169,7 @@ function initAnimations() {
 
 function renderPage(page) {
     // الحماية المباشرة: منع الدخول للوحة المشتركين بدون جلسة (Session)
-    if (page === 'dashboard' && !sessionStorage.getItem('volta_client_session')) {
+    if (page === 'dashboard' && !localStorage.getItem('volta_user')) {
         page = 'login';
         showToast('Please log in to access your dashboard.', 'error');
         window.location.replace(window.location.pathname + '#login');
@@ -209,9 +209,9 @@ window.addEventListener('hashchange', () => {
 
 // منع المتصفح من عرض الصفحة من الكاش (Back/Forward Cache) للمشتركين
 window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
+    if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
         const page = window.location.hash.replace('#', '') || 'home';
-        if (page === 'dashboard' && !sessionStorage.getItem('volta_client_session')) {
+        if (page === 'dashboard' && !localStorage.getItem('volta_user')) {
             window.location.replace(window.location.pathname + '#login');
         }
     }
@@ -603,7 +603,7 @@ async function handleLogin(e) {
         // لو اللي بيعمل لوجين هو الأدمن
         if (result.isAdmin) {
             // حفظ بيانات الجلسة السرية وتوجيهك لملف الأدمن
-            sessionStorage.setItem('volta_admin_session', 'true');
+            localStorage.setItem('volta_admin_token', 'true');
             localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
             showToast('Admin Portal Unlocked!', 'success');
             setTimeout(() => {
@@ -613,8 +613,7 @@ async function handleLogin(e) {
         }
 
         currentUser = result.user;
-        sessionStorage.setItem('volta_client_session', 'true');
-        sessionStorage.setItem('volta_user', JSON.stringify(result.user));
+        localStorage.setItem('volta_user', JSON.stringify(result.user));
 
         updateAuthUI();
         updateDashboard();
@@ -636,8 +635,7 @@ function logout() {
     localStorage.removeItem('weightUnlocked');
     localStorage.removeItem('volta_access_code');
     currentUser = null;
-    sessionStorage.removeItem('volta_user');
-    sessionStorage.removeItem('volta_client_session');
+    localStorage.removeItem('volta_user');
     localStorage.removeItem('volta_last_user_email');
     isWeightUpdateUnlocked = false;
     lockWeightUpdate();
@@ -951,7 +949,7 @@ async function handleWeightUpdate(e) {
         currentUser.weightGoalType = weightGoalType;
         currentUser.goal = weightGoalType;
 
-        sessionStorage.setItem('volta_user', JSON.stringify(currentUser));
+        localStorage.setItem('volta_user', JSON.stringify(currentUser));
 
         // حدث الداشبورد الأول
         updateDashboard();
@@ -1064,7 +1062,7 @@ function displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWe
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const savedUser = sessionStorage.getItem('volta_user');
+    const savedUser = localStorage.getItem('volta_user');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         updateAuthUI();

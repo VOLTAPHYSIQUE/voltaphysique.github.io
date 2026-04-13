@@ -1,15 +1,17 @@
 (function () {
     // التأكد من وجود الجلسة
-    if (!sessionStorage.getItem('volta_admin_session')) {
+    if (!localStorage.getItem('volta_admin_token')) {
         window.location.replace('index.html');
         return;
     }
     // منع المتصفح من عرض نسخة 'ميتة' من الصفحة عند الرجوع
-    window.onpageshow = function (event) {
-        if (event.persisted) {
-            window.location.reload();
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            if (!localStorage.getItem('volta_admin_token')) {
+                window.location.replace('index.html');
+            }
         }
-    };
+    });
 })();
 
 let adminPackages = [];
@@ -18,7 +20,7 @@ let adminRevenueChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية الصفحة: طرد أي زائر يحاول يفتح الصفحة مباشرة بدون إذن
-    const isAdmin = sessionStorage.getItem('volta_admin_session');
+    const isAdmin = localStorage.getItem('volta_admin_token');
     if (!isAdmin) {
         window.location.replace('index.html');
         return;
@@ -49,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // تحديث البيانات أوتوماتيكياً لما ترجع تفتح المتصفح أو تمسك الموبايل
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && sessionStorage.getItem('volta_admin_session')) {
+    if (document.visibilityState === 'visible' && localStorage.getItem('volta_admin_token')) {
         fetchFreshAdminData();
         fetchFreshWeeklyUpdates();
         fetchFreshContentData();
@@ -779,7 +781,7 @@ function closeAdminModal() {
 }
 
 function adminLogout() {
-    sessionStorage.clear();
+    localStorage.removeItem('volta_admin_token');
     localStorage.removeItem('volta_admin_users');
     window.location.replace('index.html'); // قفل اللوحة والرجوع للموقع الأساسي
 }
