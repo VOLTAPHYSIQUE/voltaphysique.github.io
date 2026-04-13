@@ -548,6 +548,8 @@ async function handleSignup(e) {
         if (!result.success) {
             errorDiv.textContent = result.message || 'Signup failed.';
             errorDiv.classList.remove('hidden');
+            btn.textContent = 'Create Account';
+            btn.disabled = false;
             return;
         }
 
@@ -597,6 +599,8 @@ async function handleLogin(e) {
         if (!result.success) {
             errorDiv.textContent = result.message || 'Invalid email or password.';
             errorDiv.classList.remove('hidden');
+            btn.textContent = 'Sign In';
+            btn.disabled = false;
             return;
         }
 
