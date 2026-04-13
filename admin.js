@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // جلب البيانات الجديدة أوتوماتيكياً في الخلفية عند تحميل الصفحة
     fetchFreshAdminData();
+    fetchFreshWeeklyUpdates();
 });
 
 // تحديث البيانات أوتوماتيكياً لما ترجع تفتح المتصفح أو تمسك الموبايل
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && localStorage.getItem('volta_admin')) {
         fetchFreshAdminData();
+        fetchFreshWeeklyUpdates();
     }
 });
 
@@ -318,7 +320,10 @@ async function refreshAdminData(event) {
     btn.innerHTML = '<span class="text-xs">Refreshing...</span>';
     btn.disabled = true;
 
-    await fetchFreshAdminData();
+    await Promise.all([
+        fetchFreshAdminData(),
+        fetchFreshWeeklyUpdates()
+    ]);
 
     btn.innerHTML = originalHtml;
     btn.disabled = false;
@@ -347,6 +352,33 @@ async function fetchFreshAdminData() {
         }
     } catch (e) {
         console.log("Failed to auto-refresh data.", e);
+    }
+}
+
+async function fetchFreshWeeklyUpdates() {
+    try {
+        const formData = new FormData();
+        formData.append("action", "getWeeklyUpdates");
+        formData.append("adminPassword", "VoltaAdmin123");
+
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.json();
+
+        if (result.success && result.data) {
+            localStorage.setItem('volta_weekly_updates', JSON.stringify(result.data));
+
+            // لو المودال مفتوح قدامك على التحديثات، اعمل ريفرش للجدول في نفس اللحظة
+            const titleEl = document.getElementById('admin-modal-title');
+            const modal = document.getElementById('admin-modal');
+            if (titleEl && modal && !modal.classList.contains('hidden') && titleEl.textContent.includes('UPDATES')) {
+                openAdminModal('weeklyUpdates');
+            }
+        }
+    } catch (e) {
+        console.log("Failed to auto-refresh weekly updates.", e);
     }
 }
 
@@ -442,17 +474,70 @@ function openAdminModal(type) {
 
         thead.innerHTML = `
             <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
-                <th class="p-3 sm:p-4 font-medium">Timestamp</th>
                 <th class="p-3 sm:p-4 font-medium">Name</th>
+                <th class="p-3 sm:p-4 font-medium text-center">Updates</th>
                 <th class="p-3 sm:p-4 font-medium">Start Wt.</th>
-                <th class="p-3 sm:p-4 font-medium">Target Wt.</th>
-                <th class="p-3 sm:p-4 font-medium">Prev Wt.</th>
                 <th class="p-3 sm:p-4 font-medium">Current Wt.</th>
                 <th class="p-3 sm:p-4 font-medium">Goal</th>
+                <th class="p-3 sm:p-4 font-medium text-center">History</th>
             </tr>
         `;
 
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Loading weekly updates...</td></tr>';
+        const updatesData = localStorage.getItem('volta_weekly_updates');
+
+        if (updatesData) {
+            const allUpdates = JSON.parse(updatesData);
+
+            // 1. تجميع التحديثات حسب اسم المشترك
+            const updatesByUser = allUpdates.reduce((acc, update) => {
+                const name = update.fullName || update['Full Name'];
+                if (!name) return acc;
+
+                if (!acc[name]) {
+                    acc[name] = [];
+                }
+                acc[name].push(update);
+                return acc;
+            }, {});
+
+            // 2. ترتيب تحديثات كل مشترك حسب التاريخ
+            for (const name in updatesByUser) {
+                updatesByUser[name].sort((a, b) => new Date(a.timestamp || a.Timestamp) - new Date(b.timestamp || b.Timestamp));
+            }
+
+            // ترتيب الأسماء أبجدياً عشان الجدول يكون منظم
+            const sortedNames = Object.keys(updatesByUser).sort((a, b) => a.localeCompare(b));
+
+            // 3. عرض البيانات المجمعة في الجدول
+            tbody.innerHTML = sortedNames.map(name => {
+                const userUpdates = updatesByUser[name];
+                const latestUpdate = userUpdates[userUpdates.length - 1]; // آخر تحديث
+                const firstUpdate = userUpdates[0]; // أول تحديث
+
+                const startWeight = firstUpdate.startWeight || firstUpdate['Start Weight'] || firstUpdate.currentWeight || '--';
+                const currentWeight = latestUpdate.currentWeight || latestUpdate['Current Weight'] || '--';
+                const goal = latestUpdate.goalType || latestUpdate.Goal || latestUpdate.goal || '--';
+                const escapedName = name.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
+                return `
+                    <tr class="hover:bg-white/5 transition-colors admin-table-row">
+                        <td class="p-2 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${name}</td>
+                        <td class="p-3 sm:p-4 text-xs text-center text-gray-400">${userUpdates.length}</td>
+                        <td class="p-3 sm:p-4 text-xs text-gray-400">${startWeight} kg</td>
+                        <td class="p-3 sm:p-4 text-xs text-orange-500 font-bold">${currentWeight} kg</td>
+                        <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${goal}</td>
+                        <td class="p-2 sm:p-4 text-center">
+                            <button onclick="viewUpdateHistoryGraph('${escapedName}')" class="px-3 py-1.5 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/10 text-xs uppercase font-bold tracking-wider transition-colors flex items-center justify-center gap-1.5 mx-auto">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                Graph
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-500">No weekly updates found.</td></tr>';
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Loading weekly updates...</td></tr>';
+        }
 
         const filterEl = document.getElementById('admin-filter');
         if (filterEl) {
@@ -464,47 +549,9 @@ function openAdminModal(type) {
             modal.classList.remove('opacity-0');
             modalContent.classList.remove('scale-95');
         }, 10);
-
-        fetchWeeklyUpdates();
     }
 }
 
-async function fetchWeeklyUpdates() {
-    const tbody = document.getElementById('admin-modal-tbody');
-    try {
-        const formData = new FormData();
-        formData.append("action", "getWeeklyUpdates");
-        formData.append("adminPassword", "VoltaAdmin123");
-
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
-            method: "POST",
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (result.success && result.data) {
-            const updates = result.data.reverse(); // عشان يعرض الأحدث الأول
-
-            tbody.innerHTML = updates.map(update => `
-                <tr class="hover:bg-white/5 transition-colors admin-table-row">
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${update.timestamp || update.Timestamp ? new Date(update.timestamp || update.Timestamp).toLocaleDateString() : '--'}</td>
-                    <td class="p-2 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || update['Full Name'] || '--'}</td>
-                    <td class="p-3 sm:p-4 text-xs">${update.startWeight || update['Start Weight'] || '--'}</td>
-                    <td class="p-3 sm:p-4 text-xs">${update.targetWeight || update['Target Weight'] || '--'}</td>
-                    <td class="p-3 sm:p-4 text-xs">${update.previousWeight || update['Previous Weight'] || '--'}</td>
-                    <td class="p-3 sm:p-4 text-xs text-orange-500 font-bold">${update.currentWeight || update['Current Weight'] || '--'}</td>
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || update.Goal || update.goal || '--'}</td>
-                </tr>
-            `).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No weekly updates found.</td></tr>';
-        } else {
-            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load data.</td></tr>';
-        }
-    } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Network error while fetching updates.</td></tr>';
-        console.error("Weekly updates fetch error:", e);
-    }
-}
 
 function applyAdminFilter() {
     const filterVal = document.getElementById('admin-filter').value;
@@ -750,6 +797,102 @@ function viewAthleteGraph(identifier) {
             scales: {
                 y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
                 x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { family: 'Inter', weight: 'bold' } } }
+            }
+        }
+    });
+}
+
+function viewUpdateHistoryGraph(name) {
+    const updatesData = localStorage.getItem('volta_weekly_updates');
+    if (!updatesData) {
+        alert("Weekly updates data not found.");
+        return;
+    }
+
+    const allUpdates = JSON.parse(updatesData);
+
+    // فلترة التحديثات الخاصة بهذا المشترك وترتيبها زمنياً
+    const userUpdates = allUpdates
+        .filter(update => (update.fullName || update['Full Name']) === name)
+        .sort((a, b) => new Date(a.timestamp || a.Timestamp) - new Date(b.timestamp || b.Timestamp));
+
+    if (userUpdates.length === 0) {
+        alert(`No history found for ${name}.`);
+        return;
+    }
+
+    const latestUpdate = userUpdates[userUpdates.length - 1];
+    const goal = latestUpdate.goalType || latestUpdate.Goal || latestUpdate.goal || 'No Goal Set';
+
+    document.getElementById('graph-athlete-name').textContent = name;
+    document.getElementById('graph-athlete-goal').textContent = goal;
+
+    const modal = document.getElementById('graph-modal');
+    const content = document.getElementById('graph-modal-content');
+
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }, 10);
+
+    const canvas = document.getElementById('adminWeightChart');
+    if (!canvas) return;
+
+    // تجهيز بيانات الجراف
+    const labels = userUpdates.map(u => new Date(u.timestamp || u.Timestamp).toLocaleDateString());
+    const weights = userUpdates.map(u => parseFloat(u.currentWeight || u['Current Weight']));
+    const targetWeight = parseFloat(latestUpdate.targetWeight || latestUpdate['Target Weight']);
+
+    if (adminChartInstance) {
+        adminChartInstance.destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(255, 107, 0, 0.4)');
+    gradient.addColorStop(1, 'rgba(255, 107, 0, 0.0)');
+
+    const datasets = [{
+        label: 'Weight (kg)',
+        data: weights,
+        borderColor: '#ff6b00',
+        backgroundColor: gradient,
+        borderWidth: 3,
+        pointBackgroundColor: '#0a0a0a',
+        pointBorderColor: '#ff6b00',
+        pointBorderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: true,
+        tension: 0.3
+    }];
+
+    // إضافة خط الوزن المستهدف لو موجود
+    if (targetWeight && targetWeight > 0) {
+        datasets.push({
+            label: 'Target Weight',
+            data: Array(labels.length).fill(targetWeight),
+            borderColor: '#22c55e',
+            borderWidth: 2,
+            pointRadius: 0,
+            borderDash: [5, 5],
+            fill: false
+        });
+    }
+
+    adminChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { display: (targetWeight && targetWeight > 0), position: 'top', labels: { color: '#9ca3af' } },
+                tooltip: { backgroundColor: '#141414', titleColor: '#ff6b00', bodyColor: '#fff', borderColor: 'rgba(255,107,0,0.2)', borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} kg` } }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' }, beginAtZero: false },
+                x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { family: 'Inter' }, maxRotation: 45, minRotation: 0 } }
             }
         }
     });
