@@ -792,16 +792,9 @@ async function toggleUserStatus(event, email, newStatus) {
     const originalHtml = btn.innerHTML;
     const originalClass = btn.className;
 
-    // تأثير سريع جداً (Optimistic UI) عشان يقلب معاك في نفس اللحظة بدون ريفرش
-    if (newStatus === 'Active') {
-        btn.innerHTML = 'VIP ACTIVE';
-        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-500/10 text-green-500 text-[9px] sm:text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors";
-        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Pending')`);
-    } else {
-        btn.innerHTML = 'PENDING';
-        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[9px] sm:text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors";
-        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Active')`);
-    }
+    // إظهار حالة التحميل (Loading)
+    btn.innerHTML = '<span class="text-[10px] uppercase font-bold tracking-wider">Updating...</span>';
+    btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-gray-500/10 text-gray-400 text-[9px] sm:text-[10px] border border-gray-500/20 cursor-not-allowed";
     btn.disabled = true;
 
     try {
@@ -829,21 +822,45 @@ async function toggleUserStatus(event, email, newStatus) {
                     localStorage.setItem('volta_admin_users', JSON.stringify(users));
                     updateAdminStats(users);
 
-                    const title = document.getElementById('admin-modal-title').textContent;
-                    const modal = document.getElementById('admin-modal');
-                    if (title && title.includes('TRACKER') && modal && !modal.classList.contains('hidden')) {
-                        openAdminModal('tracker');
+                    // تحديث الأرقام الإحصائية اللي جوة المودال (بدون ريفرش للجدول كله)
+                    const activeCount = users.filter(u => String(u.Status || u.status || '').toLowerCase() === 'active').length;
+                    const pendingCount = users.length - activeCount;
+                    const statsEl = document.getElementById('admin-modal-stats');
+                    if (statsEl) {
+                        statsEl.innerHTML = `
+                            <span class="px-2 py-1 rounded-md bg-gray-500/10 text-gray-400 border border-gray-500/20">TOTAL: <span class="text-white">${users.length}</span></span>
+                            <span class="px-2 py-1 rounded-md bg-green-500/10 text-green-500 border border-green-500/20">VIP ACTIVE: <span class="text-white">${activeCount}</span></span>
+                            <span class="px-2 py-1 rounded-md bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">PENDING: <span class="text-white">${pendingCount}</span></span>
+                        `;
                     }
+
+                    // تحديث شكل الزرار بناءً على الحالة الجديدة (بعد نجاح الاتصال)
+                    if (newStatus === 'Active') {
+                        btn.innerHTML = 'VIP ACTIVE';
+                        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-500/10 text-green-500 text-[9px] sm:text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors";
+                        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Pending')`);
+                        const row = btn.closest('tr');
+                        if (row) row.dataset.status = 'active';
+                    } else {
+                        btn.innerHTML = 'PENDING';
+                        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[9px] sm:text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors";
+                        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Active')`);
+                        const row = btn.closest('tr');
+                        if (row) row.dataset.status = 'pending';
+                    }
+                    btn.disabled = false;
                 }
             }
         } else {
             alert("Failed to update status: " + result.message);
             btn.innerHTML = originalHtml;
+            btn.className = originalClass;
             btn.disabled = false;
         }
     } catch (e) {
         alert("Connection error while updating status.");
         btn.innerHTML = originalHtml;
+        btn.className = originalClass;
         btn.disabled = false;
     }
 }
