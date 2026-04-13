@@ -452,7 +452,8 @@ async function refreshAdminData(event) {
 
     await Promise.all([
         fetchFreshAdminData(),
-        fetchFreshWeeklyUpdates()
+        fetchFreshWeeklyUpdates(),
+        fetchFreshContentData()
     ]);
 
     btn.innerHTML = originalHtml;
@@ -509,6 +510,28 @@ async function fetchFreshWeeklyUpdates() {
         }
     } catch (e) {
         console.log("Failed to auto-refresh weekly updates.", e);
+    }
+}
+
+async function fetchFreshContentData() {
+    try {
+        const formData = new FormData();
+        formData.append("action", "getContent");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
+        const result = await response.json();
+
+        if (result.content) {
+            localStorage.setItem('volta_website_content', JSON.stringify(result.content));
+            if (result.content.finance_data) financeData = JSON.parse(result.content.finance_data);
+            if (result.content.packages_data) adminPackages = JSON.parse(result.content.packages_data);
+
+            const financeModal = document.getElementById('finance-modal');
+            if (financeModal && !financeModal.classList.contains('hidden') && !financeModal.classList.contains('opacity-0')) {
+                renderFinanceModal();
+            }
+        }
+    } catch (e) {
+        console.log("Failed to auto-refresh content data.", e);
     }
 }
 
