@@ -431,6 +431,79 @@ function openAdminModal(type) {
             modalContent.classList.remove('scale-95');
         }, 10);
     }
+    else if (type === 'weeklyUpdates') {
+        title.innerHTML = 'WEEKLY <span class="text-orange-500">UPDATES</span>';
+
+        if (statsEl) {
+            statsEl.classList.add('hidden');
+        }
+
+        modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
+
+        thead.innerHTML = `
+            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+                <th class="p-3 sm:p-4 font-medium">Timestamp</th>
+                <th class="p-3 sm:p-4 font-medium">Name</th>
+                <th class="p-3 sm:p-4 font-medium">Start Wt.</th>
+                <th class="p-3 sm:p-4 font-medium">Target Wt.</th>
+                <th class="p-3 sm:p-4 font-medium">Prev Wt.</th>
+                <th class="p-3 sm:p-4 font-medium">Current Wt.</th>
+                <th class="p-3 sm:p-4 font-medium">Goal</th>
+            </tr>
+        `;
+
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Loading weekly updates...</td></tr>';
+
+        const filterEl = document.getElementById('admin-filter');
+        if (filterEl) {
+            filterEl.style.display = 'none';
+        }
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+        }, 10);
+
+        fetchWeeklyUpdates();
+    }
+}
+
+async function fetchWeeklyUpdates() {
+    const tbody = document.getElementById('admin-modal-tbody');
+    try {
+        const formData = new FormData();
+        formData.append("action", "getWeeklyUpdates");
+        formData.append("adminPassword", "VoltaAdmin123");
+
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+            const updates = result.data.reverse(); // عشان يعرض الأحدث الأول
+
+            tbody.innerHTML = updates.map(update => `
+                <tr class="hover:bg-white/5 transition-colors admin-table-row">
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${update.timestamp || update.Timestamp ? new Date(update.timestamp || update.Timestamp).toLocaleDateString() : '--'}</td>
+                    <td class="p-2 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || update['Full Name'] || '--'}</td>
+                    <td class="p-3 sm:p-4 text-xs">${update.startWeight || update['Start Weight'] || '--'}</td>
+                    <td class="p-3 sm:p-4 text-xs">${update.targetWeight || update['Target Weight'] || '--'}</td>
+                    <td class="p-3 sm:p-4 text-xs">${update.previousWeight || update['Previous Weight'] || '--'}</td>
+                    <td class="p-3 sm:p-4 text-xs text-orange-500 font-bold">${update.currentWeight || update['Current Weight'] || '--'}</td>
+                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || update.Goal || update.goal || '--'}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No weekly updates found.</td></tr>';
+        } else {
+            tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load data.</td></tr>';
+        }
+    } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Network error while fetching updates.</td></tr>';
+        console.error("Weekly updates fetch error:", e);
+    }
 }
 
 function applyAdminFilter() {
