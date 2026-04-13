@@ -342,8 +342,7 @@ async function fetchFreshAdminData() {
             const titleEl = document.getElementById('admin-modal-title');
             if (titleEl && !document.getElementById('admin-modal').classList.contains('hidden')) {
                 const title = titleEl.textContent;
-                if (title.includes('UPDATES')) openAdminModal('updates');
-                else if (title.includes('TRACKER')) openAdminModal('tracker');
+                if (title.includes('TRACKER')) openAdminModal('tracker');
             }
         }
     } catch (e) {
@@ -420,417 +419,348 @@ function openAdminModal(type) {
             `;
         }).join('') || '<tr><td colspan="8" class="p-4 text-center text-gray-500">No clients found.</td></tr>';
 
-    } else if (type === 'updates') {
-        title.innerHTML = 'WEEKLY <span class="text-orange-500">UPDATES</span>';
-        if (statsEl) statsEl.classList.add('hidden');
-        modalLink.href = 'https://docs.google.com/spreadsheets/d/1JjwXxEUpFrNZPXNyx25GCYV9DuXt86TmQVaWqy8QFSU/edit?usp=sharing';
-
-        thead.innerHTML = `
-            <tr class="bg-[#1a1a1a] border-b border-orange-500/20 text-[9px] sm:text-xs uppercase tracking-wider text-gray-400">
-                <th class="p-3 sm:p-4 font-medium">Date</th>
-                <th class="p-3 sm:p-4 font-medium">Name</th>
-                <th class="p-3 sm:p-4 font-medium">Goal</th>
-                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Previous</th>
-                <th class="p-3 sm:p-4 font-medium text-center">Current</th>
-                <th class="p-3 sm:p-4 font-medium hidden sm:table-cell">Target</th>
-                <th class="p-3 sm:p-4 font-medium text-center">Action</th>
-            </tr>
-        `;
-        tbody.innerHTML = '';
-
-        // استدعاء البيانات من شيت التحديثات
-        loadWeeklyUpdates();
-    }
-
-    const filterEl = document.getElementById('admin-filter');
-    if (filterEl) {
-        filterEl.value = 'all';
-        filterEl.style.display = type === 'updates' ? 'none' : 'block'; // إخفاء الفلتر في التحديثات
-    }
-
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        modalContent.classList.remove('scale-95');
-    }, 10);
-}
-
-async function loadWeeklyUpdates() {
-    const tbody = document.getElementById('admin-modal-tbody');
-    try {
-        const formData = new FormData();
-        formData.append("action", "getWeeklyUpdates");
-        formData.append("adminPassword", "VoltaAdmin123");
-
-        // استدعاء سكريبت التحديثات الأسبوعية
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
-        const result = await response.json();
-
-        if (result.success) {
-            const updates = result.data.reverse(); // الأحدث فوق
-            tbody.innerHTML = updates.map(update => {
-                const dateStr = update.timestamp ? new Date(update.timestamp).toLocaleDateString() : '--';
-                // ذكاء برمجي: لو الإيميل مش موجود، نبعت الاسم عشان الجراف يشتغل
-                const identifier = (update.email && String(update.email).includes('@')) ? update.email : update.fullName;
-                const safeIdentifier = String(identifier || '').replace(/['"]/g, '');
-                return `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${dateStr}</td>
-                    <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || '--'}</td>
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || '--'}</td>
-                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.previousWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${update.currentWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.targetWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
-                        <button onclick="viewAthleteGraph('${safeIdentifier}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
-                            <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
-                            <span class="hidden sm:inline font-semibold">Graph</span>
-                        </button>
-                    </td>
-                </tr>
-                `;
-            }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
-        } else {
-            tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Error: ${result.message}</td></tr>`;
+        const filterEl = document.getElementById('admin-filter');
+        if (filterEl) {
+            filterEl.value = 'all';
+            filterEl.style.display = 'block';
         }
-    } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load from server.</td></tr>';
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modalContent.classList.remove('scale-95');
+        }, 10);
     }
-}
 
-function applyAdminFilter() {
-    const filterVal = document.getElementById('admin-filter').value;
-    const rows = document.querySelectorAll('.admin-table-row');
+    function applyAdminFilter() {
+        const filterVal = document.getElementById('admin-filter').value;
+        const rows = document.querySelectorAll('.admin-table-row');
 
-    rows.forEach(row => {
-        if (filterVal === 'all') {
-            row.style.display = '';
-        } else if (filterVal === 'active' && row.dataset.status === 'active') {
-            row.style.display = '';
-        } else if (filterVal === 'pending' && row.dataset.status === 'pending') {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-}
-
-function closeAdminModal() {
-    const modal = document.getElementById('admin-modal');
-    const modalContent = document.getElementById('admin-modal-content');
-
-    modal.classList.add('opacity-0');
-    modalContent.classList.add('scale-95');
-
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
-}
-
-function adminLogout() {
-    localStorage.removeItem('volta_admin');
-    localStorage.removeItem('volta_admin_users');
-    localStorage.removeItem('volta_admin_updates');
-    window.location.href = 'index.html'; // قفل اللوحة والرجوع للموقع الأساسي
-}
-
-async function deleteClient(event, email, name) {
-    // 1. طلب الباسورد كخطوة تأكيدية للحماية
-    const adminPass = prompt(`Are you sure you want to permanently remove ${name}?\n\nEnter Admin Password to confirm:`);
-
-    if (!adminPass) return; // لو داس كنسل أو مدخلش حاجة
-
-    const btn = event.target.closest('button');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<span class="text-xs">...</span>';
-    btn.disabled = true;
-
-    try {
-        const formData = new FormData();
-        formData.append("action", "deleteUser");
-        formData.append("email", email);
-        formData.append("adminPassword", adminPass);
-
-        // استخدام رابط السكريبت الخاص بالـ Login/Signup
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", {
-            method: "POST",
-            body: formData
-        });
-        const result = await response.json();
-
-        if (result.success) {
-            // تحديث الذاكرة واللوحة بدون ريفرش
-            const usersData = localStorage.getItem('volta_admin_users');
-            if (usersData) {
-                let users = JSON.parse(usersData);
-                users = users.filter(u => u.email !== email); // شيل العميل من القائمة
-                localStorage.setItem('volta_admin_users', JSON.stringify(users));
-
-                updateAdminStats(users); // تحديث الأرقام اللي فوق
-
-                const title = document.getElementById('admin-modal-title').textContent;
-                if (title && title.includes('UPDATES')) openAdminModal('updates');
-                else if (title && title.includes('TRACKER')) openAdminModal('tracker');
+        rows.forEach(row => {
+            if (filterVal === 'all') {
+                row.style.display = '';
+            } else if (filterVal === 'active' && row.dataset.status === 'active') {
+                row.style.display = '';
+            } else if (filterVal === 'pending' && row.dataset.status === 'pending') {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
             }
-        } else {
-            alert('Failed to remove user: ' + result.message);
+        });
+    }
+
+    function closeAdminModal() {
+        const modal = document.getElementById('admin-modal');
+        const modalContent = document.getElementById('admin-modal-content');
+
+        modal.classList.add('opacity-0');
+        modalContent.classList.add('scale-95');
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    function adminLogout() {
+        localStorage.removeItem('volta_admin');
+        localStorage.removeItem('volta_admin_users');
+        window.location.href = 'index.html'; // قفل اللوحة والرجوع للموقع الأساسي
+    }
+
+    async function deleteClient(event, email, name) {
+        // 1. طلب الباسورد كخطوة تأكيدية للحماية
+        const adminPass = prompt(`Are you sure you want to permanently remove ${name}?\n\nEnter Admin Password to confirm:`);
+
+        if (!adminPass) return; // لو داس كنسل أو مدخلش حاجة
+
+        const btn = event.target.closest('button');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="text-xs">...</span>';
+        btn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append("action", "deleteUser");
+            formData.append("email", email);
+            formData.append("adminPassword", adminPass);
+
+            // استخدام رابط السكريبت الخاص بالـ Login/Signup
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                // تحديث الذاكرة واللوحة بدون ريفرش
+                const usersData = localStorage.getItem('volta_admin_users');
+                if (usersData) {
+                    let users = JSON.parse(usersData);
+                    users = users.filter(u => u.email !== email); // شيل العميل من القائمة
+                    localStorage.setItem('volta_admin_users', JSON.stringify(users));
+
+                    updateAdminStats(users); // تحديث الأرقام اللي فوق
+
+                    const title = document.getElementById('admin-modal-title').textContent;
+                    if (title && title.includes('TRACKER')) openAdminModal('tracker');
+                }
+            } else {
+                alert('Failed to remove user: ' + result.message);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        } catch (error) {
+            alert('Connection error while trying to remove user.');
             btn.innerHTML = originalHtml;
             btn.disabled = false;
         }
-    } catch (error) {
-        alert('Connection error while trying to remove user.');
-        btn.innerHTML = originalHtml;
+    }
+
+    function openEditAthleteModal(email) {
+        const usersData = localStorage.getItem('volta_admin_users');
+        const users = usersData ? JSON.parse(usersData) : [];
+        const user = users.find(u => u.email === email);
+        if (!user) return;
+
+        document.getElementById('edit-athlete-email').value = user.email;
+        document.getElementById('edit-athlete-goal').value = user.weightGoalType || user.goal || '';
+        document.getElementById('edit-athlete-current').value = user.currentWeight || user.weight || '';
+        document.getElementById('edit-athlete-target').value = user.targetWeight || '';
+
+        const modal = document.getElementById('edit-athlete-modal');
+        const content = document.getElementById('edit-athlete-modal-content');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }, 10);
+    }
+
+    function closeEditAthleteModal() {
+        const modal = document.getElementById('edit-athlete-modal');
+        const content = document.getElementById('edit-athlete-modal-content');
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    async function saveAthleteData(e) {
+        const btn = e.currentTarget;
+        const originalText = btn.textContent;
+        btn.textContent = 'Saving...';
+        btn.disabled = true;
+
+        const email = document.getElementById('edit-athlete-email').value;
+        const goalType = document.getElementById('edit-athlete-goal').value;
+        const currentWeight = document.getElementById('edit-athlete-current').value;
+        const targetWeight = document.getElementById('edit-athlete-target').value;
+
+        try {
+            const formData = new FormData();
+            formData.append("action", "syncWeights");
+            formData.append("email", email);
+            formData.append("currentWeight", currentWeight);
+            formData.append("targetWeight", targetWeight);
+            formData.append("goalType", goalType);
+
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
+            const result = await response.json();
+
+            if (result.success) {
+                const usersData = localStorage.getItem('volta_admin_users');
+                if (usersData) {
+                    let users = JSON.parse(usersData);
+                    const userIndex = users.findIndex(u => u.email === email);
+                    if (userIndex !== -1) {
+                        users[userIndex].currentWeight = currentWeight;
+                        users[userIndex].targetWeight = targetWeight;
+                        users[userIndex].weightGoalType = goalType;
+                        users[userIndex].goal = goalType;
+                        localStorage.setItem('volta_admin_users', JSON.stringify(users));
+
+                        const title = document.getElementById('admin-modal-title').textContent;
+                        if (title && title.includes('TRACKER')) openAdminModal('tracker');
+                    }
+                }
+                closeEditAthleteModal();
+            } else {
+                alert("Failed to update: " + (result.message || "Unknown error"));
+            }
+        } catch (e) {
+            alert("Network error while saving athlete data.");
+        }
+        btn.textContent = originalText;
         btn.disabled = false;
     }
-}
 
-function openEditAthleteModal(email) {
-    const usersData = localStorage.getItem('volta_admin_users');
-    const users = usersData ? JSON.parse(usersData) : [];
-    const user = users.find(u => u.email === email);
-    if (!user) return;
+    let adminChartInstance = null;
 
-    document.getElementById('edit-athlete-email').value = user.email;
-    document.getElementById('edit-athlete-goal').value = user.weightGoalType || user.goal || '';
-    document.getElementById('edit-athlete-current').value = user.currentWeight || user.weight || '';
-    document.getElementById('edit-athlete-target').value = user.targetWeight || '';
+    function viewAthleteGraph(identifier) {
+        const usersData = localStorage.getItem('volta_admin_users');
+        const users = usersData ? JSON.parse(usersData) : [];
 
-    const modal = document.getElementById('edit-athlete-modal');
-    const content = document.getElementById('edit-athlete-modal-content');
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('scale-95');
-    }, 10);
-}
+        // ذكاء برمجي: البحث بالإيميل أو الاسم عشان الجراف يشتغل على كل السجلات القديمة والجديدة
+        const user = users.find(u =>
+            (u.email && String(u.email).toLowerCase().trim() === String(identifier).toLowerCase().trim()) ||
+            (u.fullName && String(u.fullName).replace(/['"]/g, '').toLowerCase().trim() === String(identifier).toLowerCase().trim())
+        );
 
-function closeEditAthleteModal() {
-    const modal = document.getElementById('edit-athlete-modal');
-    const content = document.getElementById('edit-athlete-modal-content');
-    modal.classList.add('opacity-0');
-    content.classList.add('scale-95');
-    setTimeout(() => modal.classList.add('hidden'), 300);
-}
-
-async function saveAthleteData(e) {
-    const btn = e.currentTarget;
-    const originalText = btn.textContent;
-    btn.textContent = 'Saving...';
-    btn.disabled = true;
-
-    const email = document.getElementById('edit-athlete-email').value;
-    const goalType = document.getElementById('edit-athlete-goal').value;
-    const currentWeight = document.getElementById('edit-athlete-current').value;
-    const targetWeight = document.getElementById('edit-athlete-target').value;
-
-    try {
-        const formData = new FormData();
-        formData.append("action", "syncWeights");
-        formData.append("email", email);
-        formData.append("currentWeight", currentWeight);
-        formData.append("targetWeight", targetWeight);
-        formData.append("goalType", goalType);
-
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
-        const result = await response.json();
-
-        if (result.success) {
-            const usersData = localStorage.getItem('volta_admin_users');
-            if (usersData) {
-                let users = JSON.parse(usersData);
-                const userIndex = users.findIndex(u => u.email === email);
-                if (userIndex !== -1) {
-                    users[userIndex].currentWeight = currentWeight;
-                    users[userIndex].targetWeight = targetWeight;
-                    users[userIndex].weightGoalType = goalType;
-                    users[userIndex].goal = goalType;
-                    localStorage.setItem('volta_admin_users', JSON.stringify(users));
-
-                    const title = document.getElementById('admin-modal-title').textContent;
-                    if (title && title.includes('UPDATES')) openAdminModal('updates');
-                    else if (title && title.includes('TRACKER')) openAdminModal('tracker');
-                }
-            }
-            closeEditAthleteModal();
-        } else {
-            alert("Failed to update: " + (result.message || "Unknown error"));
+        if (!user) {
+            alert("Athlete data not found for the graph.");
+            return;
         }
-    } catch (e) {
-        alert("Network error while saving athlete data.");
-    }
-    btn.textContent = originalText;
-    btn.disabled = false;
-}
 
-let adminChartInstance = null;
+        document.getElementById('graph-athlete-name').textContent = user.fullName || 'Athlete';
+        document.getElementById('graph-athlete-goal').textContent = user.goal || user.weightGoalType || 'No Goal Set';
 
-function viewAthleteGraph(identifier) {
-    const usersData = localStorage.getItem('volta_admin_users');
-    const users = usersData ? JSON.parse(usersData) : [];
+        const modal = document.getElementById('graph-modal');
+        const content = document.getElementById('graph-modal-content');
 
-    // ذكاء برمجي: البحث بالإيميل أو الاسم عشان الجراف يشتغل على كل السجلات القديمة والجديدة
-    const user = users.find(u =>
-        (u.email && String(u.email).toLowerCase().trim() === String(identifier).toLowerCase().trim()) ||
-        (u.fullName && String(u.fullName).replace(/['"]/g, '').toLowerCase().trim() === String(identifier).toLowerCase().trim())
-    );
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }, 10);
 
-    if (!user) {
-        alert("Athlete data not found for the graph.");
-        return;
-    }
+        const canvas = document.getElementById('adminWeightChart');
+        if (!canvas) return;
 
-    document.getElementById('graph-athlete-name').textContent = user.fullName || 'Athlete';
-    document.getElementById('graph-athlete-goal').textContent = user.goal || user.weightGoalType || 'No Goal Set';
+        const startW = parseFloat(user.startWeight || user.weight) || 0;
+        const currentW = parseFloat(user.currentWeight || user.weight) || 0;
+        const targetW = parseFloat(user.targetWeight) || 0;
 
-    const modal = document.getElementById('graph-modal');
-    const content = document.getElementById('graph-modal-content');
+        if (adminChartInstance) {
+            adminChartInstance.destroy();
+        }
 
-    modal.classList.remove('hidden');
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-        content.classList.remove('scale-95');
-    }, 10);
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(255, 107, 0, 0.4)');
+        gradient.addColorStop(1, 'rgba(255, 107, 0, 0.0)');
 
-    const canvas = document.getElementById('adminWeightChart');
-    if (!canvas) return;
-
-    const startW = parseFloat(user.startWeight || user.weight) || 0;
-    const currentW = parseFloat(user.currentWeight || user.weight) || 0;
-    const targetW = parseFloat(user.targetWeight) || 0;
-
-    if (adminChartInstance) {
-        adminChartInstance.destroy();
-    }
-
-    const ctx = canvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(255, 107, 0, 0.4)');
-    gradient.addColorStop(1, 'rgba(255, 107, 0, 0.0)');
-
-    adminChartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Start', 'Current', 'Target'],
-            datasets: [{
-                label: 'Weight (kg)',
-                data: [startW, currentW, targetW],
-                borderColor: '#ff6b00',
-                backgroundColor: gradient,
-                borderWidth: 3,
-                pointBackgroundColor: '#0a0a0a',
-                pointBorderColor: '#ff6b00',
-                pointBorderWidth: 3,
-                pointRadius: 6,
-                pointHoverRadius: 8,
-                fill: true,
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#141414', titleColor: '#ff6b00', bodyColor: '#fff', borderColor: 'rgba(255,107,0,0.2)',
-                    borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: (ctx) => ctx.parsed.y + ' kg' }
-                }
+        adminChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Start', 'Current', 'Target'],
+                datasets: [{
+                    label: 'Weight (kg)',
+                    data: [startW, currentW, targetW],
+                    borderColor: '#ff6b00',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#0a0a0a',
+                    pointBorderColor: '#ff6b00',
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    fill: true,
+                    tension: 0.3
+                }]
             },
-            scales: {
-                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
-                x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { family: 'Inter', weight: 'bold' } } }
-            }
-        }
-    });
-}
-
-function closeGraphModal() {
-    const modal = document.getElementById('graph-modal');
-    const content = document.getElementById('graph-modal-content');
-    modal.classList.add('opacity-0');
-    content.classList.add('scale-95');
-    setTimeout(() => modal.classList.add('hidden'), 300);
-}
-
-async function saveAccessCode(e) {
-    if (e) e.preventDefault();
-
-    const pass = prompt("Enter Admin Password to update the Access Code:");
-    if (pass !== "VoltaAdmin123") {
-        if (pass) alert("Incorrect Password");
-        return;
-    }
-
-    const btn = e.currentTarget;
-    const originalText = btn.textContent;
-    btn.textContent = 'Saving...';
-    btn.disabled = true;
-
-    await saveContentToDB({
-        access_code: document.getElementById('edit-access-code').value.trim()
-    });
-
-    btn.textContent = originalText;
-    btn.disabled = false;
-    alert("Access Code updated successfully!");
-}
-
-async function toggleUserStatus(event, email, newStatus) {
-    event.stopPropagation();
-    const btn = event.currentTarget;
-    const originalHtml = btn.innerHTML;
-    const originalClass = btn.className;
-
-    // تأثير سريع جداً (Optimistic UI) عشان يقلب معاك في نفس اللحظة بدون ريفرش
-    if (newStatus === 'Active') {
-        btn.innerHTML = 'VIP ACTIVE';
-        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-500/10 text-green-500 text-[9px] sm:text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors";
-        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Pending')`);
-    } else {
-        btn.innerHTML = 'PENDING';
-        btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[9px] sm:text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors";
-        btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Active')`);
-    }
-    btn.disabled = true;
-
-    try {
-        const formData = new FormData();
-        formData.append("action", "updateUserStatus");
-        formData.append("email", email);
-        formData.append("status", newStatus);
-        formData.append("adminPassword", "VoltaAdmin123");
-
-        // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", {
-            method: "POST",
-            body: formData
-        });
-        const result = await response.json();
-
-        if (result.success) {
-            const usersData = localStorage.getItem('volta_admin_users');
-            if (usersData) {
-                let users = JSON.parse(usersData);
-                const userIndex = users.findIndex(u => u.email === email);
-                if (userIndex !== -1) {
-                    users[userIndex].Status = newStatus;
-                    users[userIndex].status = newStatus;
-                    localStorage.setItem('volta_admin_users', JSON.stringify(users));
-                    updateAdminStats(users);
-
-                    const title = document.getElementById('admin-modal-title').textContent;
-                    if (title && title.includes('UPDATES')) { openAdminModal('updates'); }
-                    else if (title && title.includes('TRACKER')) { openAdminModal('tracker'); }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#141414', titleColor: '#ff6b00', bodyColor: '#fff', borderColor: 'rgba(255,107,0,0.2)',
+                        borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: (ctx) => ctx.parsed.y + ' kg' }
+                    }
+                },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { family: 'Inter', weight: 'bold' } } }
                 }
             }
+        });
+    }
+
+    function closeGraphModal() {
+        const modal = document.getElementById('graph-modal');
+        const content = document.getElementById('graph-modal-content');
+        modal.classList.add('opacity-0');
+        content.classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    async function saveAccessCode(e) {
+        if (e) e.preventDefault();
+
+        const pass = prompt("Enter Admin Password to update the Access Code:");
+        if (pass !== "VoltaAdmin123") {
+            if (pass) alert("Incorrect Password");
+            return;
+        }
+
+        const btn = e.currentTarget;
+        const originalText = btn.textContent;
+        btn.textContent = 'Saving...';
+        btn.disabled = true;
+
+        await saveContentToDB({
+            access_code: document.getElementById('edit-access-code').value.trim()
+        });
+
+        btn.textContent = originalText;
+        btn.disabled = false;
+        alert("Access Code updated successfully!");
+    }
+
+    async function toggleUserStatus(event, email, newStatus) {
+        event.stopPropagation();
+        const btn = event.currentTarget;
+        const originalHtml = btn.innerHTML;
+        const originalClass = btn.className;
+
+        // تأثير سريع جداً (Optimistic UI) عشان يقلب معاك في نفس اللحظة بدون ريفرش
+        if (newStatus === 'Active') {
+            btn.innerHTML = 'VIP ACTIVE';
+            btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-green-500/10 text-green-500 text-[9px] sm:text-[10px] font-bold border border-green-500/20 hover:bg-green-500/20 transition-colors";
+            btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Pending')`);
         } else {
-            alert("Failed to update status: " + result.message);
+            btn.innerHTML = 'PENDING';
+            btn.className = "px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md bg-yellow-500/10 text-yellow-500 text-[9px] sm:text-[10px] border border-yellow-500/20 hover:bg-yellow-500/20 transition-colors";
+            btn.setAttribute('onclick', `toggleUserStatus(event, '${email}', 'Active')`);
+        }
+        btn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append("action", "updateUserStatus");
+            formData.append("email", email);
+            formData.append("status", newStatus);
+            formData.append("adminPassword", "VoltaAdmin123");
+
+            // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
+            const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                const usersData = localStorage.getItem('volta_admin_users');
+                if (usersData) {
+                    let users = JSON.parse(usersData);
+                    const userIndex = users.findIndex(u => u.email === email);
+                    if (userIndex !== -1) {
+                        users[userIndex].Status = newStatus;
+                        users[userIndex].status = newStatus;
+                        localStorage.setItem('volta_admin_users', JSON.stringify(users));
+                        updateAdminStats(users);
+
+                        const title = document.getElementById('admin-modal-title').textContent;
+                        if (title && title.includes('TRACKER')) { openAdminModal('tracker'); }
+                    }
+                }
+            } else {
+                alert("Failed to update status: " + result.message);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+        } catch (e) {
+            alert("Connection error while updating status.");
             btn.innerHTML = originalHtml;
             btn.disabled = false;
         }
-    } catch (e) {
-        alert("Connection error while updating status.");
-        btn.innerHTML = originalHtml;
-        btn.disabled = false;
     }
-}
