@@ -764,3 +764,4 @@ function openAdminModal(type) {
             btn.disabled = false;
         }
     }
+}
