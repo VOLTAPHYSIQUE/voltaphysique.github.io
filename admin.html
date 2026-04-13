@@ -97,19 +97,39 @@
                 </div>
             </div>
 
-            <!-- Athletes Breakdown Graph -->
-            <div class="rounded-2xl card-dark p-4 sm:p-6 mb-10 max-w-md mx-auto">
-                <h3
-                    class="font-bebas text-lg sm:text-xl tracking-wider mb-4 flex items-center justify-center gap-2 text-gray-300">
-                    <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-                    </svg> ATHLETES BREAKDOWN
-                </h3>
-                <div class="relative w-full h-[200px] sm:h-[250px] flex items-center justify-center">
-                    <canvas id="adminOverviewChart"></canvas>
+            <!-- Dashboard Charts -->
+            <div class="grid md:grid-cols-2 gap-6 mb-10 max-w-5xl mx-auto">
+                <!-- Athletes Breakdown Graph -->
+                <div class="rounded-2xl card-dark p-4 sm:p-6 flex flex-col">
+                    <h3
+                        class="font-bebas text-lg sm:text-xl tracking-wider mb-4 flex items-center justify-center gap-2 text-gray-300">
+                        <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                        </svg> ATHLETES BREAKDOWN
+                    </h3>
+                    <div class="relative w-full flex-1 min-h-[200px] flex items-center justify-center">
+                        <canvas id="adminOverviewChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Revenue Breakdown Graph -->
+                <div class="rounded-2xl card-dark p-4 sm:p-6 flex flex-col">
+                    <h3
+                        class="font-bebas text-lg sm:text-xl tracking-wider mb-1 flex items-center justify-center gap-2 text-gray-300">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg> REVENUE OVERVIEW
+                    </h3>
+                    <p id="dashboard-total-revenue"
+                        class="text-center font-bebas text-3xl sm:text-4xl text-green-500 mb-2">0 EGP</p>
+                    <div class="relative w-full flex-1 min-h-[160px] flex items-center justify-center">
+                        <canvas id="adminRevenueChart"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -432,7 +452,7 @@
         </div>
     </div>
 
-    <script src="admin.js?v=9"></script>
+    <script src="admin.js?v=10"></script>
 </body>
 
 </html>
