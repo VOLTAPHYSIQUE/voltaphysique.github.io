@@ -436,7 +436,7 @@ function openAdminModal(type) {
                 <th class="p-3 sm:p-4 font-medium text-center">Action</th>
             </tr>
         `;
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Loading updates from server...</td></tr>';
+        tbody.innerHTML = '';
 
         // استدعاء البيانات من شيت التحديثات
         loadWeeklyUpdates();
