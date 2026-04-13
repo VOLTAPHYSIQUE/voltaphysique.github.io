@@ -498,46 +498,6 @@ async function loadWeeklyUpdates() {
     }
 }
 
-async function loadWeeklyUpdates() {
-    const tbody = document.getElementById('admin-modal-tbody');
-    try {
-        const formData = new FormData();
-        formData.append("action", "getWeeklyUpdates");
-        formData.append("adminPassword", "VoltaAdmin123");
-
-        // استدعاء سكريبت التحديثات الأسبوعية
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
-        const result = await response.json();
-
-        if (result.success) {
-            const updates = result.data.reverse(); // الأحدث فوق
-            tbody.innerHTML = updates.map(update => {
-                const dateStr = update.timestamp ? new Date(update.timestamp).toLocaleDateString() : '--';
-                return `
-                <tr class="hover:bg-white/5 transition-colors">
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${dateStr}</td>
-                    <td class="p-3 sm:p-4 font-semibold text-white whitespace-normal min-w-[90px] sm:min-w-[120px] text-[11px] sm:text-sm">${update.fullName || '--'}</td>
-                    <td class="p-3 sm:p-4 text-[10px] sm:text-xs">${update.goalType || '--'}</td>
-                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.previousWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${update.currentWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 hidden sm:table-cell">${update.targetWeight || '--'}</td>
-                    <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
-                        <button onclick="viewAthleteGraph('${update.email}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
-                            <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
-                            <span class="hidden sm:inline font-semibold">Graph</span>
-                        </button>
-                    </td>
-                </tr>
-                `;
-            }).join('') || '<tr><td colspan="7" class="p-4 text-center text-gray-500">No updates found.</td></tr>';
-        } else {
-            tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Error: ${result.message}</td></tr>`;
-        }
-    } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-red-500">Failed to load from server.</td></tr>';
-    }
-}
-
 function applyAdminFilter() {
     const filterVal = document.getElementById('admin-filter').value;
     const rows = document.querySelectorAll('.admin-table-row');
