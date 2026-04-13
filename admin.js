@@ -663,11 +663,20 @@ async function saveAthleteData(e) {
 
 let adminChartInstance = null;
 
-function viewAthleteGraph(email) {
+function viewAthleteGraph(identifier) {
     const usersData = localStorage.getItem('volta_admin_users');
     const users = usersData ? JSON.parse(usersData) : [];
-    const user = users.find(u => u.email === email);
-    if (!user) return;
+
+    // البحث بالإيميل أو الاسم عشان يدعم السجلات القديمة والجديدة
+    const user = users.find(u =>
+        (u.email && String(u.email).toLowerCase().trim() === String(identifier).toLowerCase().trim()) ||
+        (u.fullName && String(u.fullName).replace(/['"]/g, '').toLowerCase().trim() === String(identifier).toLowerCase().trim())
+    );
+
+    if (!user) {
+        alert("Cannot open graph: Athlete data not found in Tracker.");
+        return;
+    }
 
     document.getElementById('graph-athlete-name').textContent = user.fullName || 'Athlete';
     document.getElementById('graph-athlete-goal').textContent = user.goal || user.weightGoalType || 'No Goal Set';
