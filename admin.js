@@ -14,6 +14,7 @@
 
 let adminPackages = [];
 let adminOverviewChartInstance = null;
+let adminRevenueChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية الصفحة: طرد أي زائر يحاول يفتح الصفحة مباشرة بدون إذن
@@ -30,9 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAdminStats(users);
     }
 
+    const savedContent = localStorage.getItem('volta_website_content');
+    if (savedContent) {
+        try {
+            const c = JSON.parse(savedContent);
+            if (c.finance_data) financeData = JSON.parse(c.finance_data);
+            if (c.packages_data) adminPackages = JSON.parse(c.packages_data);
+        } catch (e) { }
+    }
+    updateDashboardRevenueChart();
+
     // جلب البيانات الجديدة أوتوماتيكياً في الخلفية عند تحميل الصفحة
     fetchFreshAdminData();
     fetchFreshWeeklyUpdates();
+    fetchFreshContentData();
 });
 
 // تحديث البيانات أوتوماتيكياً لما ترجع تفتح المتصفح أو تمسك الموبايل
@@ -40,6 +52,7 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && sessionStorage.getItem('volta_admin_session')) {
         fetchFreshAdminData();
         fetchFreshWeeklyUpdates();
+        fetchFreshContentData();
     }
 });
 
@@ -85,6 +98,42 @@ function updateAdminStats(users) {
                     }
                 }
             }
+        });
+    }
+}
+
+function updateDashboardRevenueChart() {
+    const usersData = localStorage.getItem('volta_admin_users');
+    const users = usersData ? JSON.parse(usersData) : [];
+    const activeUsers = users.filter(u => String(u.Status || u.status || '').toLowerCase() === 'active');
+
+    let totalRevenue = 0;
+    let packageCounts = {};
+
+    activeUsers.forEach(user => {
+        const fData = financeData[user.email] || { price: 0, package: '' };
+        totalRevenue += Number(fData.price) || 0;
+
+        if (fData.package && Number(fData.price) > 0) {
+            packageCounts[fData.package] = (packageCounts[fData.package] || 0) + Number(fData.price);
+        }
+    });
+
+    const revEl = document.getElementById('dashboard-total-revenue');
+    if (revEl) revEl.textContent = totalRevenue.toLocaleString() + ' EGP';
+
+    const ctx = document.getElementById('adminRevenueChart');
+    if (ctx) {
+        if (adminRevenueChartInstance) adminRevenueChartInstance.destroy();
+        const labels = Object.keys(packageCounts);
+        const data = Object.values(packageCounts);
+
+        if (labels.length === 0) { labels.push('No Data'); data.push(1); }
+
+        adminRevenueChartInstance = new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: { labels: labels, datasets: [{ data: data, backgroundColor: ['#22c55e', '#f97316', '#3b82f6', '#a855f7', '#eab308', '#ec4899'], borderColor: '#141414', borderWidth: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } } } }
         });
     }
 }
@@ -185,6 +234,7 @@ async function saveClientFinance(email) {
         formData.append("updates", JSON.stringify({ finance_data: JSON.stringify(financeData) }));
         await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
         renderFinanceModal();
+        updateDashboardRevenueChart();
     } catch (e) { alert("Failed to save."); }
     btn.textContent = 'Save'; btn.disabled = false;
 }
@@ -465,6 +515,7 @@ async function fetchFreshAdminData() {
         if (result.success && result.isAdmin) {
             localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
             updateAdminStats(result.users);
+            updateDashboardRevenueChart();
 
             // تحديث الجداول لو كانت مفتوحة قدامك
             const titleEl = document.getElementById('admin-modal-title');
@@ -516,6 +567,7 @@ async function fetchFreshContentData() {
             localStorage.setItem('volta_website_content', JSON.stringify(result.content));
             if (result.content.finance_data) financeData = JSON.parse(result.content.finance_data);
             if (result.content.packages_data) adminPackages = JSON.parse(result.content.packages_data);
+            updateDashboardRevenueChart();
 
             const financeModal = document.getElementById('finance-modal');
             if (financeModal && !financeModal.classList.contains('hidden') && !financeModal.classList.contains('opacity-0')) {
