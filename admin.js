@@ -576,7 +576,10 @@ async function deleteClient(event, email, name) {
                 updateAdminStats(users); // تحديث الأرقام اللي فوق
 
                 const title = document.getElementById('admin-modal-title').textContent;
-                if (title && title.includes('TRACKER')) openAdminModal('tracker');
+                const modal = document.getElementById('admin-modal');
+                if (title && title.includes('TRACKER') && modal && !modal.classList.contains('hidden')) {
+                    openAdminModal('tracker');
+                }
             }
         } else {
             alert('Failed to remove user: ' + result.message);
@@ -653,7 +656,10 @@ async function saveAthleteData(e) {
                     localStorage.setItem('volta_admin_users', JSON.stringify(users));
 
                     const title = document.getElementById('admin-modal-title').textContent;
-                    if (title && title.includes('TRACKER')) openAdminModal('tracker');
+                    const modal = document.getElementById('admin-modal');
+                    if (title && title.includes('TRACKER') && modal && !modal.classList.contains('hidden')) {
+                        openAdminModal('tracker');
+                    }
                 }
             }
             closeEditAthleteModal();
@@ -824,7 +830,10 @@ async function toggleUserStatus(event, email, newStatus) {
                     updateAdminStats(users);
 
                     const title = document.getElementById('admin-modal-title').textContent;
-                    if (title && title.includes('TRACKER')) { openAdminModal('tracker'); }
+                    const modal = document.getElementById('admin-modal');
+                    if (title && title.includes('TRACKER') && modal && !modal.classList.contains('hidden')) {
+                        openAdminModal('tracker');
+                    }
                 }
             }
         } else {
