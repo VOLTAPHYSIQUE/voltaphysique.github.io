@@ -473,6 +473,9 @@ async function loadWeeklyUpdates() {
             const updates = result.data.reverse(); // الأحدث فوق
             tbody.innerHTML = updates.map(update => {
                 const dateStr = update.timestamp ? new Date(update.timestamp).toLocaleDateString() : '--';
+                // ذكاء برمجي: لو الإيميل مش موجود، نبعت الاسم عشان الجراف يشتغل
+                const identifier = (update.email && String(update.email).includes('@')) ? update.email : update.fullName;
+                const safeIdentifier = String(identifier || '').replace(/['"]/g, '');
                 return `
                 <tr class="hover:bg-white/5 transition-colors">
                     <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${dateStr}</td>
@@ -482,7 +485,7 @@ async function loadWeeklyUpdates() {
                     <td class="p-3 sm:p-4 text-orange-400 font-bold text-center">${update.currentWeight || '--'}</td>
                     <td class="p-3 sm:p-4 hidden sm:table-cell">${update.targetWeight || '--'}</td>
                     <td class="p-3 sm:p-4 flex justify-center gap-1 sm:gap-2">
-                        <button onclick="viewAthleteGraph('${update.email}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
+                        <button onclick="viewAthleteGraph('${safeIdentifier}')" class="p-1.5 sm:px-3 sm:py-1.5 bg-blue-500/10 text-blue-500 text-[10px] sm:text-xs rounded-lg hover:bg-blue-500/20 transition-colors inline-flex items-center justify-center" title="Graph">
                             <svg class="w-4 h-4 sm:hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4m8 4v8m-4-4v4m-4-8v8M4 20h16"></path></svg>
                             <span class="hidden sm:inline font-semibold">Graph</span>
                         </button>
