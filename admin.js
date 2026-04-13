@@ -412,9 +412,6 @@ function openAdminModal(type) {
                 <td class="p-3 sm:p-4 text-center">${statusBadge}</td>
                 <td class="p-3 sm:p-4 text-[10px] sm:text-xs text-gray-500">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '--'}</td>
                 <td class="p-2 sm:p-4 text-center flex justify-center gap-1 sm:gap-2">
-                    <button onclick="openEditAthleteModal('${user.email}')" class="p-1.5 sm:p-2 bg-yellow-500/10 text-yellow-500 rounded-lg hover:bg-yellow-500/20 transition-colors inline-flex items-center justify-center" title="Edit Athlete Data">
-                        <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                    </button>
                     <button onclick="deleteClient(event, '${user.email}', '${(user.fullName || '').replace(/['"]/g, '')}')" class="p-1.5 sm:p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors inline-flex items-center justify-center" title="Remove Client">
                         <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
@@ -466,7 +463,7 @@ async function loadWeeklyUpdates() {
         formData.append("adminPassword", "VoltaAdmin123");
 
         // استدعاء سكريبت التحديثات الأسبوعية
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxO9QnDSGkTrnvWDhLTnTe9wkOxA6GdyVG0w4eDD9uZacteLbO2f2nzikecr2y8syhN/exec", { method: "POST", body: formData });
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", { method: "POST", body: formData });
         const result = await response.json();
 
         if (result.success) {
@@ -667,11 +664,20 @@ async function saveAthleteData(e) {
 
 let adminChartInstance = null;
 
-function viewAthleteGraph(email) {
+function viewAthleteGraph(identifier) {
     const usersData = localStorage.getItem('volta_admin_users');
     const users = usersData ? JSON.parse(usersData) : [];
-    const user = users.find(u => u.email === email);
-    if (!user) return;
+
+    // ذكاء برمجي: البحث بالإيميل أو الاسم عشان الجراف يشتغل على كل السجلات القديمة والجديدة
+    const user = users.find(u =>
+        (u.email && String(u.email).toLowerCase().trim() === String(identifier).toLowerCase().trim()) ||
+        (u.fullName && String(u.fullName).replace(/['"]/g, '').toLowerCase().trim() === String(identifier).toLowerCase().trim())
+    );
+
+    if (!user) {
+        alert("Athlete data not found for the graph.");
+        return;
+    }
 
     document.getElementById('graph-athlete-name').textContent = user.fullName || 'Athlete';
     document.getElementById('graph-athlete-goal').textContent = user.goal || user.weightGoalType || 'No Goal Set';
