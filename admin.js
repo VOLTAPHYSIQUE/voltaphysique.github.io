@@ -78,38 +78,16 @@ function updateAdminStats(users) {
 let financeData = {};
 let financeChartInstance = null;
 
-async function openFinanceModal() {
-    const btn = document.querySelector('button[onclick="openFinanceModal()"]');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<span class="truncate">Wait...</span>';
-    btn.disabled = true;
+function openFinanceModal() {
+    renderFinanceModal();
 
-    try {
-        const formData = new FormData();
-        formData.append("action", "getContent");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
-        const result = await response.json();
-
-        if (result.content) {
-            if (result.content.finance_data) financeData = JSON.parse(result.content.finance_data);
-            if (result.content.packages_data) adminPackages = JSON.parse(result.content.packages_data);
-        }
-
-        renderFinanceModal();
-
-        const modal = document.getElementById('finance-modal');
-        const content = document.getElementById('finance-modal-content');
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-        }, 10);
-
-    } catch (e) {
-        alert("Failed to load finance data.");
-    }
-    btn.innerHTML = originalHtml;
-    btn.disabled = false;
+    const modal = document.getElementById('finance-modal');
+    const content = document.getElementById('finance-modal-content');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+    }, 10);
 }
 
 function autoFillPrice(safeId, pkgTitle) {
