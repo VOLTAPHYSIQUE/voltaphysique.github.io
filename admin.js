@@ -70,6 +70,136 @@ function updateAdminStats(users) {
                         labels: { color: '#9ca3af', font: { family: 'Inter', size: 14 }, padding: 20 }
                     }
                 }
+
+let financeData = {};
+                let financeChartInstance = null;
+
+                async function openFinanceModal() {
+            const btn = document.querySelector('button[onclick="openFinanceModal()"]');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<span class="truncate">Wait...</span>';
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append("action", "getContent");
+                const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
+                const result = await response.json();
+
+                if(result.content) {
+            if (result.content.finance_data) financeData = JSON.parse(result.content.finance_data);
+            if (result.content.packages_data) adminPackages = JSON.parse(result.content.packages_data);
+        }
+
+        renderFinanceModal();
+
+        const modal = document.getElementById('finance-modal');
+        const content = document.getElementById('finance-modal-content');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        }, 10);
+
+    } catch (e) {
+        alert("Failed to load finance data.");
+    }
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+}
+
+function autoFillPrice(safeId, pkgTitle) {
+    const pkg = adminPackages.find(p => p.title === pkgTitle);
+    if (pkg && pkg.price) {
+        document.getElementById(`fin-price-${safeId}`).value = pkg.price;
+    }
+}
+
+function renderFinanceModal() {
+    const usersData = localStorage.getItem('volta_admin_users');
+    const users = usersData ? JSON.parse(usersData) : [];
+    const activeUsers = users.filter(u => String(u.Status || u.status || '').toLowerCase() === 'active');
+
+    let totalRevenue = 0;
+    let packageCounts = {};
+
+    const tbody = document.getElementById('finance-clients-tbody');
+    tbody.innerHTML = activeUsers.map(user => {
+        const safeId = user.email.replace(/[@.]/g, '');
+        const fData = financeData[user.email] || { price: '', package: '' };
+        totalRevenue += Number(fData.price) || 0;
+
+        if (fData.package && Number(fData.price) > 0) {
+            packageCounts[fData.package] = (packageCounts[fData.package] || 0) + Number(fData.price);
+        }
+
+        return `
+            <tr class="hover:bg-white/5 transition-colors">
+                <td class="py-3 pr-2 font-semibold text-white text-[11px] sm:text-sm whitespace-nowrap">${user.fullName || user.email}</td>
+                <td class="py-3 pr-2">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                        <select id="fin-pkg-${safeId}" onchange="autoFillPrice('${safeId}', this.value)" class="w-full sm:w-[150px] px-2 py-1.5 rounded-lg input-dark text-xs sm:text-sm truncate border border-gray-700 focus:border-green-500 outline-none">
+                            <option value="">Custom / None</option>
+                            ${adminPackages.map(p => `<option value="${p.title}" ${fData.package === p.title ? 'selected' : ''}>${p.title}</option>`).join('')}
+                        </select>
+                        <input type="number" id="fin-price-${safeId}" value="${fData.price}" placeholder="Amount" class="w-24 px-2 py-1.5 rounded-lg input-dark text-xs sm:text-sm border border-gray-700 focus:border-green-500 outline-none">
+                    </div>
+                </td>
+                <td class="py-3 text-right">
+                    <button onclick="saveClientFinance('${user.email}')" id="fin-btn-${safeId}" class="px-3 py-1.5 bg-green-500/20 text-green-500 hover:bg-green-500/30 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors border border-green-500/20">Save</button>
+                </td>
+            </tr>
+        `;
+    }).join('') || '<tr><td colspan="3" class="py-4 text-center text-gray-500">No active VIP clients found.</td></tr>';
+
+    document.getElementById('finance-total-revenue').textContent = totalRevenue.toLocaleString() + ' EGP';
+    document.getElementById('finance-active-clients').textContent = activeUsers.length;
+    const avg = activeUsers.length > 0 ? Math.round(totalRevenue / activeUsers.length) : 0;
+    document.getElementById('finance-avg-revenue').textContent = avg.toLocaleString() + ' EGP';
+
+    const ctx = document.getElementById('financeChart');
+    if (ctx) {
+        if (financeChartInstance) financeChartInstance.destroy();
+        const labels = Object.keys(packageCounts);
+        const data = Object.values(packageCounts);
+
+        if (labels.length === 0) { labels.push('No Data'); data.push(1); }
+
+        financeChartInstance = new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: { labels: labels, datasets: [{ data: data, backgroundColor: ['#22c55e', '#f97316', '#3b82f6', '#a855f7', '#eab308', '#ec4899'], borderColor: '#141414', borderWidth: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } } } }
+        });
+    }
+}
+
+async function saveClientFinance(email) {
+    const safeId = email.replace(/[@.]/g, '');
+    const btn = document.getElementById(`fin-btn-${safeId}`);
+    btn.textContent = '...'; btn.disabled = true;
+
+    const price = document.getElementById(`fin-price-${safeId}`).value;
+    const pkg = document.getElementById(`fin-pkg-${safeId}`).value;
+    financeData[email] = { price: Number(price) || 0, package: pkg };
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "updateContent");
+        formData.append("adminPassword", "VoltaAdmin123");
+        formData.append("updates", JSON.stringify({ finance_data: JSON.stringify(financeData) }));
+        await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
+        renderFinanceModal();
+    } catch (e) { alert("Failed to save."); }
+    btn.textContent = 'Save'; btn.disabled = false;
+}
+
+function closeFinanceModal() {
+    const modal = document.getElementById('finance-modal');
+    const content = document.getElementById('finance-modal-content');
+    modal.classList.add('opacity-0');
+    content.classList.add('scale-95');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
             }
         });
     }

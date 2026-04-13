@@ -51,6 +51,15 @@
                         </svg>
                         <span class="truncate">Updates</span>
                     </button>
+                    <button onclick="openFinanceModal()"
+                        class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-green-500/50 hover:border-green-500 hover:bg-green-500/10 text-green-500 text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
+                        </svg>
+                        <span class="truncate">Finance</span>
+                    </button>
                     <button onclick="openEditorModal()"
                         class="px-2 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-blue-500 hover:bg-blue-500/10 text-blue-500 text-[11px] sm:text-sm font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -357,6 +366,68 @@
                 <button onclick="saveAthleteData(event)"
                     class="w-full btn-primary py-3 rounded-xl font-bold uppercase tracking-wider mt-2">Save
                     Updates</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Finance Overview Modal -->
+    <div id="finance-modal" class="fixed inset-0 z-[60] hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeFinanceModal()"></div>
+        <div class="absolute inset-2 sm:inset-4 md:inset-10 lg:inset-x-20 z-10 rounded-2xl card-dark flex flex-col overflow-hidden transform scale-95 transition-transform duration-300"
+            id="finance-modal-content">
+            <div class="flex items-center justify-between p-4 sm:p-6 border-b border-green-500/20 bg-[#1a1a1a]">
+                <h2 class="font-bebas text-2xl sm:text-3xl tracking-wider text-white">FINANCIAL <span
+                        class="text-green-500">OVERVIEW</span></h2>
+                <button onclick="closeFinanceModal()" class="text-gray-400 hover:text-red-500 transition-colors">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 overflow-y-auto flex-1 bg-[#0a0a0a]">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                    <div
+                        class="p-6 rounded-2xl bg-[#141414] border border-green-500/20 flex flex-col items-center justify-center text-center">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Total Revenue</p>
+                        <p id="finance-total-revenue" class="font-bebas text-3xl sm:text-4xl text-green-500">0 EGP</p>
+                    </div>
+                    <div
+                        class="p-6 rounded-2xl bg-[#141414] border border-orange-500/20 flex flex-col items-center justify-center text-center">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Active Paying Clients</p>
+                        <p id="finance-active-clients" class="font-bebas text-3xl sm:text-4xl text-orange-500">0</p>
+                    </div>
+                    <div
+                        class="p-6 rounded-2xl bg-[#141414] border border-blue-500/20 flex flex-col items-center justify-center text-center">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider mb-2">Avg. Revenue / Client</p>
+                        <p id="finance-avg-revenue" class="font-bebas text-3xl sm:text-4xl text-blue-500">0 EGP</p>
+                    </div>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div
+                        class="lg:col-span-1 p-6 rounded-2xl bg-[#141414] border border-white/5 flex flex-col items-center">
+                        <h3 class="font-bebas text-xl text-white mb-4 text-center">Revenue by Package</h3>
+                        <div class="relative w-full flex-1 min-h-[200px] flex items-center justify-center"><canvas
+                                id="financeChart"></canvas></div>
+                    </div>
+                    <div class="lg:col-span-2 p-6 rounded-2xl bg-[#141414] border border-white/5 flex flex-col">
+                        <h3 class="font-bebas text-xl text-white mb-4">Client Subscriptions Manager</h3>
+                        <div class="overflow-y-auto flex-1 max-h-[300px] pr-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="border-b border-gray-700 text-[10px] sm:text-xs uppercase tracking-wider text-gray-400">
+                                        <th class="pb-3 font-medium">Name</th>
+                                        <th class="pb-3 font-medium">Package / Paid Amount (EGP)</th>
+                                        <th class="pb-3 font-medium text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="finance-clients-tbody"
+                                    class="text-gray-300 text-sm divide-y divide-gray-800"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
