@@ -1,11 +1,25 @@
+(function () {
+    // التأكد من وجود الجلسة
+    if (!sessionStorage.getItem('volta_admin_session')) {
+        window.location.replace('index.html');
+        return;
+    }
+    // منع المتصفح من عرض نسخة 'ميتة' من الصفحة عند الرجوع
+    window.onpageshow = function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+})();
+
 let adminPackages = [];
 let adminOverviewChartInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. حماية الصفحة: طرد أي زائر يحاول يفتح الصفحة مباشرة بدون إذن
-    const isAdmin = localStorage.getItem('volta_admin');
+    const isAdmin = sessionStorage.getItem('volta_admin_session');
     if (!isAdmin) {
-        window.location.href = 'index.html';
+        window.location.replace('index.html');
         return;
     }
 
@@ -23,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // تحديث البيانات أوتوماتيكياً لما ترجع تفتح المتصفح أو تمسك الموبايل
 document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && localStorage.getItem('volta_admin')) {
+    if (document.visibilityState === 'visible' && sessionStorage.getItem('volta_admin_session')) {
         fetchFreshAdminData();
         fetchFreshWeeklyUpdates();
     }
@@ -713,9 +727,9 @@ function closeAdminModal() {
 }
 
 function adminLogout() {
-    localStorage.removeItem('volta_admin');
+    sessionStorage.clear();
     localStorage.removeItem('volta_admin_users');
-    window.location.href = 'index.html'; // قفل اللوحة والرجوع للموقع الأساسي
+    window.location.replace('index.html'); // قفل اللوحة والرجوع للموقع الأساسي
 }
 
 async function deleteClient(event, email, name) {
