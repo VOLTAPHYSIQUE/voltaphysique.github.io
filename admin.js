@@ -533,6 +533,7 @@ function closeAdminModal() {
 function adminLogout() {
     localStorage.removeItem('volta_admin');
     localStorage.removeItem('volta_admin_users');
+    localStorage.removeItem('volta_admin_updates');
     window.location.href = 'index.html'; // قفل اللوحة والرجوع للموقع الأساسي
 }
 
