@@ -603,7 +603,7 @@ async function handleLogin(e) {
         // لو اللي بيعمل لوجين هو الأدمن
         if (result.isAdmin) {
             // حفظ بيانات الجلسة السرية وتوجيهك لملف الأدمن
-            localStorage.setItem('volta_admin_token', 'true');
+            localStorage.setItem('volta_admin_token', password);
             localStorage.setItem('volta_admin_users', JSON.stringify(result.users));
             showToast('Admin Portal Unlocked!', 'success');
             setTimeout(() => {

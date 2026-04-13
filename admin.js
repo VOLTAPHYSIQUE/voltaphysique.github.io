@@ -232,7 +232,7 @@ async function saveClientFinance(email) {
     try {
         const formData = new FormData();
         formData.append("action", "updateContent");
-        formData.append("adminPassword", "VoltaAdmin123");
+        formData.append("adminPassword", localStorage.getItem('volta_admin_token'));
         formData.append("updates", JSON.stringify({ finance_data: JSON.stringify(financeData) }));
         await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
         renderFinanceModal();
@@ -425,7 +425,7 @@ async function savePackage(e, index) {
 async function deletePackage(index) {
     const pkgName = adminPackages[index].title || 'this package';
     const pass = prompt(`Are you sure you want to permanently delete "${pkgName}"?\n\nEnter Admin Password to confirm:`);
-    if (pass !== "VoltaAdmin123") {
+    if (pass !== localStorage.getItem('volta_admin_token')) {
         if (pass) alert("Incorrect Password");
         return;
     }
@@ -439,7 +439,7 @@ async function saveGeneralSettings(e) {
     if (e) e.preventDefault();
 
     const pass = prompt("Enter Admin Password to save website content & security settings:");
-    if (pass !== "VoltaAdmin123") {
+    if (pass !== localStorage.getItem('volta_admin_token')) {
         if (pass) alert("Incorrect Password");
         return;
     }
@@ -474,7 +474,7 @@ async function saveContentToDB(updates) {
     try {
         const formData = new FormData();
         formData.append("action", "updateContent");
-        formData.append("adminPassword", "VoltaAdmin123");
+        formData.append("adminPassword", localStorage.getItem('volta_admin_token'));
         formData.append("updates", JSON.stringify(updates));
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
@@ -509,7 +509,7 @@ async function fetchFreshAdminData() {
         const formData = new FormData();
         formData.append("action", "login");
         formData.append("email", "admin");
-        formData.append("password", "VoltaAdmin123");
+        formData.append("password", localStorage.getItem('volta_admin_token'));
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", { method: "POST", body: formData });
         const result = await response.json();
@@ -535,7 +535,7 @@ async function fetchFreshWeeklyUpdates() {
     try {
         const formData = new FormData();
         formData.append("action", "getWeeklyUpdates");
-        formData.append("adminPassword", "VoltaAdmin123");
+        formData.append("adminPassword", localStorage.getItem('volta_admin_token'));
 
         const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
             method: "POST",
@@ -790,7 +790,10 @@ async function deleteClient(event, email, name) {
     // 1. طلب الباسورد كخطوة تأكيدية للحماية
     const adminPass = prompt(`Are you sure you want to permanently remove ${name}?\n\nEnter Admin Password to confirm:`);
 
-    if (!adminPass) return; // لو داس كنسل أو مدخلش حاجة
+    if (adminPass !== localStorage.getItem('volta_admin_token')) {
+        if (adminPass) alert("Incorrect Password");
+        return;
+    }
 
     const btn = event.target.closest('button');
     const originalHtml = btn.innerHTML;
@@ -1108,7 +1111,7 @@ async function saveAccessCode(e) {
     if (e) e.preventDefault();
 
     const pass = prompt("Enter Admin Password to update the Access Code:");
-    if (pass !== "VoltaAdmin123") {
+    if (pass !== localStorage.getItem('volta_admin_token')) {
         if (pass) alert("Incorrect Password");
         return;
     }
@@ -1143,7 +1146,7 @@ async function toggleUserStatus(event, email, newStatus) {
         formData.append("action", "updateUserStatus");
         formData.append("email", email);
         formData.append("status", newStatus);
-        formData.append("adminPassword", "VoltaAdmin123");
+        formData.append("adminPassword", localStorage.getItem('volta_admin_token'));
 
         // الاتصال بسكريبت جوجل الخاص بالتسجيل والبيانات
         const response = await fetch("https://script.google.com/macros/s/AKfycbzoxWdEfo2AkM97qPmO7a6POIm09htcqZ8uDIufDsA7S-0CXc0zzrEOxFuclfNnTTVUBg/exec", {
