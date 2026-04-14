@@ -58,6 +58,68 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+// ==========================================
+// CUSTOM ADMIN PASSWORD PROMPT MODAL
+// ==========================================
+function requestAdminPassword(messageText) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('admin-password-modal');
+        const overlay = document.getElementById('admin-password-overlay');
+        const msgEl = document.getElementById('admin-password-message');
+        const inputEl = document.getElementById('admin-password-input');
+        const confirmBtn = document.getElementById('admin-password-confirm');
+        const cancelBtn = document.getElementById('admin-password-cancel');
+        const errorEl = document.getElementById('admin-password-error');
+
+        msgEl.textContent = messageText;
+        inputEl.value = '';
+        inputEl.style.borderColor = '';
+        errorEl.classList.add('hidden');
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.querySelector('div:nth-child(2)').classList.remove('scale-95');
+            inputEl.focus();
+        }, 10);
+
+        const cleanup = () => {
+            modal.classList.add('opacity-0');
+            modal.querySelector('div:nth-child(2)').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+
+            confirmBtn.removeEventListener('click', onConfirm);
+            cancelBtn.removeEventListener('click', onCancel);
+            overlay.removeEventListener('click', onCancel);
+            inputEl.removeEventListener('keypress', onEnter);
+        };
+
+        const onConfirm = () => {
+            const pass = inputEl.value;
+            if (pass !== localStorage.getItem('volta_admin_token')) {
+                errorEl.classList.remove('hidden');
+                // Shake Animation for incorrect password
+                inputEl.style.transform = 'translateX(10px)';
+                inputEl.style.borderColor = '#ef4444';
+                setTimeout(() => inputEl.style.transform = 'translateX(-10px)', 100);
+                setTimeout(() => inputEl.style.transform = 'translateX(10px)', 200);
+                setTimeout(() => inputEl.style.transform = 'translateX(0)', 300);
+                return; // Stop here, don't close modal
+            }
+            cleanup();
+            resolve(pass); // Correct password returned
+        };
+
+        const onCancel = () => { cleanup(); resolve(null); };
+        const onEnter = (e) => { if (e.key === 'Enter') { e.preventDefault(); onConfirm(); } };
+
+        confirmBtn.addEventListener('click', onConfirm);
+        cancelBtn.addEventListener('click', onCancel);
+        overlay.addEventListener('click', onCancel);
+        inputEl.addEventListener('keypress', onEnter);
+    });
+}
+
 function updateAdminStats(users) {
     document.getElementById('admin-total-users').textContent = users.length;
 
@@ -424,11 +486,8 @@ async function savePackage(e, index) {
 
 async function deletePackage(index) {
     const pkgName = adminPackages[index].title || 'this package';
-    const pass = prompt(`Are you sure you want to permanently delete "${pkgName}"?\n\nEnter Admin Password to confirm:`);
-    if (pass !== localStorage.getItem('volta_admin_token')) {
-        if (pass) alert("Incorrect Password");
-        return;
-    }
+    const pass = await requestAdminPassword(`Are you sure you want to permanently delete "${pkgName}"?`);
+    if (!pass) return;
 
     adminPackages.splice(index, 1);
     await saveContentToDB({ packages_data: JSON.stringify(adminPackages) });
@@ -438,11 +497,8 @@ async function deletePackage(index) {
 async function saveGeneralSettings(e) {
     if (e) e.preventDefault();
 
-    const pass = prompt("Enter Admin Password to save website content & security settings:");
-    if (pass !== localStorage.getItem('volta_admin_token')) {
-        if (pass) alert("Incorrect Password");
-        return;
-    }
+    const pass = await requestAdminPassword("Enter Admin Password to save website content & security settings:");
+    if (!pass) return;
 
     const btn = document.getElementById('save-general-btn');
     btn.textContent = 'Saving...';
@@ -788,12 +844,8 @@ function adminLogout() {
 
 async function deleteClient(event, email, name) {
     // 1. طلب الباسورد كخطوة تأكيدية للحماية
-    const adminPass = prompt(`Are you sure you want to permanently remove ${name}?\n\nEnter Admin Password to confirm:`);
-
-    if (adminPass !== localStorage.getItem('volta_admin_token')) {
-        if (adminPass) alert("Incorrect Password");
-        return;
-    }
+    const adminPass = await requestAdminPassword(`Are you sure you want to permanently remove ${name}?`);
+    if (!adminPass) return;
 
     const btn = event.target.closest('button');
     const originalHtml = btn.innerHTML;
@@ -1110,11 +1162,8 @@ function closeGraphModal() {
 async function saveAccessCode(e) {
     if (e) e.preventDefault();
 
-    const pass = prompt("Enter Admin Password to update the Access Code:");
-    if (pass !== localStorage.getItem('volta_admin_token')) {
-        if (pass) alert("Incorrect Password");
-        return;
-    }
+    const pass = await requestAdminPassword("Enter Admin Password to update the Access Code:");
+    if (!pass) return;
 
     const btn = e.currentTarget;
     const originalText = btn.textContent;

@@ -453,6 +453,44 @@
         </div>
     </div>
 
+    <!-- Custom Admin Password Prompt Modal -->
+    <div id="admin-password-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" id="admin-password-overlay"></div>
+        <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm z-10 rounded-2xl card-dark flex flex-col overflow-hidden scale-95 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="font-bebas text-2xl text-center tracking-wider mb-2 text-white">SECURITY <span
+                        class="text-orange-500">CHECK</span></h3>
+                <p id="admin-password-message" class="text-gray-400 text-xs sm:text-sm text-center mb-6">Please enter
+                    the admin password to continue.</p>
+
+                <div class="relative mb-2">
+                    <input type="password" id="admin-password-input"
+                        class="w-full px-4 py-3 rounded-xl input-dark text-white text-center tracking-widest transition-all"
+                        placeholder="••••••••">
+                </div>
+                <p id="admin-password-error" class="hidden text-red-500 text-xs text-center mb-4 transition-all">
+                    Incorrect Password</p>
+
+                <div class="flex gap-3 mt-4">
+                    <button id="admin-password-cancel"
+                        class="flex-1 px-4 py-3 rounded-xl border border-gray-600/50 hover:bg-gray-600/20 text-gray-300 text-sm font-semibold uppercase tracking-wider transition-all">Cancel</button>
+                    <button id="admin-password-confirm"
+                        class="flex-1 btn-primary px-4 py-3 rounded-xl text-sm font-semibold uppercase tracking-wider">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="admin.js?v=11"></script>
 </body>
 
