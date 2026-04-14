@@ -457,11 +457,11 @@ function editPackage(index) {
 }
 
 function addNewPackage() {
-    adminPackages.push({
+    adminPackages.unshift({
         title: 'New Package', price: '0', currency: 'EGP', duration: '1 Month', discount: '', shortFeatures: [], fullFeatures: []
     });
     renderAdminPackages();
-    editPackage(adminPackages.length - 1);
+    editPackage(0);
 }
 
 async function savePackage(e, index) {
@@ -888,6 +888,53 @@ async function deleteClient(event, email, name) {
         }
     } catch (error) {
         alert('Connection error while trying to remove user.');
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+    }
+}
+
+async function deleteClientUpdates(event, name) {
+    const adminPass = await requestAdminPassword(`Are you sure you want to permanently delete ALL weekly updates for "${name}"?`);
+    if (!adminPass) return;
+
+    const btn = event.target.closest('button');
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span class="text-xs">...</span>';
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append("action", "deleteWeeklyUpdates");
+        formData.append("fullName", name);
+        formData.append("adminPassword", adminPass);
+
+        // إرسال الطلب لسكريبت التحديثات الأسبوعية
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwJLHda0hAjvHnr84kSlSYfez_6bzIrWnWJGpHH6jwa1zCiNIp1G-fWKpG8eeCF4nWa/exec", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        // التحديث المحلي في الموقع
+        const updatesData = localStorage.getItem('volta_weekly_updates');
+        if (updatesData) {
+            let allUpdates = JSON.parse(updatesData);
+            allUpdates = allUpdates.filter(u => (u.fullName || u['Full Name']) !== name);
+            localStorage.setItem('volta_weekly_updates', JSON.stringify(allUpdates));
+
+            const title = document.getElementById('admin-modal-title').textContent;
+            const modal = document.getElementById('admin-modal');
+            if (title && title.includes('UPDATES') && modal && !modal.classList.contains('hidden')) {
+                openAdminModal('weeklyUpdates');
+            }
+        }
+
+        if (!result.success) {
+            console.warn('Backend delete script not implemented yet. Deleted locally.');
+        }
+    } catch (error) {
+        alert('Connection error while trying to remove updates.');
         btn.innerHTML = originalHtml;
         btn.disabled = false;
     }
