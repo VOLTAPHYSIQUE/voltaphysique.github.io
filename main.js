@@ -168,6 +168,13 @@ function initAnimations() {
 }
 
 function renderPage(page) {
+    // منع المشترك المسجل من الدخول لصفحة اللوجين أو التسجيل بالخطأ
+    if ((page === 'login' || page === 'signup') && localStorage.getItem('volta_user')) {
+        page = 'dashboard';
+        window.location.hash = 'dashboard';
+        return;
+    }
+
     // الحماية المباشرة: منع الدخول للوحة المشتركين بدون جلسة (Session)
     if (page === 'dashboard' && !localStorage.getItem('volta_user')) {
         page = 'login';
@@ -1066,6 +1073,13 @@ function displayWeightUpdateResult(weeklyChange, progressPercentage, remainingWe
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // التوجيه التلقائي للأدمن لو فتح الموقع وهو مسجل دخول
+    const currentHash = window.location.hash.replace('#', '');
+    if (localStorage.getItem('volta_admin_token') && (!currentHash || currentHash === 'login' || currentHash === 'home')) {
+        window.location.replace('admin.html');
+        return; // إيقاف تحميل باقي سكريبت المشتركين
+    }
+
     const savedUser = localStorage.getItem('volta_user');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -1090,7 +1104,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // استعادة الصفحة اللي المستخدم كان فيها من الرابط وقت الـ Refresh
-    const initialPage = window.location.hash.replace('#', '') || 'home';
+    let initialPage = window.location.hash.replace('#', '') || 'home';
+
+    // لو المشترك مسجل دخول وفاتح الموقع، نوديه للداشبورد فوراً
+    if (savedUser && (initialPage === 'home' || initialPage === 'login')) {
+        initialPage = 'dashboard';
+        window.location.hash = 'dashboard';
+    }
+
     renderPage(initialPage);
 
     // تشغيل كود تسخين السيرفرات أول ما الموقع يفتح
