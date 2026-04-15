@@ -28,6 +28,20 @@
   <link rel="stylesheet" href="style.css">
   <!-- Note: Replace Tailwind CDN with a built CSS file for production -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    // كود سريع جداً بيشتغل قبل ما الموقع يحمل عشان يمنع ظهور الصفحة الرئيسية للمشتركين
+    (function () {
+      const hash = window.location.hash.replace('#', '');
+      const isHomeOrLogin = !hash || hash === 'home' || hash === 'login';
+
+      if (localStorage.getItem('volta_admin_token') && isHomeOrLogin) {
+        window.location.replace('admin.html');
+      } else if (localStorage.getItem('volta_user') && isHomeOrLogin) {
+        // تغيير الرابط للداشبورد فوراً قبل ما الصفحة ترسم أي حاجة
+        window.location.replace(window.location.pathname + '#dashboard');
+      }
+    })();
+  </script>
 </head>
 
 <body class="h-full bg-[#0a0a0a] text-white font-inter overflow-x-hidden">
@@ -182,7 +196,7 @@
         </div>
       </div>
     </div><!-- HOME PAGE -->
-    <div id="page-home" class="page active">
+    <div id="page-home" class="page">
       <section class="lightning-bg relative min-h-screen pt-16 overflow-hidden">
 
         <!-- DARK OVERLAY -->
