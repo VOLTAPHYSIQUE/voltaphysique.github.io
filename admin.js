@@ -841,10 +841,22 @@ function closeAdminModal() {
     }, 300);
 }
 
-function adminLogout() {
-    localStorage.removeItem('volta_admin_token');
-    localStorage.removeItem('volta_admin_users');
-    window.location.replace('index.html'); // قفل اللوحة والرجوع للموقع الأساسي
+function adminLogout(event) {
+    if (event) {
+        const btn = event.currentTarget;
+        btn.innerHTML = '<span class="truncate text-xs">EXITING...</span>';
+        btn.disabled = true;
+    }
+
+    document.documentElement.style.backgroundColor = '#0a0a0a'; // منع ظهور لون أبيض أثناء الاختفاء
+    document.body.style.transition = 'opacity 0.5s ease-in-out';
+    document.body.style.opacity = '0';
+
+    setTimeout(() => {
+        localStorage.removeItem('volta_admin_token');
+        localStorage.removeItem('volta_admin_users');
+        window.location.replace('index.html'); // قفل اللوحة والرجوع للموقع الأساسي
+    }, 500);
 }
 
 async function deleteClient(event, email, name) {
