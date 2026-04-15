@@ -17,7 +17,7 @@ body {
     overflow: hidden;
     background-image: url('./lightning-mobile.png');
     background-size: cover;
-    background-position: center;
+    background-position: top center;
     background-repeat: no-repeat;
 }
 
@@ -25,6 +25,7 @@ body {
 @media (min-width: 768px) {
     .lightning-bg {
         background-image: url('./lightning-desktop.png');
+        background-position: center;
     }
 }
 
