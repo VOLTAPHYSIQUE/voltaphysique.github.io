@@ -191,6 +191,16 @@ function renderPage(page) {
         targetPage = document.getElementById('page-home');
     }
 
+    // إخفاء أيقونة السوشيال ميديا نهائياً في صفحات الدخول والتسجيل
+    const socialBtn = document.getElementById('social-float-btn');
+    if (socialBtn) {
+        if (page === 'login' || page === 'signup') {
+            socialBtn.style.display = 'none';
+        } else {
+            socialBtn.style.display = 'flex';
+        }
+    }
+
     // إعادة ضبط الأنيميشن للعناصر عشان تشتغل تاني لما نقلب بين الصفحات
     const animatedElements = targetPage.querySelectorAll('.volta-animate, .volta-animate-text');
     animatedElements.forEach(el => {
@@ -1092,6 +1102,43 @@ document.addEventListener('DOMContentLoaded', () => {
             silentVerifyAccessCode(savedCode);
         }
     }
+
+    // معالجة مشكلة صعود الأيقونة مع الكيبورد في الموبايل
+    const socialBtn = document.getElementById('social-float-btn');
+    let initialViewportHeight = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        if (!socialBtn) return;
+        const currentPage = window.location.hash.replace('#', '') || 'home';
+        if (currentPage === 'login' || currentPage === 'signup') return;
+
+        if (window.innerHeight < initialViewportHeight - 100) {
+            socialBtn.style.opacity = '0';
+            socialBtn.style.pointerEvents = 'none';
+        } else {
+            socialBtn.style.opacity = '1';
+            socialBtn.style.pointerEvents = 'auto';
+        }
+    });
+
+    document.addEventListener('focusin', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+            if (socialBtn) {
+                socialBtn.style.opacity = '0';
+                socialBtn.style.pointerEvents = 'none';
+            }
+        }
+    });
+
+    document.addEventListener('focusout', () => {
+        const currentPage = window.location.hash.replace('#', '') || 'home';
+        if (socialBtn && currentPage !== 'login' && currentPage !== 'signup') {
+            setTimeout(() => {
+                socialBtn.style.opacity = '1';
+                socialBtn.style.pointerEvents = 'auto';
+            }, 300);
+        }
+    });
 
     // تشغيل نظام الأنيميشن أول ما الموقع يفتح
     initAnimations();
